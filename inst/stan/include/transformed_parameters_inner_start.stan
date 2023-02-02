@@ -1,0 +1,11 @@
+real log_det = 0;
+real yt_Q_y = 0;
+real y_tildet_Q_y_tilde = 0;
+matrix[P_mean_total, P_mean_total] Xt_Q_X = rep_matrix(0, P_mean_total, P_mean_total);
+vector[P_mean_total] Xt_Q_y = rep_vector(0, P_mean_total);
+vector[P_mean_total] Xt_Q_y_tilde = rep_vector(0, P_mean_total);
+matrix[P_mean_total, P_mean_total] alpha_beta_prior_precision = rep_matrix(0, P_mean_total, P_mean_total);
+matrix[P_mean_total, P_mean_total] L_alpha_beta_precision;
+matrix[P_mean_total, P_mean_total] L_alpha_beta_prior_precision;
+matrix[P_mean_total, P_mean_total] alpha_beta_precision;
+vector[P_mean_total] alpha_beta_rhs;
