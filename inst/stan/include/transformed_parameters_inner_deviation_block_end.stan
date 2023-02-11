@@ -1,5 +1,4 @@
-model{
-  L_block[:N_current_block, :N_current_block] = cholesky_decompose(
+L_block[:N_current_block, :N_current_block] = cholesky_decompose(
   K_block[:N_current_block, :N_current_block]
 );
 L_inv_X_block[:N_current_block, :P_X_mean_non_zero[i]] = mdivide_left_tri_low(

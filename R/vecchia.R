@@ -1,5 +1,5 @@
 #' @export
-get_parent_structure <- function(
+vecchia_parent_structure <- function(
   df,
   model,
   n_parents = 10,
@@ -9,38 +9,151 @@ get_parent_structure <- function(
   if (is.data.frame(df)) {
     df <- list(df)
   }
-  if (scaling[1] == 'auto') {
-    log_debug('Computing automatic Vecchia dimensional scaling')
-    scaling <- auto_vecchia_scaling(
-      df[[1]],
-      model,
-      n_parents,
-      ordering = ordering
-    )
+  if (model$deviation_model$name == 'vertical_only') {
+    .vecchia_parent_structure_vertical_only(df, model, n_parents)
+  } else if (model$deviation_model$name == 'white') {
+    stop('Vecchia not supported (or needed) for white covariance')
+  } else {
+    .vecchia_parent_structure_full(df, model, n_parents, ordering, scaling)
   }
-  ordering <- match.fun(ordering)
-  x_scaled <- lapply(df, function(df_i) {
-    x <- as.matrix(
-      df_i[, c(model$horizontal_coordinates, model$vertical_coordinate)]
-    )
-    t(t(x) * scaling)
+}
+
+.vecchia_parent_structure_vertical_only <- function(df, model, n_parents) {
+  orderings <- lapply(df, function(df_i) {
+    do.call(order, lapply(
+      c(model$horizontal_coordinates, model$vertical_coordinate),
+      function(name) df_i[[name]]
+    ))
   })
-  log_debug('Finding Vecchia ordering')
-  x_ordering <- lapply(x_scaled, ordering)
-  log_debug('Finding Vecchia parents')
-  parents <- GpGp::find_ordered_nn(
-    do.call(rbind, lapply(seq_along(x_scaled), function(i) {
-      x_scaled[[i]][x_ordering[[i]], ]
-    })),
-    n_parents
-  )
+
+  coordinates_joined <- lapply(seq_along(df), function(i) {
+    output <- df[[i]] %>%
+      ungroup() %>%
+      select(model$horizontal_coordinates, model$vertical_coordinate)
+    output[orderings[[i]], ]
+  }) %>%
+    bind_rows() %>%
+    mutate(index = seq_len(n()))
+
+  parent_parts <- coordinates_joined %>%
+    group_by(across(model$horizontal_coordinates)) %>%
+    group_map(~ {
+      output <- GpGp::find_ordered_nn(.x[[model$vertical_coordinate]], n_parents)
+      if (ncol(output) < n_parents + 1) {
+        output <- cbind(
+          output,
+          matrix(NA, nrow = nrow(output), ncol = n_parents + 1 - ncol(output))
+        )
+      }
+      # Use the canonical indices derived above in the parent object
+      output[] <- .x$index[output]
+      output
+    })
+  parents <- do.call(rbind, parent_parts)
+  parents <- parents[order(parents[, 1]), ]
+
   list(
-    ordering = if (length(x_ordering) == 1) {
-      x_ordering[[1]]
+    ordering = if (length(orderings) == 1) {
+      orderings[[1]]
     } else {
-      x_ordering
+      orderings
     },
     parents = parents
+  )
+}
+
+.vecchia_parent_structure_full <- function(df, model, n_parents, ordering, scaling) {
+  if (!is.list(scaling) && scaling == 'auto') {
+    scaling <- rep(list('auto'), length(df))
+  }
+  if (!is.list(scaling)) {
+    scaling <- list(scaling)
+  }
+  stopifnot(length(scaling) == length(df))
+  scaling <- lapply(seq_along(scaling), function(i) {
+    scaling_i <- scaling[[i]]
+    if (length(scaling_i) > 1 && scaling_i != 'auto') return(scaling[[i]])
+
+    log_debug('Computing automatic Vecchia dimensional scaling')
+    auto_vecchia_scaling(
+      df[[i]],
+      model,
+      n_parents,
+      parent_df = head(df, i - 1),
+      ordering = ordering
+    )
+  })
+  ordering <- match.fun(ordering)
+  x_parts <- lapply(seq_along(df), function(i) {
+    as.matrix(
+      df[[i]][, c(model$horizontal_coordinates, model$vertical_coordinate)]
+    )
+  })
+
+  orderings <- lapply(seq_along(x_parts), function(i) {
+    ordering(t(t(x_parts[[i]]) * scaling[[i]]))
+  })
+  x_ordered <- do.call(rbind, lapply(seq_along(x_parts), function(i) {
+    x_parts[[i]][orderings[[i]], ]
+  }))
+
+  part_sizes <- sapply(df, nrow)
+  parents <- do.call(rbind, lapply(seq_along(df), function(i) {
+    max_index <- sum(part_sizes[seq_len(i)])
+    x_ordered_upto_scaled <- t(t(x_ordered[seq_len(max_index), ]) * scaling[[i]])
+    tail(
+      GpGp::find_ordered_nn(
+        x_ordered_upto_scaled,
+        n_parents
+      ),
+      part_sizes[i]
+    )
+  }))
+
+  list(
+    ordering = if (length(orderings) == 1) {
+      orderings[[1]]
+    } else {
+      orderings
+    },
+    parents = parents,
+    scaling = scaling
+  )
+}
+
+#' @export
+vecchia_grouping <- function(
+  parent_structure,
+  exponent = 2
+) {
+  vecchia_groups <- GpGp::group_obs(
+    parent_structure$parents,
+    exponent = exponent
+  )
+  current_block_index <- 1L
+  current_response_index <- 1L
+  for (i in seq_along(vecchia_groups$last_ind_of_block)) {
+    block_i <- current_block_index : vecchia_groups$last_ind_of_block[i]
+    block_indices <- vecchia_groups$all_inds[block_i]
+    response_indices <- vecchia_groups$local_resp_inds[
+      current_response_index : vecchia_groups$last_resp_of_block[i]
+    ]
+    vecchia_groups$all_inds[block_i] <- c(
+      block_indices[-response_indices],
+      block_indices[response_indices]
+    )
+    current_block_index <- vecchia_groups$last_ind_of_block[i] + 1L
+    current_response_index <- vecchia_groups$last_resp_of_block[i] + 1L
+  }
+  list(
+    N_indices = length(vecchia_groups$all_inds),
+    N_blocks = length(vecchia_groups$last_ind_of_block),
+    block_indices = vecchia_groups$all_inds,
+    block_last_index = vecchia_groups$last_ind_of_block,
+    block_N_responses = c(
+      vecchia_groups$last_resp_of_block[1],
+      diff(vecchia_groups$last_resp_of_block)
+    )
   )
 }
 
@@ -49,26 +162,43 @@ auto_vecchia_scaling <- function(
   df,
   model,
   n_parents,
+  parent_df,
   proportion_from_neighbours_target = 0.5,
   tolerance = 0.05,
   max_attempts = 50,
   interval = c(1e-6, 1e5),
   ...
 ) {
+  if (missing(parent_df)) {
+    parent_df <- NULL
+  }
+
+  if (is.null(parent_df) && nrow(distinct(df[, model$horizontal_coordinates, drop = FALSE])) == 1) {
+    return(rep(1, 1 + length(model$horizontal_coordinates)))
+  }
+
   as_scaling <- function(x) c(rep(1, length(model$horizontal_coordinates)), x)
   bounds <- interval
   previous_proportion_from_neighbours <- 2
   for (i in seq_len(max_attempts)) {
     log_trace('Step {i}: bounds = {bounds[1]}, {bounds[2]}; proportion = {previous_proportion_from_neighbours}')
     middle <- mean(bounds)
-    parent_structure_i <- get_parent_structure(
-      df,
+    parent_structure_i <- vecchia_parent_structure(
+      c(parent_df, list(df)),
       model,
       n_parents,
-      scaling = as_scaling(middle),
+      scaling = rep(
+        list(as_scaling(middle)),
+        length(parent_df) + 1
+      ),
       ...
     )
-    n_from_neighbours_i <- parents_n_from_neighbours(df, model, parent_structure_i)
+    n_from_neighbours_i <- parents_n_from_neighbours(
+      df,
+      model,
+      parent_structure_i,
+      parent_df
+    )
     proportion_from_neighbours_i <- mean(n_from_neighbours_i) / n_parents
     if (abs(proportion_from_neighbours_i - proportion_from_neighbours_target) <= tolerance) {
       return(as_scaling(middle))
@@ -89,6 +219,37 @@ auto_vecchia_scaling <- function(
 #' @export
 parents_n_from_neighbours <- function(
   df,
+  model,
+  structure,
+  parent_df
+) {
+  if (missing(parent_df)) {
+    parent_df <- NULL
+  }
+  if (length(parent_df) == 0) {
+    structure$ordering <- list(structure$ordering)
+  }
+
+  all_df <- c(parent_df, list(df))
+  x <- do.call(rbind, lapply(seq_along(all_df), function(i) {
+    as.matrix(all_df[[i]][, model$horizontal_coordinates])[structure$ordering[[i]], , drop = FALSE]
+  }))
+  apply(tail(structure$parents, nrow(df)), 1, function(parents_i) {
+    x_i <- x[parents_i[1], ]
+    output_i <- 0L
+    for (k in tail(parents_i, -1)) {
+      if (is.na(k)) break
+      if (any(x_i != x[k, ])) {
+        output_i <- output_i + 1L
+      }
+    }
+    output_i
+  })
+}
+
+.parents_n_from_parents <- function(
+  df,
+  parent_df,
   model,
   structure
 ) {
@@ -160,17 +321,20 @@ plot_parent_structure <- function(
   X_deviation_fixed,
   X_deviation_random,
   fit,
-  parent_structure
+  parent_structure,
+  model = fit$model,
+  parameters = fit$parameters
 ) {
   U_parts <- lapply(seq_len(nrow(parent_structure$parents)), function(k) {
-    block_size_k <- min(k, ncol(parent_structure$parents))
+    block_size_k <- sum(!is.na(parent_structure$parents[k, ]))
     indices_k <- rev(parent_structure$parents[k, 1 : block_size_k])
 
     Sigma_k <- .covariance_matrix_internal(
       x[indices_k, , drop = FALSE],
       X_deviation_fixed[indices_k, , drop = FALSE],
       X_deviation_random[indices_k, , drop = FALSE],
-      fit
+      model = model,
+      parameters = parameters
     )
     R_k <- chol(Sigma_k)
     list(

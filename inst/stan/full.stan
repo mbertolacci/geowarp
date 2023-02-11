@@ -4,42 +4,59 @@ functions {
 data {
 #include "include/data_start.stan"
 #include "include/data_deviation_start.stan"
+  int<lower=0> D_rotation;
+
+  int<lower=1> N_indices;
+  int<lower=1> N_blocks;
+  int block_indices[N_indices];
+  int block_last_index[N_blocks];
+  int block_N_responses[N_blocks];
 
   vector<lower=0>[D] gamma_deviation_a;
   vector<lower=0>[D] gamma_deviation_b;
+  real<lower=0> L_deviation_shape;
 }
 transformed data {
-#include "include/transformed_data_exact.stan"
+#include "include/transformed_data.stan"
 }
 parameters {
 #include "include/parameters_start.stan"
 #include "include/parameters_deviation_start.stan"
   vector<lower=0>[D - 1] gamma_deviation_horizontal;
   vector<lower=0>[P_deviation_warping] gamma_deviation_vertical;
+  cholesky_factor_corr[D_rotation] L_deviation;
 }
 transformed parameters {
 #include "include/transformed_parameters_outer_start.stan"
 
   {
-    matrix[N, N] K = rep_matrix(0, N, N);
     vector[D] x_warped[N];
+
 #include "include/transformed_parameters_inner_start.stan"
-#include "include/transformed_parameters_inner_deviation_exact_start.stan"
+#include "include/transformed_parameters_inner_deviation_start.stan"
 
     for (i in 1:N) {
       for (j in 1:(D-1)) {
         x_warped[i][j] = gamma_deviation_horizontal[j] * scaling[j] * x[i][j];
       }
       x_warped[i][D] = X_deviation_warping[i, :] * cumulative_sum(gamma_deviation_vertical);
+      if (D_rotation > 0) {
+        x_warped[i] = L_deviation' * x_warped[i];
+      }
     }
 
-    K = exponential_cov_heteroskedastic_vector(
-      x_warped,
-      deviation_sd,
-      sigma_squared_nugget
-    );
+    for (i in 1:N_blocks) {
+#include "include/transformed_parameters_inner_deviation_block_start.stan"
 
-#include "include/transformed_parameters_inner_deviation_exact_end.stan"
+      K_block[:N_current_block, :N_current_block] = exponential_cov_heteroskedastic_vector(
+        x_warped[indices_current_block[:N_current_block]],
+        deviation_sd[indices_current_block[:N_current_block]],
+        sigma_squared_nugget
+      );
+
+#include "include/transformed_parameters_inner_deviation_block_end.stan"
+    }
+
 #include "include/transformed_parameters_inner_end.stan"
   }
 }
@@ -54,6 +71,9 @@ model {
   }
   if (gamma_deviation_b[D] > 0) {
     gamma_deviation_vertical ~ gamma(gamma_deviation_a[D], gamma_deviation_b[D]);
+  }
+  if (D_rotation > 0) {
+    L_deviation ~ lkj_corr_cholesky(L_deviation_shape);
   }
 }
 generated quantities {

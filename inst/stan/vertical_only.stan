@@ -15,7 +15,7 @@ data {
   real<lower=0> gamma_deviation_b;
 }
 transformed data {
-#include "include/transformed_data_vecchia.stan"
+#include "include/transformed_data.stan"
 }
 parameters {
 #include "include/parameters_start.stan"
@@ -29,14 +29,14 @@ transformed parameters {
     real x_vertical_warped[N];
 
 #include "include/transformed_parameters_inner_start.stan"
-#include "include/transformed_parameters_inner_deviation_vecchia_start.stan"
+#include "include/transformed_parameters_inner_deviation_start.stan"
 
     for (i in 1:N) {
       x_vertical_warped[i] = X_deviation_warping[i, :] * cumulative_sum(gamma_deviation_vertical);
     }
 
     for (i in 1:N_blocks) {
-#include "include/transformed_parameters_inner_deviation_vecchia_block_start.stan"
+#include "include/transformed_parameters_inner_deviation_block_start.stan"
 
       K_block[:N_current_block, :N_current_block] = exponential_cov_heteroskedastic_scalar(
         x_vertical_warped[indices_current_block[:N_current_block]],
@@ -44,7 +44,7 @@ transformed parameters {
         sigma_squared_nugget
       );
 
-#include "include/transformed_parameters_inner_deviation_vecchia_block_end.stan"
+#include "include/transformed_parameters_inner_deviation_block_end.stan"
     }
 
 #include "include/transformed_parameters_inner_end.stan"

@@ -2,12 +2,12 @@
 
 #include <Rcpp.h>
 using namespace Rcpp ;
-#include "stanExports_anisotropic_exact.h"
+#include "stanExports_full.h"
 
-RCPP_MODULE(stan_fit4anisotropic_exact_mod) {
+RCPP_MODULE(stan_fit4full_mod) {
 
 
-    class_<rstan::stan_fit<stan_model, boost::random::ecuyer1988> >("rstantools_model_anisotropic_exact")
+    class_<rstan::stan_fit<stan_model, boost::random::ecuyer1988> >("rstantools_model_full")
 
     .constructor<SEXP,SEXP,SEXP>()
 

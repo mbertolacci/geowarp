@@ -12,21 +12,13 @@ Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
 
-RcppExport SEXP _rcpp_module_boot_stan_fit4anisotropic_exact_mod();
-RcppExport SEXP _rcpp_module_boot_stan_fit4anisotropic_vecchia_mod();
-RcppExport SEXP _rcpp_module_boot_stan_fit4isotropic_exact_mod();
-RcppExport SEXP _rcpp_module_boot_stan_fit4isotropic_vecchia_mod();
-RcppExport SEXP _rcpp_module_boot_stan_fit4vertical_only_exact_mod();
-RcppExport SEXP _rcpp_module_boot_stan_fit4vertical_only_vecchia_mod();
+RcppExport SEXP _rcpp_module_boot_stan_fit4full_mod();
+RcppExport SEXP _rcpp_module_boot_stan_fit4vertical_only_mod();
 RcppExport SEXP _rcpp_module_boot_stan_fit4white_mod();
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_rcpp_module_boot_stan_fit4anisotropic_exact_mod", (DL_FUNC) &_rcpp_module_boot_stan_fit4anisotropic_exact_mod, 0},
-    {"_rcpp_module_boot_stan_fit4anisotropic_vecchia_mod", (DL_FUNC) &_rcpp_module_boot_stan_fit4anisotropic_vecchia_mod, 0},
-    {"_rcpp_module_boot_stan_fit4isotropic_exact_mod", (DL_FUNC) &_rcpp_module_boot_stan_fit4isotropic_exact_mod, 0},
-    {"_rcpp_module_boot_stan_fit4isotropic_vecchia_mod", (DL_FUNC) &_rcpp_module_boot_stan_fit4isotropic_vecchia_mod, 0},
-    {"_rcpp_module_boot_stan_fit4vertical_only_exact_mod", (DL_FUNC) &_rcpp_module_boot_stan_fit4vertical_only_exact_mod, 0},
-    {"_rcpp_module_boot_stan_fit4vertical_only_vecchia_mod", (DL_FUNC) &_rcpp_module_boot_stan_fit4vertical_only_vecchia_mod, 0},
+    {"_rcpp_module_boot_stan_fit4full_mod", (DL_FUNC) &_rcpp_module_boot_stan_fit4full_mod, 0},
+    {"_rcpp_module_boot_stan_fit4vertical_only_mod", (DL_FUNC) &_rcpp_module_boot_stan_fit4vertical_only_mod, 0},
     {"_rcpp_module_boot_stan_fit4white_mod", (DL_FUNC) &_rcpp_module_boot_stan_fit4white_mod, 0},
     {NULL, NULL, 0}
 };

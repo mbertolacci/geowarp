@@ -6,15 +6,10 @@ simulate_pcpts <- function(
   n_samples = 1,
   vecchia = 'auto',
   vecchia_n_parents = 50,
-  parent_structure = get_parent_structure(
+  parent_structure = vecchia_parent_structure(
     output_df,
     model,
-    vecchia_n_parents,
-    scaling = if (model$deviation_model$name == 'vertical_only') {
-      c(rep(1, length(model$horizontal_coordinates)), 1e-6)
-    } else {
-      as.vector(parameters$ell_deviation)
-    }
+    vecchia_n_parents
   )
 ) {
   if (vecchia == 'auto') {
@@ -50,8 +45,8 @@ simulate_pcpts <- function(
     stan_data$x,
     stan_data$X_deviation_fixed,
     stan_data$X_deviation_random,
-    model,
-    parameters
+    model = model,
+    parameters = parameters
   )
   R <- chol(Sigma)
 
@@ -77,9 +72,9 @@ simulate_pcpts <- function(
     stan_data$x[parent_structure$ordering, , drop = FALSE],
     stan_data$X_deviation_fixed[parent_structure$ordering, , drop = FALSE],
     stan_data$X_deviation_random[parent_structure$ordering, , drop = FALSE],
-    model,
-    parameters,
-    parent_structure
+    parent_structure = parent_structure,
+    model = model,
+    parameters = parameters,
   )
 
   output <- as.vector(cbind(

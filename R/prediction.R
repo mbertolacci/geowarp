@@ -12,6 +12,19 @@ mean_profile <- function(
 }
 
 #' @export
+marginal_variance_profile <- function(
+  object,
+  output_df = object$input_df
+) {
+  stan_data <- .to_stan_data(output_df, object$model)
+
+  as.vector(exp(
+    stan_data$X_deviation_fixed %*% object$parameters$eta_deviation
+    + stan_data$X_deviation_random %*% object$parameters$zeta_deviation
+  ))
+}
+
+#' @export
 predict.pcpt_fit <- function(
   object,
   output_df = object$input_df,
@@ -21,26 +34,11 @@ predict.pcpt_fit <- function(
   include_samples = FALSE,
   n_samples = 500,
   vecchia = 'auto',
-  vecchia_n_parents = 50,
-  parent_structure = get_parent_structure(
+  n_parents = 50,
+  parent_structure = vecchia_parent_structure(
     list(input_df, output_df),
     object$model,
-    vecchia_n_parents,
-    scaling = if (object$model$deviation_model$name == 'vertical_only') {
-      c(rep(1, length(object$model$horizontal_coordinates)), 1e-6)
-    } else {
-      'auto'
-    },
-    ordering = if (object$model$deviation_model$name == 'vertical_only') {
-      function(x) {
-        coordinates <- lapply(seq_len(ncol(x)), function(i) {
-          x[, i]
-        })
-        do.call(order, coordinates)
-      }
-    } else {
-      GpGp::order_maxmin
-    }
+    n_parents
   ),
   ...
 ) {

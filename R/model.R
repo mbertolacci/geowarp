@@ -63,48 +63,32 @@ pcpt_white_deviation_model <- function(
 
 #' @export
 pcpt_vertical_only_deviation_model <- function(
-  warping = pcpt_linear_warping(),
+  axial_warping_unit = pcpt_linear_awu(),
   variance_model = pcpt_variance_model()
 ) {
   list(
     name = 'vertical_only',
-    warping = warping,
+    axial_warping_unit = axial_warping_unit,
     variance_model = variance_model
   )
 }
 
 #' @export
-pcpt_isotropic_deviation_model <- function(
-  warpings = list(
-    pcpt_linear_warping(),
-    pcpt_linear_warping(),
-    pcpt_linear_warping()
+pcpt_full_deviation_model <- function(
+  axial_warping_units = list(
+    pcpt_linear_awu(),
+    pcpt_linear_awu(),
+    pcpt_linear_awu()
   ),
+  rotation_unit = NULL,
   variance_model = pcpt_variance_model()
 ) {
-  .check_horizontal_warping(warpings)
-  list(
-    name = 'isotropic',
-    warpings = warpings,
-    variance_model = variance_model
-  )
-}
+  .check_horizontal_warping(axial_warping_units)
 
-#' @export
-pcpt_anisotropic_deviation_model <- function(
-  warpings = list(
-    pcpt_linear_warping(),
-    pcpt_linear_warping(),
-    pcpt_linear_warping()
-  ),
-  anisotropy_shape = 1,
-  variance_model = pcpt_variance_model()
-) {
-  .check_horizontal_warping(warpings)
   list(
-    name = 'anisotropic',
-    warpings = warpings,
-    anisotropy_shape = anisotropy_shape,
+    name = 'full',
+    axial_warping_units = axial_warping_units,
+    rotation_unit = rotation_unit,
     variance_model = variance_model
   )
 }
@@ -136,22 +120,22 @@ pcpt_variance_model <- function(
 }
 
 #' @export
-pcpt_linear_warping <- function(
+pcpt_linear_awu <- function(
   scaling = 1,
   prior = list(shape = 1, rate = 0)
 ) {
-  list(name = 'linear', scaling = scaling, prior = prior)
+  list(name = 'linear_awu', scaling = scaling, prior = prior)
 }
 
 #' @export
-pcpt_bernstein_warping <- function(
+pcpt_bernstein_awu <- function(
   order = 20,
   domain,
   prior = list(shape = 1, rate = 0)
 ) {
   stopifnot(domain[2] > domain[1])
   list(
-    name = 'bernstein_warping',
+    name = 'bernstein_awu',
     order = order,
     scaling = 1,
     domain = domain,
@@ -159,22 +143,17 @@ pcpt_bernstein_warping <- function(
   )
 }
 
+#' @export
+pcpt_rotation_warping_unit <- function(prior_shape = 1) {
+  list(
+    name = 'rotation_warping_unit',
+    prior_shape = prior_shape
+  )
+}
 
 .check_horizontal_warping <- function(warpings) {
   warping_names <- sapply(warpings, getElement, 'name')
-  if (!all(head(warping_names, -1) == 'linear')) {
+  if (!all(head(warping_names, -1) == 'linear_awu')) {
     stop('non-linear warping currently not supported for horizontal dimensions')
   }
-}
-
-
-#' @export
-pcpt_length_scale_prior <- function(
-  q_lower, q_upper,
-  p_lower = 0.05, p_upper = 0.95
-) {
-  gamma_quantile_prior(
-    1 / q_upper, 1 / q_lower,
-    p_lower, p_upper
-  )
 }

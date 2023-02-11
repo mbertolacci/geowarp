@@ -2,12 +2,12 @@
 
 #include <Rcpp.h>
 using namespace Rcpp ;
-#include "stanExports_vertical_only_vecchia.h"
+#include "stanExports_vertical_only.h"
 
-RCPP_MODULE(stan_fit4vertical_only_vecchia_mod) {
+RCPP_MODULE(stan_fit4vertical_only_mod) {
 
 
-    class_<rstan::stan_fit<stan_model, boost::random::ecuyer1988> >("rstantools_model_vertical_only_vecchia")
+    class_<rstan::stan_fit<stan_model, boost::random::ecuyer1988> >("rstantools_model_vertical_only")
 
     .constructor<SEXP,SEXP,SEXP>()
 

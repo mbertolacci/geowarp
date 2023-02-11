@@ -14,8 +14,7 @@ data {
 
   int<lower=0> P_mean_random;
   matrix[N, P_mean_random] X_mean_random;
-  real<lower=0> tau_squared_mean_random_a;
-  real<lower=0> tau_squared_mean_random_b;
+  real<lower=0> tau_squared_mean_random_scale;
 
   real<lower=0> sigma_squared_nugget_a;
   real<lower=0> sigma_squared_nugget_b;
@@ -38,7 +37,7 @@ data {
   int block_N_responses[N_blocks];
 }
 transformed data {
-#include "include/transformed_data_vecchia.stan"
+#include "include/transformed_data.stan"
 }
 parameters {
 #include "include/parameters_start.stan"
@@ -49,7 +48,7 @@ transformed parameters {
 
   {
 #include "include/transformed_parameters_inner_start.stan"
-#include "include/transformed_parameters_inner_deviation_vecchia_start.stan"
+#include "include/transformed_parameters_inner_deviation_start.stan"
 
     for (i in 1:N_blocks) {
       N_current_block = block_last_index[i] - current_block_start + 1;
