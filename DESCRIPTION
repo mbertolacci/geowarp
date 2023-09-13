@@ -1,4 +1,4 @@
-Package: pcptmodels
+Package: geowarp
 Title: What the Package Does (One Line, Title Case)
 Version: 0.0.0.9000
 Authors@R: 
@@ -9,7 +9,7 @@ License: `use_mit_license()`, `use_gpl3_license()` or friends to pick a
     license
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.1.2
+RoxygenNote: 7.2.3
 Biarch: true
 Depends: 
     R (>= 3.4.0)
@@ -24,7 +24,7 @@ Imports:
     vctrs,
     logger,
     GpGp,
-    pracma,
+    FNN,
     splines,
     ggplot2,
     Rcpp (>= 0.12.0),
@@ -39,3 +39,6 @@ LinkingTo:
     rstan (>= 2.18.1),
     StanHeaders (>= 2.18.0)
 SystemRequirements: GNU make
+Suggests: 
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3

@@ -1,10 +1,46 @@
+#' Estimate the GeoWarp Model Parameters Through Optimisation
+#'
+#' This function estimates the parameters of a specified GeoWarp model by using
+#' an optimisation algorithm to find the posterior mode.
+#'
+#' @param df Data frame containing the observations.
+#' @param model A GeoWarp model object specifying the model structure and
+#' priors,created using \code{\link{geowarp_model}}.
+#' @param max_attempts Maximum number of optimisation attempts. Defaults to 20.
+#' @param best_of Number of times to run the optimisation algorithm. The
+#' algorithm is run repeatedly with different starting values in order to help
+#' find the global posterior mode.
+#' @param algorithm Optimisation algorithm to use, passed to
+#' \code{\link[rstan]{optimizing}}.
+#' @param vecchia Whether to use the Vecchia approximation. Can be 'auto',
+#' `TRUE`, or `FALSE`. If 'auto', the Vecchia approximation is used if there
+#' are more than 1000 observations.
+#' @param n_parents Number of parent locations for the Vecchia approximation.
+#' Defaults to 20.
+#' @param parent_structure The parent structure used for the Vecchia
+#' approximation; see \code{\link{vecchia_parent_structure}}.
+#' @param grouping Grouping structure for the Vecchia approximation; see
+#' \code{\link{vecchia_grouping}}. The default should be fine for most cases.
+#' @param ... Additional parameters to be passed to
+#' \code{\link[rstan]{optimizing}}. You can use this to control the degree of
+#' output.
+#'
+#' @return A 'geowarp_fit' object that estimated parameters, suitable for use
+#' with \code{\link{predict.geowarp_fit}} and other methods.
+#'
+#' @examples
+#' # Using the geowarp_optimise function
+#' fit <- geowarp_optimise(
+#'   df = my_data,
+#'   model = my_model
+#' )
+#'
 #' @export
-pcpt_optimise <- function(
+geowarp_optimise <- function(
   df,
-  model = pcpt_model(),
+  model = geowarp_model(),
   max_attempts = 20,
-  best_of = 10,
-  show_progress = FALSE,
+  best_of = 5,
   algorithm = 'BFGS',
   vecchia = 'auto',
   n_parents = 20,
@@ -16,6 +52,8 @@ pcpt_optimise <- function(
   grouping = vecchia_grouping(parent_structure),
   ...
 ) {
+  .validate_data(df, model)
+
   is_white <- model$deviation_model$name == 'white'
   if (vecchia == 'auto') {
     vecchia <- nrow(df) > 1000
@@ -25,50 +63,17 @@ pcpt_optimise <- function(
   }
 
   log_debug('Converting inputs into format required for Stan')
-  stan_data <- .to_stan_data(df, model)
+  stan_data <- geowarp_stan_data(
+    df,
+    model,
+    if (vecchia) parent_structure else NULL,
+    if (vecchia) grouping else NULL
+  )
 
-  if (!vecchia && !is_white) {
-    # Create one block with all indices in it
-    parent_structure <- list(
-      ordering = seq_len(stan_data$N)
-    )
-    grouping <- list(
-      N_indices = stan_data$N,
-      N_blocks = 1L,
-      block_indices = seq_len(stan_data$N),
-      block_last_index = stan_data$N,
-      block_N_responses = stan_data$N
-    )
-  }
-  if (is_white) {
-    stan_data$block_indices <- seq_len(stan_data$N)
-    stan_data$block_last_index <- tail(seq(0, stan_data$N, by = n_parents), -1)
-    if (tail(stan_data$block_last_index, 1) != stan_data$N) {
-      stan_data$block_last_index <- c(
-        stan_data$block_last_index,
-        stan_data$N
-      )
-    }
-    stan_data$block_N_responses <- diff(c(0, stan_data$block_last_index))
-    stan_data$N_indices <- length(stan_data$block_indices)
-    stan_data$N_blocks <- length(stan_data$block_N_responses)
-  } else {
-    stan_data$y <- stan_data$y[parent_structure$ordering]
-    for (name in c('x', 'X_mean_fixed', 'X_mean_random', 'X_deviation_warping', 'X_deviation_fixed', 'X_deviation_random')) {
-      stan_data[[name]] <- stan_data[[name]][parent_structure$ordering, , drop = FALSE]
-    }
-    stan_data$N_indices <- grouping$N_indices
-    stan_data$N_blocks <- grouping$N_blocks
-    stan_data$block_indices <- array(grouping$block_indices)
-    stan_data$block_last_index <- array(grouping$block_last_index)
-    stan_data$block_N_responses <- array(grouping$block_N_responses)
-  }
-
-  log_debug('Running optimization')
+  log_debug('Running optimisation')
   stan_fit <- .optimizing_best_of(
     max_attempts = max_attempts,
     best_of = best_of,
-    show_progress = show_progress,
     object = stanmodels[[model$deviation_model$name]],
     data = stan_data,
     as_vector = FALSE,
@@ -77,98 +82,56 @@ pcpt_optimise <- function(
     ...
   )
   parameters <- stan_fit$par
-  if (!is_white) {
-    parameters$alpha_beta <- parameters$alpha_beta_hat
-    parameters$alpha_beta_hat <- NULL
-    parameters$log_marginal <- NULL
-  }
+  parameters$alpha_beta <- parameters$alpha_beta_hat
+  parameters$alpha_beta_hat <- NULL
+  parameters$log_marginal <- NULL
   structure(
     list(
       model = model,
-      input_df = df,
+      observed_df = df,
       parameters = parameters,
       stan_fit = stan_fit
     ),
-    class = 'pcpt_fit'
+    class = 'geowarp_fit'
   )
 }
 
+#' GeoWarp Stan Model
+#'
+#' These functions allow access to the underlying Stan implementation of
+#' GeoWarp. They allow access to the \link[rstan]{stan_model} object used to fit
+#' GeoWarp, and can prepare the input data required to use the object.
+#'
+#' @param name Name of the model to use. Can be 'full', 'vertical_only', or
+#' 'white'. The full model is the default.
+#' @param df The input data to prepare for Stan.
+#' @param model The GeoWarp model object, created using
+#' \code{\link{geowarp_model}}.
+#' @param parent_structure The parent structure used for the Vecchia
+#' approximation; see \code{\link{vecchia_parent_structure}}.
+#' @param grouping Grouping structure for the Vecchia approximation; see
+#' \code{\link{vecchia_grouping}}. The default should be fine for most cases.
+#' @param white_block_size Block size to use for the white noise model. This
+#' affects performance but not the results; the default should be fine.
+#'
+#' @return A \link[rstan]{stan_model} object.
+#'
+#' @seealso \code{\link{geowarp_optimise}}
+#'
 #' @export
-pcpt_sample <- function(
-  df,
-  model = pcpt_model(),
-  vecchia = 'auto',
-  vecchia_n_parents = 20,
-  vecchia_scaling = 'auto',
-  vecchia_grouping_exponent = 2,
-  parent_structure = vecchia_parent_structure(
-    df,
-    model,
-    vecchia_n_parents,
-    scaling = vecchia_scaling
-  ),
-  control = list(
-    metric = 'dense_e'
-  ),
-  ...
-) {
-  is_white <- model$deviation_model$name == 'white'
-  if (vecchia == 'auto') {
-    vecchia <- nrow(df) > 1000
-  }
-  vecchia <- is_white || vecchia
-
-  log_debug('Converting inputs into format required for Stan')
-  stan_data <- .to_stan_data(df, model)
-
-  if (vecchia) {
-    stan_data <- .augment_stan_data_with_vecchia(
-      stan_data,
-      vecchia_n_parents,
-      parent_structure,
-      model,
-      vecchia_grouping_exponent
-    )
-  }
-
-  log_debug('Running optimization')
-  model_name <- if (is_white) 'white' else sprintf(
-    '%s_%s',
-    model$deviation_model$name,
-    if (vecchia) 'vecchia' else 'exact'
-  )
-  stan_fit <- rstan::sampling(
-    object = stanmodels[[model_name]],
-    data = stan_data,
-    ...
-  )
-
-  structure(
-    list(
-      model = model,
-      input_df = df,
-      stan_fit = stan_fit
-    ),
-    class = 'pcpt_fit'
-  )
+geowarp_stan_model <- function(name = c('full', 'vertical_only', 'white')) {
+  name <- match.arg(name)
+  stanmodels[[name]]
 }
 
-# #' @export
-# print.pcpt_fit <- function(x, ...) {
-#   cat('- Model:\n')
-#   print(x$model)
-#   cat('- Estimated parameters:\n')
-#   if (is(x$stan_fit, 'stanfit')) {
-#     print(summary(x$stan_fit))
-#   } else {
-#     print(x$stan_fit$par)
-#   }
-#   invisible(x)
-# }
-
-.to_stan_data <- function(
+#' @describeIn geowarp_stan_model Prepare data for Stan
+#' @export
+geowarp_stan_data <- function(
   df,
-  model
+  model,
+  parent_structure,
+  grouping,
+  white_block_size = min(nrow(df) - 1L, 30)
 ) {
   is_white <- model$deviation_model$name == 'white'
   is_vertical_only <- model$deviation_model$name == 'vertical_only'
@@ -183,9 +146,15 @@ pcpt_sample <- function(
   )
   if (!is_white) {
     if (is_vertical_only) {
-      output$scaling <- c(rep(1, output$D - 1), model$deviation_model$axial_warping_unit$scaling)
+      output$scaling <- c(
+        rep(1, output$D - 1),
+        model$deviation_model$axial_warping_unit$scaling
+      )
     } else {
-      output$scaling <- sapply(model$deviation_model$axial_warping_units, getElement, 'scaling')
+      output$scaling <- sapply(
+        model$deviation_model$axial_warping_units,
+        getElement, 'scaling'
+      )[model$deviation_model$axial_warping_unit_mapping]
     }
   }
 
@@ -203,6 +172,7 @@ pcpt_sample <- function(
   mean_parts <- .random_effects_design_matrices(
     df,
     model$vertical_coordinate,
+    model$vertical_domain,
     model$mean_model
   )
   output$X_mean_fixed <- mean_parts$X_fixed
@@ -225,14 +195,21 @@ pcpt_sample <- function(
       ncol = output$P_mean_fixed
     )
   }
-  output$tau_squared_mean_random_scale <- model$mean_model$vertical_basis_function_variance_prior$scale
+  output$tau_squared_mean_random_a <- model$mean_model$vertical_basis_function_variance_prior$shape
+  output$tau_squared_mean_random_b <- model$mean_model$vertical_basis_function_variance_prior$rate
 
   # Deviation model
   if (!is_white) {
+    output$smoothness <- switch(
+      model$deviation_model$covariance_function,
+      exponential = 0.5,
+      matern15 = 1.5,
+      stop('Covariance function not supported')
+    )
     vertical_warping <- if (is_vertical_only) {
       model$deviation_model$axial_warping_unit
     } else {
-      model$deviation_model$axial_warping_units[[output$D]]
+      tail(model$deviation_model$axial_warping_units, 1)[[1]]
     }
     if (vertical_warping$name == 'linear_awu') {
       output$X_deviation_warping <- cbind(
@@ -243,40 +220,43 @@ pcpt_sample <- function(
       output$X_deviation_warping <- bernstein_warping_design_matrix(
         vertical_warping$scaling * output$x[, output$D],
         vertical_warping$order,
-        vertical_warping$domain
+        model$vertical_domain
       )
       output$P_deviation_warping <- ncol(output$X_deviation_warping)
     }
   }
 
+  variance_model <- model$deviation_model$variance_model
   deviation_parts <- .random_effects_design_matrices(
     df,
     model$vertical_coordinate,
-    model$deviation_model$variance_model
+    model$vertical_domain,
+    variance_model
   )
   output$X_deviation_fixed <- deviation_parts$X_fixed
   output$X_deviation_random <- deviation_parts$X_random
   output$P_deviation_fixed <- ncol(output$X_deviation_fixed)
   output$P_deviation_random <- ncol(output$X_deviation_random)
   output$eta_deviation_mean <- array(vctrs::vec_recycle(
-    model$deviation_model$variance_model$fixed_effect_mean,
+    variance_model$fixed_effect_mean,
     output$P_deviation_fixed
   ), dim = output$P_deviation_fixed)
-  if (is.matrix(model$deviation_model$variance_model$fixed_effect_precision)) {
-    output$eta_deviation_precision <- model$deviation_model$variance_model$fixed_effect_precision
+  if (is.matrix(variance_model$fixed_effect_precision)) {
+    output$eta_deviation_precision <- variance_model$fixed_effect_precision
   } else {
     output$eta_deviation_precision <- diag(
       x = vctrs::vec_recycle(
-        model$deviation_model$variance_model$fixed_effect_precision,
+        variance_model$fixed_effect_precision,
         output$P_deviation_fixed
       ),
       nrow = output$P_deviation_fixed,
       ncol = output$P_deviation_fixed
     )
   }
-  output$delta_deviation_random <- model$deviation_model$variance_model$vertical_basis_function_delta
-  output$ell_deviation_random_scale <- model$deviation_model$variance_model$vertical_basis_function_length_scale_prior$scale
-  output$tau_squared_deviation_random_scale <- model$deviation_model$variance_model$vertical_basis_function_variance_prior$scale
+  output$delta_deviation_random <- variance_model$vertical_basis_function_delta
+  output$ell_deviation_random_scale <- variance_model$vertical_basis_function_length_scale_prior$scale
+  output$tau_squared_deviation_random_a <- variance_model$vertical_basis_function_variance_prior$shape
+  output$tau_squared_deviation_random_b <- variance_model$vertical_basis_function_variance_prior$rate
 
   if (!is_white) {
     if (is_vertical_only) {
@@ -286,39 +266,81 @@ pcpt_sample <- function(
       warping_priors <- lapply(model$deviation_model$axial_warping_units, getElement, 'prior')
       output$gamma_deviation_a <- sapply(warping_priors, getElement, 'shape')
       output$gamma_deviation_b <- sapply(warping_priors, getElement, 'rate')
+      output$D_horizontal_warpings <- length(warping_priors) - 1L
+      output$axial_warping_unit_mapping <- model$deviation_model$axial_warping_unit_mapping
     }
   }
 
-  if (!is.null(model$deviation_model$rotation_unit)) {
-    output$L_deviation_shape <- model$deviation_model$rotation_unit$prior_shape
-    output$D_rotation <- output$D
+  if (!is.null(model$deviation_model$geometric_warping_unit)) {
+    output$L_deviation_shape <- model$deviation_model$geometric_warping_unit$prior_shape
+    output$D_geometric <- output$D
   } else {
     output$L_deviation_shape <- 0
-    output$D_rotation <- 0L
+    output$D_geometric <- 0L
   }
 
   output$sigma_squared_nugget_a <- model$nugget_prior$shape
   output$sigma_squared_nugget_b <- model$nugget_prior$rate
 
+  ## Add Vecchia bits as needed
+  has_grouping <- !missing(grouping) && !is.null(grouping)
+  if (!has_grouping && !is_white) {
+    # Create one block with all indices in it
+    parent_structure <- list(
+      observed_ordering = seq_len(output$N)
+    )
+    grouping <- list(
+      N_indices = output$N,
+      N_blocks = 1L,
+      block_indices = seq_len(output$N),
+      block_last_index = output$N,
+      block_N_responses = output$N
+    )
+  }
+
+  if (is_white) {
+    output$block_indices <- seq_len(output$N)
+    output$block_last_index <- tail(seq(0, output$N, by = white_block_size), -1)
+    if (tail(output$block_last_index, 1) != output$N) {
+      output$block_last_index <- c(
+        output$block_last_index,
+        output$N
+      )
+    }
+    output$block_N_responses <- diff(c(0, output$block_last_index))
+    output$N_indices <- length(output$block_indices)
+    output$N_blocks <- length(output$block_N_responses)
+  } else {
+    output$y <- output$y[parent_structure$observed_ordering]
+    for (name in c('x', 'X_mean_fixed', 'X_mean_random', 'X_deviation_warping', 'X_deviation_fixed', 'X_deviation_random')) {
+      output[[name]] <- output[[name]][parent_structure$observed_ordering, , drop = FALSE]
+    }
+    output$N_indices <- grouping$N_indices
+    output$N_blocks <- grouping$N_blocks
+    output$block_indices <- array(as.integer(grouping$block_indices))
+    output$block_last_index <- array(as.integer(grouping$block_last_index))
+    output$block_N_responses <- array(as.integer(grouping$block_N_responses))
+  }
+
   output
 }
 
-.random_effects_design_matrices <- function(df, vertical_coordinate, model) {
+.random_effects_design_matrices <- function(df, vertical_coordinate, vertical_domain, model) {
   output <- NULL
   output$X_fixed <- model.matrix(model$fixed_formula, df)
   if (model$vertical_basis_functions) {
     x <- df[[vertical_coordinate]]
 
     shift_value <- function(z) {
-      (z - model$vertical_basis_function_domain[1]) / model$vertical_basis_function_delta
+      (z - vertical_domain[1]) / model$vertical_basis_function_delta
     }
 
     centres <- seq(
       model$vertical_basis_function_delta * (floor(shift_value(
-        model$vertical_basis_function_domain[1]
+        vertical_domain[1]
       )) - 3),
       model$vertical_basis_function_delta * (ceiling(shift_value(
-        model$vertical_basis_function_domain[2]
+        vertical_domain[2]
       )) + 3),
       by = model$vertical_basis_function_delta
     )
@@ -332,34 +354,29 @@ pcpt_sample <- function(
   output
 }
 
-.optimizing_best_of <- function(max_attempts, best_of, show_progress = FALSE, ...) {
-  good_attempts <- 0
-  best_result <- list(value = -Inf)
-  attempts <- list()
-  for (attempt in seq_len(max_attempts)) {
-    if (show_progress) {
-      cat('\rrunning', attempt, '/', max_attempts, '| completed', good_attempts, '/', best_of, '| best', best_result$value)
-    }
-    result <- tryCatch({
-      rstan::optimizing(...)
-    }, error = function(e) {
-      print(e)
-      NULL
-    })
-    if (!is.null(result)) {
-      attempts <- c(attempts, list(result))
-    }
-    if (is.null(result)) next
-
-    good_attempts <- good_attempts + 1
-    if (result$value > best_result$value) {
-      best_result <- result
-    }
-    if (good_attempts == best_of) break
+.validate_data <- function(df, model) {
+  if (
+    anyDuplicated(rbind(as.matrix(
+      df[, c(model$horizontal_coordinates, model$vertical_coordinate)]
+    )))
+  ) {
+    stop('Duplicate coordinates are not supported')
   }
-  cat('\r')
-  if (attempt == max_attempts) stop('Max attempts exceeded')
-
-  best_result$attempts <- attempts
-  best_result
+  coordinate_names <- c(model$horizontal_coordinates, model$vertical_coordinate)
+  coordinate_domains <- c(
+    model$horizontal_domains,
+    list(model$vertical_domain)
+  )
+  for (i in seq_along(coordinate_names)) {
+    coordinate_range <- range(df[[coordinate_names[i]]])
+    if (
+      coordinate_range[1] < coordinate_domains[[i]][1]
+      || coordinate_range[2] > coordinate_domains[[i]][2]
+    ) {
+      stop(sprintf(
+        'Coordinate %s is outside of the domain',
+        coordinate_names[i]
+      ))
+    }
+  }
 }

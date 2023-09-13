@@ -11,19 +11,96 @@ Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
 Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
+// parent_knn_across_groups
+Rcpp::IntegerMatrix parent_knn_across_groups(const Eigen::MatrixXd& x, Rcpp::IntegerVector groups, int n_parents, int leaf_size);
+RcppExport SEXP _geowarp_parent_knn_across_groups(SEXP xSEXP, SEXP groupsSEXP, SEXP n_parentsSEXP, SEXP leaf_sizeSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::traits::input_parameter< const Eigen::MatrixXd& >::type x(xSEXP);
+    Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type groups(groupsSEXP);
+    Rcpp::traits::input_parameter< int >::type n_parents(n_parentsSEXP);
+    Rcpp::traits::input_parameter< int >::type leaf_size(leaf_sizeSEXP);
+    rcpp_result_gen = Rcpp::wrap(parent_knn_across_groups(x, groups, n_parents, leaf_size));
+    return rcpp_result_gen;
+END_RCPP
+}
+// parent_knn
+Rcpp::IntegerMatrix parent_knn(const Eigen::MatrixXd& x, int n_parents, int leaf_size);
+RcppExport SEXP _geowarp_parent_knn(SEXP xSEXP, SEXP n_parentsSEXP, SEXP leaf_sizeSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::traits::input_parameter< const Eigen::MatrixXd& >::type x(xSEXP);
+    Rcpp::traits::input_parameter< int >::type n_parents(n_parentsSEXP);
+    Rcpp::traits::input_parameter< int >::type leaf_size(leaf_sizeSEXP);
+    rcpp_result_gen = Rcpp::wrap(parent_knn(x, n_parents, leaf_size));
+    return rcpp_result_gen;
+END_RCPP
+}
+// quadFormDiag
+Rcpp::NumericMatrix quadFormDiag(Rcpp::NumericMatrix A, Rcpp::NumericVector x);
+RcppExport SEXP _geowarp_quadFormDiag(SEXP ASEXP, SEXP xSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::traits::input_parameter< Rcpp::NumericMatrix >::type A(ASEXP);
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type x(xSEXP);
+    rcpp_result_gen = Rcpp::wrap(quadFormDiag(A, x));
+    return rcpp_result_gen;
+END_RCPP
+}
+// uniqueRows
+Rcpp::NumericMatrix uniqueRows(Rcpp::NumericMatrix input);
+RcppExport SEXP _geowarp_uniqueRows(SEXP inputSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::traits::input_parameter< Rcpp::NumericMatrix >::type input(inputSEXP);
+    rcpp_result_gen = Rcpp::wrap(uniqueRows(input));
+    return rcpp_result_gen;
+END_RCPP
+}
+// deduplicateParents
+Rcpp::IntegerMatrix deduplicateParents(Rcpp::IntegerMatrix parents);
+RcppExport SEXP _geowarp_deduplicateParents(SEXP parentsSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::traits::input_parameter< Rcpp::IntegerMatrix >::type parents(parentsSEXP);
+    rcpp_result_gen = Rcpp::wrap(deduplicateParents(parents));
+    return rcpp_result_gen;
+END_RCPP
+}
+// vecchia_U_x_parts
+Rcpp::NumericVector vecchia_U_x_parts(const Eigen::MatrixXi& parents, const Eigen::MatrixXd& xWarped, const std::string& covarianceFunction, const Eigen::VectorXd& sigmaDeviation, const Eigen::VectorXd& sigmaSquaredNugget);
+RcppExport SEXP _geowarp_vecchia_U_x_parts(SEXP parentsSEXP, SEXP xWarpedSEXP, SEXP covarianceFunctionSEXP, SEXP sigmaDeviationSEXP, SEXP sigmaSquaredNuggetSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const Eigen::MatrixXi& >::type parents(parentsSEXP);
+    Rcpp::traits::input_parameter< const Eigen::MatrixXd& >::type xWarped(xWarpedSEXP);
+    Rcpp::traits::input_parameter< const std::string& >::type covarianceFunction(covarianceFunctionSEXP);
+    Rcpp::traits::input_parameter< const Eigen::VectorXd& >::type sigmaDeviation(sigmaDeviationSEXP);
+    Rcpp::traits::input_parameter< const Eigen::VectorXd& >::type sigmaSquaredNugget(sigmaSquaredNuggetSEXP);
+    rcpp_result_gen = Rcpp::wrap(vecchia_U_x_parts(parents, xWarped, covarianceFunction, sigmaDeviation, sigmaSquaredNugget));
+    return rcpp_result_gen;
+END_RCPP
+}
 
 RcppExport SEXP _rcpp_module_boot_stan_fit4full_mod();
 RcppExport SEXP _rcpp_module_boot_stan_fit4vertical_only_mod();
 RcppExport SEXP _rcpp_module_boot_stan_fit4white_mod();
 
 static const R_CallMethodDef CallEntries[] = {
+    {"_geowarp_parent_knn_across_groups", (DL_FUNC) &_geowarp_parent_knn_across_groups, 4},
+    {"_geowarp_parent_knn", (DL_FUNC) &_geowarp_parent_knn, 3},
+    {"_geowarp_quadFormDiag", (DL_FUNC) &_geowarp_quadFormDiag, 2},
+    {"_geowarp_uniqueRows", (DL_FUNC) &_geowarp_uniqueRows, 1},
+    {"_geowarp_deduplicateParents", (DL_FUNC) &_geowarp_deduplicateParents, 1},
+    {"_geowarp_vecchia_U_x_parts", (DL_FUNC) &_geowarp_vecchia_U_x_parts, 5},
     {"_rcpp_module_boot_stan_fit4full_mod", (DL_FUNC) &_rcpp_module_boot_stan_fit4full_mod, 0},
     {"_rcpp_module_boot_stan_fit4vertical_only_mod", (DL_FUNC) &_rcpp_module_boot_stan_fit4vertical_only_mod, 0},
     {"_rcpp_module_boot_stan_fit4white_mod", (DL_FUNC) &_rcpp_module_boot_stan_fit4white_mod, 0},
     {NULL, NULL, 0}
 };
 
-RcppExport void R_init_pcptmodels(DllInfo *dll) {
+RcppExport void R_init_geowarp(DllInfo *dll) {
     R_registerRoutines(dll, NULL, CallEntries, NULL, NULL);
     R_useDynamicSymbols(dll, FALSE);
 }

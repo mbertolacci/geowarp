@@ -38,10 +38,11 @@ transformed parameters {
     for (i in 1:N_blocks) {
 #include "include/transformed_parameters_inner_deviation_block_start.stan"
 
-      K_block[:N_current_block, :N_current_block] = exponential_cov_heteroskedastic_scalar(
-        x_vertical_warped[indices_current_block[:N_current_block]],
+      K_block[:N_current_block, :N_current_block] = geowarp_process_covariance_1d(
+        sigma_squared_nugget,
         deviation_sd[indices_current_block[:N_current_block]],
-        sigma_squared_nugget
+        x_vertical_warped[indices_current_block[:N_current_block]],
+        smoothness
       );
 
 #include "include/transformed_parameters_inner_deviation_block_end.stan"
@@ -57,7 +58,4 @@ model {
   if (gamma_deviation_b > 0) {
     gamma_deviation_vertical ~ gamma(gamma_deviation_a, gamma_deviation_b);
   }
-}
-generated quantities {
-#include "include/generated_quantities.stan"
 }

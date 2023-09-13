@@ -1,75 +1,178 @@
+#' Calculate estimated depth-dependent mean and variance
+#'
+#' In the GeoWarp model, the process mean and variance vary with depth. These
+#' functions calculate the estimated mean and variance at the given locations.
+#'
+#' @param fit A GeoWarp fit object form \code{\link{geowarp_optimise}}. Can be
+#' omitted if both `model` and `parameters` are given.
+#' @param model GeoWarp model object (default uses the model from the `fit`
+#' object).
+#' @param parameters GeoWarp Parameters (default uses the parameters from the
+#' `fit` object).
+#' @param df A data frame containing the observed data (default uses the
+#' observation locations used in \code{fit}).
+#' @param nugget Logical indicating whether to include the nugget variance in
+#' the output (default is TRUE).
+#' @return A vector containing the estimated mean or marginal variance at each
+#' location in `df`.
+#'
+#' @examples
+#' # Assuming `fit` is a fitted GeoWarp model:
+#' mean_values <- mean_profile(fit)
 #' @export
 mean_profile <- function(
-  object,
-  output_df = object$input_df
+  fit,
+  df = fit$observed_df,
+  model = fit$model,
+  parameters = fit$parameters
 ) {
-  stan_data <- .to_stan_data(output_df, object$model)
+  stan_data <- geowarp_stan_data(df, model)
 
   as.vector(cbind(
     stan_data$X_mean_fixed,
     stan_data$X_mean_random
-  ) %*% object$parameters$alpha_beta)
+  ) %*% parameters$alpha_beta)
 }
 
+#' @describeIn mean_profile Output the marginal variance at each depth
 #' @export
 marginal_variance_profile <- function(
-  object,
-  output_df = object$input_df
+  fit,
+  df = fit$observed_df,
+  model = fit$model,
+  parameters = fit$parameters,
+  nugget = TRUE
 ) {
-  stan_data <- .to_stan_data(output_df, object$model)
+  stan_data <- geowarp_stan_data(df, model)
 
   as.vector(exp(
-    stan_data$X_deviation_fixed %*% object$parameters$eta_deviation
-    + stan_data$X_deviation_random %*% object$parameters$zeta_deviation
-  ))
+    stan_data$X_deviation_fixed %*% parameters$eta_deviation
+    + stan_data$X_deviation_random %*% parameters$zeta_deviation
+  ) + nugget * parameters$sigma_squared_nugget)
 }
 
+#' Predict from a Fitted GeoWarp Model
+#'
+#' This function generates predictions using a fitted GeoWarp model. The
+#' prediction can use the Vecchia approximation when the number of observed and
+#' predicted data are large. The prediction distribution is multivariate
+#' Gaussian, so it is specified by its mean and covariance
+#'
+#' @param fit GeoWarp model fit produced using \code{\link{geowarp_optimise}}.
+#' @param prediction_df Data frame for locations where predictions are to be
+#' made. Defaults to the observed data frame in the model fit.
+#' @param observed_df Data frame containing the observed data. Defaults to the
+# observed data frame in the model fit.
+#' @param model GeoWarp model object (default uses the model from the fit).
+#' @param parameters GeoWarp Parameters (default uses the parameters from the
+#' fit).
+#' @param include_mean Logical, indicating whether to include the mean in the
+#' output.
+#' @param include_precision_V Logical, indicating whether to include the V
+#' matrix in the output (explained below).
+#' @param include_samples Logical, indicating whether to include the predictive
+#' samples in the output.
+#' @param nugget Logical, indicating whether to include a nugget effect in the
+#' prediction.
+#' @param n_samples Number of predictive samples to generate.
+#' @param vecchia Whether to use Vecchia's approximation (`'auto'`, `TRUE`,
+#' `FALSE`). If `'auto'`, the Vecchia approximation is used when the number of
+#' observed and prediction locations together exceed 1000.
+#' @param n_parents Number of parents to consider for Vecchia's approximation.
+#' @param parent_structure Parent structure for Vecchia's approximation,
+#' produced using \code{\link{vecchia_parent_structure}}.
+#' @param ... Ignored.
+#'
+#' @return A list containing the elements of the predictive distribution
+#' (depending on the options):
+#' \itemize{
+#' \item \code{mean}: The mean of the predictive distribution.
+#' \item \code{precision_V}: A (possibly sparse) matrix V such that VV' is the
+#' reordered precision matrix of the predictive distribution.
+#' \item \code{ordering}: A vector of integers indicating the ordering of the
+#' entries in the matrix V; see Details below.
+#' \item \code{samples}: A matrix of predictive samples.
+#' }
+#'
+#' @section Details:
+#' If `prediction` contains the output of this function, the precision matrix
+#' of the prediction can be recovered by calculating
+#' `tcrossprod(prediction$precision_V)[prediction$ordering, prediction$ordering]`.
+#' However, this may be of limited use because, while the precision matrix may
+#' be sparse, the covariance may not be. To calculate variances and other
+#' quantities it is better to draw samples from the prediction distribution.
+#' This function can do that, or you can do it manually as shown in the example
+#' section.
+#'
+#' @examples
+#' # Assuming `fit` is a fitted GeoWarp model and `new_data` is a new data frame
+#' # for prediction:
+#' prediction_dist <- predict(
+#'   fit,
+#'   prediction_df = new_data,
+#'   include_precision_V = TRUE,
+#'   include_samples = TRUE
+#' )
+#' # Samples are now in `prediction_dist$samples`, but you can also generate
+#' # them manually
+#' y_tilde <- as.matrix(solve(
+#'   t(prediction_dist$precision_V),
+#'   z
+#' ))
+#' manual_samples <- prediction_dist$mean + y_tilde[prediction_dist$ordering, ]
+#'
+#' @seealso
+#' \code{\link{geowarp_optimise}}
+#' \code{\link{vecchia_parent_structure}}
 #' @export
-predict.pcpt_fit <- function(
-  object,
-  output_df = object$input_df,
-  input_df = object$input_df,
+geowarp_predict <- function(
+  fit,
+  prediction_df = fit$observed_df,
+  observed_df = fit$observed_df,
+  parameters = fit$parameters,
+  model = fit$model,
   include_mean = TRUE,
   include_precision_V = FALSE,
   include_samples = FALSE,
+  nugget = TRUE,
   n_samples = 500,
   vecchia = 'auto',
   n_parents = 50,
   parent_structure = vecchia_parent_structure(
-    list(input_df, output_df),
-    object$model,
-    n_parents
+    observed_df,
+    model,
+    n_parents,
+    prediction_df = prediction_df
   ),
   ...
 ) {
   if (vecchia == 'auto') {
-    vecchia <- (nrow(input_df) + nrow(output_df)) > 1000
+    vecchia <- (nrow(observed_df) + nrow(prediction_df)) > 1000
   }
 
-  stan_data <- lapply(
-    list(input_df, output_df),
-    .to_stan_data,
-    object$model
-  )
-
-  if (object$model$deviation_model$name == 'white') {
+  if (model$deviation_model$name == 'white') {
     prediction_distribution <- .prediction_distribution_white(
-      stan_data[[1]],
-      stan_data[[2]],
-      object
+      observed_df,
+      prediction_df,
+      model,
+      parameters
     )
   } else if (!vecchia) {
     prediction_distribution <- .prediction_distribution_exact(
-      stan_data[[1]],
-      stan_data[[2]],
-      object
+      observed_df,
+      prediction_df,
+      model,
+      parameters,
+      nugget
     )
   } else {
     prediction_distribution <- .prediction_distribution_vecchia(
-      stan_data[[1]],
-      stan_data[[2]],
-      object,
-      parent_structure
+      observed_df,
+      prediction_df,
+      model,
+      parameters,
+      parent_structure,
+      nugget
     )
   }
   output <- list()
@@ -81,7 +184,7 @@ predict.pcpt_fit <- function(
     output$ordering <- prediction_distribution$ordering
   }
   if (include_samples) {
-    z <- matrix(rnorm(nrow(output_df) * n_samples), nrow = nrow(output_df))
+    z <- matrix(rnorm(nrow(prediction_df) * n_samples), nrow = nrow(prediction_df))
     if (!is(prediction_distribution$precision_V, 'sparseMatrix')) {
       y_tilde <- backsolve(
         prediction_distribution$precision_V,
@@ -99,47 +202,63 @@ predict.pcpt_fit <- function(
   output
 }
 
+#' @describeIn geowarp_predict Predict using a fit object
+#' @export
+predict.geowarp_fit <- function(object, ...) {
+  geowarp_predict(object, ...)
+}
+
 .prediction_distribution_exact <- function(
-  input_stan_data,
-  output_stan_data,
-  fit
+  observed_df,
+  prediction_df,
+  model,
+  parameters,
+  nugget
 ) {
+  observed_stan_data <- geowarp_stan_data(observed_df, model)
+  prediction_stan_data <- geowarp_stan_data(prediction_df, model)
+
   rbind_matrices <- function(name) {
-    rbind(input_stan_data[[name]], output_stan_data[[name]])
+    rbind(observed_stan_data[[name]], prediction_stan_data[[name]])
   }
   Sigma_all <- .covariance_matrix_internal(
     rbind_matrices('x'),
     rbind_matrices('X_deviation_fixed'),
     rbind_matrices('X_deviation_random'),
-    fit
+    model = model,
+    parameters = parameters,
+    nugget = c(
+      rep(TRUE, nrow(observed_stan_data$x)),
+      rep(nugget, nrow(prediction_stan_data$x))
+    )
   )
 
-  n_input <- nrow(input_stan_data$x)
-  n_output <- nrow(output_stan_data$x)
-  input_indices <- seq_len(n_input)
-  output_indices <- n_input + seq_len(n_output)
+  n_observed <- nrow(observed_stan_data$x)
+  n_prediction <- nrow(prediction_stan_data$x)
+  observed_indices <- seq_len(n_observed)
+  prediction_indices <- n_observed + seq_len(n_prediction)
 
-  Sigma_input <- Sigma_all[input_indices, input_indices]
-  Sigma_output <- Sigma_all[output_indices, output_indices]
-  Sigma_cross <- Sigma_all[input_indices, output_indices]
+  Sigma_observed <- Sigma_all[observed_indices, observed_indices]
+  Sigma_prediction <- Sigma_all[prediction_indices, prediction_indices]
+  Sigma_cross <- Sigma_all[observed_indices, prediction_indices]
 
-  mu_input <- as.vector(cbind(
-    input_stan_data$X_mean_fixed,
-    input_stan_data$X_mean_random
-  ) %*% fit$parameters$alpha_beta)
-  mu_output <- as.vector(cbind(
-    output_stan_data$X_mean_fixed,
-    output_stan_data$X_mean_random
-  ) %*% fit$parameters$alpha_beta)
+  mu_observed <- as.vector(cbind(
+    observed_stan_data$X_mean_fixed,
+    observed_stan_data$X_mean_random
+  ) %*% parameters$alpha_beta)
+  mu_prediction <- as.vector(cbind(
+    prediction_stan_data$X_mean_fixed,
+    prediction_stan_data$X_mean_random
+  ) %*% parameters$alpha_beta)
 
-  chol_Sigma_input <- chol(Sigma_input)
-  mu_prediction <- mu_output + as.vector(crossprod(Sigma_cross, .chol_solve(
-    chol_Sigma_input,
-    input_stan_data$y - mu_input
+  chol_Sigma_observed <- chol(Sigma_observed)
+  mu_prediction <- mu_prediction + as.vector(crossprod(Sigma_cross, .chol_solve(
+    chol_Sigma_observed,
+    observed_stan_data$y - mu_observed
   )))
   Sigma_prediction <- (
-    Sigma_output
-    - crossprod(Sigma_cross, .chol_solve(chol_Sigma_input, Sigma_cross))
+    Sigma_prediction
+    - crossprod(Sigma_cross, .chol_solve(chol_Sigma_observed, Sigma_cross))
   )
   Q_prediction <- chol2inv(chol(Sigma_prediction))
   rev_matrix <- function(x) {
@@ -148,20 +267,25 @@ predict.pcpt_fit <- function(
   list(
     mean = mu_prediction,
     precision_V = rev_matrix(t(chol(rev_matrix(Q_prediction)))),
-    ordering = seq_len(n_output)
+    ordering = seq_len(n_prediction)
   )
 }
 
 .prediction_distribution_vecchia <- function(
-  input_stan_data,
-  output_stan_data,
-  fit,
-  parent_structure
+  observed_df,
+  prediction_df,
+  model,
+  parameters,
+  parent_structure,
+  nugget
 ) {
+  observed_stan_data <- geowarp_stan_data(observed_df, model)
+  prediction_stan_data <- geowarp_stan_data(prediction_df, model)
+
   rbind_matrices <- function(name) {
     rbind(
-      input_stan_data[[name]][parent_structure$ordering[[1]], , drop = FALSE],
-      output_stan_data[[name]][parent_structure$ordering[[2]], , drop = FALSE]
+      observed_stan_data[[name]][parent_structure$observed_ordering, , drop = FALSE],
+      prediction_stan_data[[name]][parent_structure$prediction_ordering, , drop = FALSE]
     )
   }
   x_all <- rbind_matrices('x')
@@ -172,33 +296,45 @@ predict.pcpt_fit <- function(
   X_deviation_fixed_all <- rbind_matrices('X_deviation_fixed')
   X_deviation_random_all <- rbind_matrices('X_deviation_random')
 
-  n_input <- nrow(input_stan_data$x)
-  n_output <- nrow(output_stan_data$x)
-  input_indices <- seq_len(n_input)
-  output_indices <- n_input + seq_len(n_output)
+  n_observed <- nrow(observed_stan_data$x)
+  n_prediction <- nrow(prediction_stan_data$x)
+  observed_indices <- seq_len(n_observed)
+  prediction_indices <- n_observed + seq_len(n_prediction)
 
+  parents <- rbind(
+    parent_structure$observed_parents,
+    .deduplicate_parents(cbind(
+      nrow(parent_structure$observed_parents) + parent_structure$prediction_within_parents,
+      parent_structure$prediction_between_parents
+    ))
+  )
   U <- .create_vecchia_U(
     x_all,
     X_deviation_fixed_all,
     X_deviation_random_all,
-    fit,
-    parent_structure
+    parents = parents,
+    model = model,
+    parameters = parameters,
+    nugget = c(
+      rep(TRUE, nrow(observed_stan_data$x)),
+      rep(nugget, nrow(prediction_stan_data$x))
+    )
   )
-  V <- U[output_indices, output_indices]
+  V <- U[prediction_indices, prediction_indices]
 
-  mu_hat <- as.vector(X_mean_all %*% fit$parameters$alpha_beta)
+  mu_hat <- as.vector(X_mean_all %*% parameters$alpha_beta)
   prediction_mean <- (
-    mu_hat[output_indices]
+    mu_hat[prediction_indices]
     - as.vector(solve(t(V), solve(V,
-      U[output_indices, ] %*%
+      U[prediction_indices, ] %*%
       crossprod(
-        U[input_indices, ],
-        input_stan_data$y[parent_structure$ordering[[1]]]
-        - mu_hat[input_indices]
+        U[observed_indices, ],
+        observed_stan_data$y[parent_structure$observed_ordering]
+        - mu_hat[observed_indices]
       )
     )))
   )
-  reverse_ordering <- invPerm(parent_structure$ordering[[2]])
+  reverse_ordering <- invPerm(parent_structure$prediction_ordering)
   list(
     mean = prediction_mean[reverse_ordering],
     precision_V = V,
@@ -207,23 +343,26 @@ predict.pcpt_fit <- function(
 }
 
 .prediction_distribution_white <- function(
-  input_stan_data,
-  output_stan_data,
-  fit
+  observed_df,
+  prediction_df,
+  model,
+  parameters
 ) {
+  prediction_stan_data <- geowarp_stan_data(prediction_df, model)
+
   prediction_mean <- as.vector(cbind(
-    output_stan_data$X_mean_fixed,
-    output_stan_data$X_mean_random
-  ) %*% fit$parameters$alpha_beta)
+    prediction_stan_data$X_mean_fixed,
+    prediction_stan_data$X_mean_random
+  ) %*% parameters$alpha_beta)
   prediction_sd <- exp(as.vector(0.5 * (
-    output_stan_data$X_deviation_fixed %*% fit$parameters$eta_deviation
-    + output_stan_data$X_deviation_random %*% fit$parameters$zeta_deviation
+    prediction_stan_data$X_deviation_fixed %*% parameters$eta_deviation
+    + prediction_stan_data$X_deviation_random %*% parameters$zeta_deviation
   )))
 
   precision_V <- Diagonal(x = 1 / prediction_sd)
   list(
     mean = prediction_mean,
     precision_V = precision_V,
-    ordering = seq_len(output_stan_data$N)
+    ordering = seq_len(prediction_stan_data$N)
   )
 }

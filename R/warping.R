@@ -1,3 +1,29 @@
+#' Construct a Bernstein Warping Design Matrix
+#'
+#' Creates a design matrix based on the Bernstein basis for use in GeoWarp's
+#' axial warping units. The difference to the usual Bernstein basis is that the
+#' first basis function is omitted so that input coordinate zero maps to warped
+#' coordinate zero. The order determines the flexibility of the basis expansion.
+#'
+#' @param x Numeric vector representing the coordinate values; must be within
+#' the given domain.
+#' @param order An integer representing the order of the Bernstein polynomial.
+#' @param domain A numeric vector of length 2 specifying the domain over which
+#' the Bernstein polynomial is defined.
+#'
+#' @return A matrix where each column represents a Bernstein polynomial
+#' evaluated at the data points `x`.
+#'
+#' @examples
+#' # Create a Bernstein warping design matrix with 10 data points, of order 4,
+#' # over domain [0, 5]
+#' design_matrix <- bernstein_warping_design_matrix(
+#'   x = seq(0, 5, length.out = 10),
+#'   order = 4,
+#'   domain = c(0, 5)
+#' )
+#' print(design_matrix)
+#'
 #' @export
 bernstein_warping_design_matrix <- function(
   x,
@@ -5,23 +31,46 @@ bernstein_warping_design_matrix <- function(
   domain
 ) {
   x_prime <- (x - domain[1]) / (domain[2] - domain[1])
-  stopifnot(min(x_prime) >= 0 && max(x_prime) <= 1)
+  stopifnot(all(x_prime >= 0 & x_prime <= 1))
   sapply(seq_len(order), function(k) {
-    pracma::bernsteinb(k, order, x_prime)
+    choose(order, k) * x_prime ^ k * (1 - x_prime) ^ (order - k)
   })
 }
 
+#' Warped and Unwarp Coordinates
+#'
+#' These function produces the warped coordinates for a GeoWarp model given the
+#' original coordinates, or give the original coordinates given the warped
+#' coordinates.
+#'
+#' @param fit A fitted GeoWarp object.
+#' @param df A dataframe containing the original coordinate space data.
+#' @param model A GeoWarp model object, defaulting to `fit$model`.
+#' @param parameters Parameters for the GeoWarp model, defaulting to
+#' `fit$parameters`.
+#' @param x The unwarped coordinates as a matrix, by default equal to
+#' `model_coordinates(df, fit$model)`.
+#' @param warped_x Matrix containing the warped coordinates to be transformed
+#' back.
+#'
+#' @return A matrix where each row represents a point in the warped coordinate
+#' space.
+#'
+#' @seealso
+#' \code{\link[geowarp]{geowarp_model}}
+#' \code{\link[geowarp]{geowarp_optimize}}
+#' \code{\link[geowarp]{model_coordinates}}
+#'
 #' @export
 warped_coordinates <- function(
   fit,
   df,
   model = fit$model,
   parameters = fit$parameters,
-  x = as.matrix(
-    df[, c(model$horizontal_coordinates, model$vertical_coordinate)]
-  )
+  x = model_coordinates(df, model)
 ) {
   if (model$deviation_model$name == 'white') {
+    colnames(x) <- NULL
     return(x)
   }
   is_vertical_only <- model$deviation_model$name == 'vertical_only'
@@ -30,9 +79,10 @@ warped_coordinates <- function(
   output <- x
   if (!is_vertical_only) {
     for (i in seq_along(model$horizontal_coordinates)) {
+      k <- model$deviation_model$axial_warping_unit_mapping[i]
       output[, i] <- (
-        parameters$gamma_deviation_horizontal[i]
-        * model$deviation_model$axial_warping_units[[i]]$scaling
+        parameters$gamma_deviation_horizontal[k]
+        * model$deviation_model$axial_warping_units[[k]]$scaling
         * output[, i]
       )
     }
@@ -43,7 +93,7 @@ warped_coordinates <- function(
   } else {
     tail(model$deviation_model$axial_warping_units, 1)[[1]]
   }
-  if (vertical_warping$name == 'linear') {
+  if (vertical_warping$name == 'linear_awu') {
     output[, vertical_index] <- (
       parameters$gamma_deviation_vertical[1]
       * vertical_warping$scaling
@@ -53,7 +103,7 @@ warped_coordinates <- function(
     X_deviation_warping <- bernstein_warping_design_matrix(
       vertical_warping$scaling * output[, vertical_index],
       vertical_warping$order,
-      vertical_warping$domain
+      model$vertical_domain
     )
     output[, vertical_index] <- (
       X_deviation_warping
@@ -61,8 +111,72 @@ warped_coordinates <- function(
     )
   }
 
-  if (!is.null(model$deviation_model$rotation_unit)) {
+  if (!is.null(model$deviation_model$geometric_warping_unit)) {
     output <- output %*% parameters$L_deviation
+  }
+
+  colnames(output) <- NULL
+
+  output
+}
+
+#' @describeIn warped_coordinates Calculated unwarped coordinates.
+#' @export
+unwarped_coordinates <- function(
+  fit,
+  warped_x,
+  model = fit$model,
+  parameters = fit$parameters
+) {
+  if (model$deviation_model$name == 'white') {
+    return(warped_x)
+  }
+
+  is_vertical_only <- model$deviation_model$name == 'vertical_only'
+  vertical_index <- length(model$horizontal_coordinates) + 1L
+  output <- warped_x
+
+  if (!is.null(model$deviation_model$geometric_warping_unit)) {
+    output <- output %*% solve(parameters$L_deviation)
+  }
+
+  if (!is_vertical_only) {
+    for (i in seq_along(model$horizontal_coordinates)) {
+      k <- model$deviation_model$axial_warping_unit_mapping[i]
+      output[, i] <- (
+        output[, i]
+        / parameters$gamma_deviation_horizontal[k]
+        / model$deviation_model$axial_warping_units[[k]]$scaling
+      )
+    }
+  }
+
+  vertical_warping <- if (is_vertical_only) {
+    model$deviation_model$axial_warping_unit
+  } else {
+    tail(model$deviation_model$axial_warping_units, 1)[[1]]
+  }
+  if (vertical_warping$name == 'linear_awu') {
+    output[, vertical_index] <- (
+      output[, vertical_index]
+      / parameters$gamma_deviation_vertical[1]
+      / vertical_warping$scaling
+    )
+  } else {
+    # Solve for each value in turn
+    for (i in seq_len(nrow(output))) {
+      output[i, vertical_index] <- uniroot(
+        function(x) {
+          lhs <- bernstein_warping_design_matrix(
+            vertical_warping$scaling * x,
+            vertical_warping$order,
+            model$vertical_domain
+          ) %*% cumsum(parameters$gamma_deviation_vertical)
+          lhs - output[i, vertical_index]
+        },
+        interval = model$vertical_domain
+      )$root
+    }
   }
 
   output

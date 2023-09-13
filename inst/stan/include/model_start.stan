@@ -1,7 +1,7 @@
 target += log_marginal;
 
-if (tau_squared_mean_random_scale > 0) {
-  tau_squared_mean_random ~ normal(0, tau_squared_mean_random_scale);
+if (tau_squared_mean_random_b > 0) {
+  tau_squared_mean_random ~ inv_gamma(tau_squared_mean_random_a, tau_squared_mean_random_b);
 } else {
   target += -log(tau_squared_mean_random);
 }

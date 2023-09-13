@@ -3,10 +3,9 @@ L_block[:N_current_block, :N_current_block] = cholesky_decompose(
 );
 L_inv_X_block[:N_current_block, :P_X_mean_non_zero[i]] = mdivide_left_tri_low(
   L_block[:N_current_block, :N_current_block],
-  X_mean_non_zero[
-    i,
-    :N_current_block,
-    :P_X_mean_non_zero[i]
+  X_mean[
+    indices_current_block[:N_current_block],
+    indices_X_mean_non_zero[:P_X_mean_non_zero[i], i]
   ]
 );
 L_inv_y_block[:N_current_block] = mdivide_left_tri_low(
@@ -23,9 +22,6 @@ log_det += (
     (N_parents_current_block+1):N_current_block,
     (N_parents_current_block+1):N_current_block
   ])))
-);
-yt_Q_y += (
-  sum(square(L_inv_y_block[(N_parents_current_block+1):N_current_block]))
 );
 y_tildet_Q_y_tilde += (
   sum(square(L_inv_y_tilde_block[(N_parents_current_block+1):N_current_block]))

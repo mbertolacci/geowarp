@@ -1,3 +1,22 @@
+// Body in stan_meta_header.hpp
+matrix geowarp_process_covariance(
+  real sigma_squared_nugget,
+  vector deviation_sd,
+  vector[] x,
+  data real smoothness
+);
+
+// Body in stan_meta_header.hpp
+matrix geowarp_process_covariance_1d(
+  real sigma_squared_nugget,
+  vector deviation_sd,
+  real[] x,
+  data real smoothness
+);
+
+// Body in stan_meta_header.hpp
+int get_N_block_max(int[] block_last_index);
+
 matrix rw1d_precision(int n, real sigma_squared) {
   matrix[n, n] output = diag_matrix(rep_vector(2, n));
   if (n == 0) {
@@ -9,18 +28,6 @@ matrix rw1d_precision(int n, real sigma_squared) {
   }
   output[n, n] = 1;
   return output / sigma_squared;
-}
-
-matrix rw1d_precision_varying(vector sigma_squared) {
-  int n = rows(sigma_squared);
-  matrix[n, n] output = rep_matrix(0, n, n);
-  for (i in 1:(n-1)) {
-    output[i, i] = (sigma_squared[i] + sigma_squared[i + 1]) / (sigma_squared[i] * sigma_squared[i + 1]);
-    output[i + 1, i] = -1 / sigma_squared[i + 1];
-    output[i, i + 1] = -1 / sigma_squared[i + 1];
-  }
-  output[n, n] = 1 / sigma_squared[n];
-  return output;
 }
 
 matrix exp1d_precision(int n, real delta, real ell, real sigma_squared) {
@@ -53,88 +60,10 @@ matrix exp1d_precision(int n, real delta, real ell, real sigma_squared) {
   return output / sigma_squared;
 }
 
-matrix exp1d_covariance(int n, real delta, real ell, real tau_squared, real sigma_squared) {
-  matrix[n, n] output = rep_matrix(0, n, n);
-  for (i in 1:n) {
-    for (j in (i+1):n) {
-      output[i, j] = tau_squared * exp(-(
-        delta * (j - i)
-      ) / ell);
-      output[j, i] = output[i, j];
-    }
-    output[i, i] += tau_squared + sigma_squared;
-  }
-  return output;
-}
-
 // Solves (LL')X = b for X, via L^{-T} L^{-1} b
 vector chol_solve_L_b(
   matrix L,
   vector b
 ) {
   return mdivide_right_tri_low(mdivide_left_tri_low(L, b)', L)';
-}
-
-row_vector n_std_normals_rng(int n) {
-  row_vector[n] z;
-  for (i in 1:n) {
-    z[i] = normal_rng(0, 1);
-  }
-  return z;
-}
-
-matrix exponential_cov_heteroskedastic_scalar(
-  real[] x,
-  vector standard_deviations,
-  real sigma_squared_nugget
-) {
-  int n = size(x);
-  matrix[n, n] output;
-  for (j in 1:n) {
-    output[j, j] = square(standard_deviations[j]) + sigma_squared_nugget;
-    for (k in (j+1):n) {
-      output[j, k] = (
-        standard_deviations[j]
-         * standard_deviations[k]
-         * exp(-fabs(x[j] - x[k]))
-      );
-      output[k, j] = output[j, k];
-    }
-  }
-  return output;
-}
-
-matrix exponential_cov_heteroskedastic_vector(
-  vector[] x,
-  vector standard_deviations,
-  real sigma_squared_nugget
-) {
-  int n = size(x);
-  matrix[n, n] output;
-  for (j in 1:n) {
-    output[j, j] = square(standard_deviations[j]) + sigma_squared_nugget;
-    for (k in (j+1):n) {
-      output[j, k] = (
-        standard_deviations[j]
-         * standard_deviations[k]
-         * exp(-distance(x[j], x[k]))
-      );
-      output[k, j] = output[j, k];
-    }
-  }
-  return output;
-}
-
-int get_N_block_max(int[] block_last_index) {
-  int N_blocks = size(block_last_index);
-  int current_block_start_d = 1;
-  int N_block_max = 0;
-  for (i in 1:N_blocks) {
-    int N_block_i = block_last_index[i] - current_block_start_d + 1;
-    if (N_block_i > N_block_max) {
-      N_block_max = N_block_i;
-    }
-    current_block_start_d = block_last_index[i] + 1;
-  }
-  return N_block_max;
 }

@@ -1,5 +1,4 @@
 real log_det = 0;
-real yt_Q_y = 0;
 real y_tildet_Q_y_tilde = 0;
 matrix[P_mean_total, P_mean_total] Xt_Q_X = rep_matrix(0, P_mean_total, P_mean_total);
 vector[P_mean_total] Xt_Q_y = rep_vector(0, P_mean_total);

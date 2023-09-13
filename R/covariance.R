@@ -1,8 +1,15 @@
-.cor_isotropic_exp <- function(x) {
-  exp(-1.0 * fields::rdist(x))
+.cor_isotropic <- function(x, name) {
+  distances <- fields::rdist(x)
+  if (name == 'exponential') {
+    exp(-1.0 * distances)
+  } else if (name == 'matern15') {
+    (1.0 + sqrt(3) * distances) * exp(-sqrt(3) * distances)
+  } else {
+    stop('Unknown covariance function')
+  }
 }
 
-.cor_vertical_only_exp <- function(x) {
+.cor_vertical_only <- function(x, name) {
   output <- matrix(0, nrow = nrow(x), ncol = nrow(x))
 
   stopifnot(ncol(x) <= 3)
@@ -13,14 +20,8 @@
   }
   for (location_coord_i in unique(location_coords)) {
     indices <- location_coords == location_coord_i
-    output[indices, indices] <- .cor_isotropic_exp(x[indices, ncol(x)])
+    output[indices, indices] <- .cor_isotropic(x[indices, ncol(x)], name)
   }
-  output
-}
-
-.quad_form_diag <- function(Y, x) {
-  output <- Y
-  output[] <- x * Y * rep(x, each = ncol(Y))
   output
 }
 
@@ -45,9 +46,9 @@
 
   x_warped <- warped_coordinates(x = x, model = model, parameters = parameters)
   deviation_cor <- if (model$deviation_model$name == 'vertical_only') {
-    .cor_vertical_only_exp(x_warped)
+    .cor_vertical_only(x_warped, model$deviation_model$covariance_function)
   } else {
-    .cor_isotropic_exp(x_warped)
+    .cor_isotropic(x_warped, model$deviation_model$covariance_function)
   }
 
   output <- .quad_form_diag(deviation_cor, sigma_deviation)

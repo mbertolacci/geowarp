@@ -14,7 +14,8 @@ data {
 
   int<lower=0> P_mean_random;
   matrix[N, P_mean_random] X_mean_random;
-  real<lower=0> tau_squared_mean_random_scale;
+  real<lower=0> tau_squared_mean_random_a;
+  real<lower=0> tau_squared_mean_random_b;
 
   real<lower=0> sigma_squared_nugget_a;
   real<lower=0> sigma_squared_nugget_b;
@@ -28,7 +29,8 @@ data {
   matrix[N, P_deviation_random] X_deviation_random;
   real<lower=0> delta_deviation_random;
   real<lower=0> ell_deviation_random_scale;
-  real<lower=0> tau_squared_deviation_random_scale;
+  real<lower=0> tau_squared_deviation_random_a;
+  real<lower=0> tau_squared_deviation_random_b;
 
   int<lower=1> N_indices;
   int<lower=1> N_blocks;
@@ -59,10 +61,9 @@ transformed parameters {
       ];
 
       for (j in 1:P_X_mean_non_zero[i]) {
-        L_inv_X_block[:N_current_block, j] = X_mean_non_zero[
-          i,
-          :N_current_block,
-          j
+        L_inv_X_block[:N_current_block, j] = X_mean[
+          indices_current_block[:N_current_block],
+          indices_X_mean_non_zero[j, i]
         ] ./ deviation_sd[indices_current_block[:N_current_block]];
       }
       L_inv_y_block[:N_current_block] = (
@@ -76,9 +77,6 @@ transformed parameters {
 
       log_det += (
         2 * sum(log(deviation_sd[indices_current_block[:N_current_block]]))
-      );
-      yt_Q_y += (
-        sum(square(L_inv_y_block[(N_parents_current_block+1):N_current_block]))
       );
       y_tildet_Q_y_tilde += (
         sum(square(L_inv_y_tilde_block[(N_parents_current_block+1):N_current_block]))
@@ -110,7 +108,4 @@ transformed parameters {
 model {
 #include "include/model_start.stan"
 #include "include/model_deviation_start.stan"
-}
-generated quantities {
-#include "include/generated_quantities.stan"
 }
