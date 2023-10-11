@@ -81,6 +81,10 @@ marginal_variance_profile <- function(
 #' @param n_parents Number of parents to consider for Vecchia's approximation.
 #' @param parent_structure Parent structure for Vecchia's approximation,
 #' produced using \code{\link{vecchia_parent_structure}}.
+#' @param threads Number of threads to use for parallelisation, taken from
+#' `getOption('geowarp.threads')` by default, which is itself set to 1 by
+#' default. The special value -1 picks a number of threads based on the number
+#' of cores in the system). Only applies if using the Vecchia approximation.
 #' @param ... Ignored.
 #'
 #' @return A list containing the elements of the predictive distribution
@@ -144,8 +148,11 @@ geowarp_predict <- function(
     n_parents,
     prediction_df = prediction_df
   ),
+  threads = getOption('geowarp.threads'),
   ...
 ) {
+  .local_tbb_threads(threads)
+
   if (vecchia == 'auto') {
     vecchia <- (nrow(observed_df) + nrow(prediction_df)) > 1000
   }
@@ -172,7 +179,8 @@ geowarp_predict <- function(
       model,
       parameters,
       parent_structure,
-      nugget
+      nugget,
+      threads
     )
   }
   output <- list()
@@ -277,7 +285,8 @@ predict.geowarp_fit <- function(object, ...) {
   model,
   parameters,
   parent_structure,
-  nugget
+  nugget,
+  threads
 ) {
   observed_stan_data <- geowarp_stan_data(observed_df, model)
   prediction_stan_data <- geowarp_stan_data(prediction_df, model)
@@ -318,7 +327,8 @@ predict.geowarp_fit <- function(object, ...) {
     nugget = c(
       rep(TRUE, nrow(observed_stan_data$x)),
       rep(nugget, nrow(prediction_stan_data$x))
-    )
+    ),
+    threads = threads
   )
   V <- U[prediction_indices, prediction_indices]
 

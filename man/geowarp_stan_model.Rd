@@ -10,6 +10,8 @@ geowarp_stan_model(name = c("full", "vertical_only", "white"))
 geowarp_stan_data(
   df,
   model,
+  threads = 1L,
+  grain_size = 100L,
   parent_structure,
   grouping,
   white_block_size = min(nrow(df) - 1L, 30)

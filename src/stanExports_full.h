@@ -61,283 +61,330 @@ using stan::math::pow;
 stan::math::profile_map profiles__;
 static int current_statement__= 0;
 static const std::vector<string> locations_array__ = {" (found before start of program)",
-                                                      " (in 'full', line 157, column 0 to column 38)",
-                                                      " (in 'full', line 158, column 0 to column 35)",
-                                                      " (in 'full', line 160, column 0 to column 40)",
-                                                      " (in 'full', line 161, column 0 to column 42)",
-                                                      " (in 'full', line 163, column 0 to column 35)",
-                                                      " (in 'full', line 164, column 0 to column 43)",
-                                                      " (in 'full', line 165, column 2 to column 68)",
-                                                      " (in 'full', line 166, column 2 to column 64)",
-                                                      " (in 'full', line 167, column 2 to column 48)",
-                                                      " (in 'full', line 171, column 0 to column 36)",
-                                                      " (in 'full', line 172, column 0 to column 18)",
-                                                      " (in 'full', line 174, column 23 to column 24)",
-                                                      " (in 'full', line 174, column 11 to column 12)",
-                                                      " (in 'full', line 174, column 4 to column 26)",
-                                                      " (in 'full', line 176, column 0 to column 17)",
-                                                      " (in 'full', line 177, column 0 to column 28)",
-                                                      " (in 'full', line 178, column 7 to column 19)",
-                                                      " (in 'full', line 178, column 21 to column 33)",
-                                                      " (in 'full', line 178, column 0 to column 86)",
-                                                      " (in 'full', line 179, column 7 to column 19)",
-                                                      " (in 'full', line 179, column 0 to column 58)",
-                                                      " (in 'full', line 180, column 7 to column 19)",
-                                                      " (in 'full', line 180, column 0 to column 64)",
-                                                      " (in 'full', line 181, column 7 to column 19)",
-                                                      " (in 'full', line 181, column 21 to column 33)",
-                                                      " (in 'full', line 181, column 0 to column 106)",
-                                                      " (in 'full', line 182, column 7 to column 19)",
-                                                      " (in 'full', line 182, column 21 to column 33)",
-                                                      " (in 'full', line 182, column 0 to column 58)",
-                                                      " (in 'full', line 183, column 7 to column 19)",
-                                                      " (in 'full', line 183, column 21 to column 33)",
-                                                      " (in 'full', line 183, column 0 to column 64)",
-                                                      " (in 'full', line 184, column 7 to column 19)",
-                                                      " (in 'full', line 184, column 21 to column 33)",
-                                                      " (in 'full', line 184, column 0 to column 56)",
-                                                      " (in 'full', line 185, column 7 to column 19)",
-                                                      " (in 'full', line 185, column 0 to column 36)",
-                                                      " (in 'full', line 187, column 7 to column 8)",
-                                                      " (in 'full', line 187, column 0 to column 33)",
-                                                      " (in 'full', line 188, column 7 to column 8)",
-                                                      " (in 'full', line 188, column 0 to column 23)",
-                                                      " (in 'full', line 189, column 7 to column 18)",
-                                                      " (in 'full', line 189, column 20 to column 31)",
-                                                      " (in 'full', line 189, column 0 to column 41)",
-                                                      " (in 'full', line 190, column 7 to column 18)",
-                                                      " (in 'full', line 190, column 20 to column 31)",
-                                                      " (in 'full', line 190, column 0 to column 41)",
-                                                      " (in 'full', line 191, column 7 to column 18)",
-                                                      " (in 'full', line 191, column 20 to column 32)",
-                                                      " (in 'full', line 191, column 0 to column 48)",
-                                                      " (in 'full', line 192, column 7 to column 18)",
-                                                      " (in 'full', line 192, column 0 to column 34)",
-                                                      " (in 'full', line 193, column 7 to column 18)",
-                                                      " (in 'full', line 193, column 0 to column 40)",
-                                                      " (in 'full', line 194, column 0 to column 28)",
-                                                      " (in 'full', line 195, column 0 to column 20)",
-                                                      " (in 'full', line 196, column 0 to column 28)",
-                                                      " (in 'full', line 197, column 26 to column 37)",
-                                                      " (in 'full', line 197, column 0 to column 39)",
-                                                      " (in 'full', line 199, column 0 to column 59)",
-                                                      " (in 'full', line 201, column 2 to column 64)",
-                                                      " (in 'full', line 200, column 28 to line 202, column 1)",
-                                                      " (in 'full', line 200, column 0 to line 202, column 1)",
-                                                      " (in 'full', line 203, column 0 to column 49)",
-                                                      " (in 'full', line 206, column 8 to line 208, column 33)",
-                                                      " (in 'full', line 205, column 25 to line 209, column 7)",
-                                                      " (in 'full', line 205, column 6 to line 209, column 7)",
-                                                      " (in 'full', line 210, column 6 to column 92)",
-                                                      " (in 'full', line 212, column 8 to column 49)",
-                                                      " (in 'full', line 211, column 27 to line 213, column 7)",
-                                                      " (in 'full', line 211, column 6 to line 213, column 7)",
-                                                      " (in 'full', line 204, column 19 to line 214, column 5)",
-                                                      " (in 'full', line 204, column 4 to line 214, column 5)",
-                                                      " (in 'full', line 217, column 0 to column 64)",
-                                                      " (in 'full', line 218, column 0 to column 65)",
-                                                      " (in 'full', line 220, column 0 to line 222, column 2)",
-                                                      " (in 'full', line 223, column 6 to line 228, column 8)",
-                                                      " (in 'full', line 230, column 0 to line 232, column 2)",
-                                                      " (in 'full', line 233, column 0 to line 239, column 2)",
-                                                      " (in 'full', line 240, column 0 to line 243, column 2)",
-                                                      " (in 'full', line 244, column 0 to line 247, column 2)",
-                                                      " (in 'full', line 249, column 0 to line 254, column 2)",
-                                                      " (in 'full', line 255, column 0 to line 257, column 2)",
-                                                      " (in 'full', line 258, column 0 to line 261, column 2)",
-                                                      " (in 'full', line 262, column 0 to line 265, column 2)",
-                                                      " (in 'full', line 266, column 0 to line 274, column 2)",
-                                                      " (in 'full', line 276, column 0 to column 46)",
-                                                      " (in 'full', line 215, column 26 to line 277, column 5)",
-                                                      " (in 'full', line 215, column 4 to line 277, column 5)",
-                                                      " (in 'full', line 279, column 0 to column 75)",
-                                                      " (in 'full', line 281, column 2 to line 287, column 4)",
-                                                      " (in 'full', line 280, column 33 to line 288, column 1)",
-                                                      " (in 'full', line 280, column 0 to line 288, column 1)",
-                                                      " (in 'full', line 290, column 0 to column 59)",
-                                                      " (in 'full', line 292, column 0 to column 78)",
-                                                      " (in 'full', line 293, column 0 to column 66)",
-                                                      " (in 'full', line 294, column 0 to column 37)",
-                                                      " (in 'full', line 295, column 0 to column 72)",
-                                                      " (in 'full', line 298, column 0 to line 307, column 2)",
-                                                      " (in 'full', line 173, column 2 to line 308, column 3)",
-                                                      " (in 'full', line 312, column 0 to column 23)",
-                                                      " (in 'full', line 317, column 2 to column 42)",
-                                                      " (in 'full', line 316, column 7 to line 318, column 1)",
-                                                      " (in 'full', line 315, column 2 to column 92)",
-                                                      " (in 'full', line 314, column 35 to line 316, column 1)",
-                                                      " (in 'full', line 314, column 0 to line 318, column 1)",
-                                                      " (in 'full', line 323, column 2 to column 39)",
-                                                      " (in 'full', line 322, column 7 to line 324, column 1)",
-                                                      " (in 'full', line 321, column 2 to column 83)",
-                                                      " (in 'full', line 320, column 32 to line 322, column 1)",
-                                                      " (in 'full', line 320, column 0 to line 324, column 1)",
-                                                      " (in 'full', line 326, column 0 to column 79)",
-                                                      " (in 'full', line 329, column 2 to line 337, column 4)",
-                                                      " (in 'full', line 328, column 28 to line 338, column 1)",
-                                                      " (in 'full', line 328, column 0 to line 338, column 1)",
-                                                      " (in 'full', line 341, column 2 to column 63)",
-                                                      " (in 'full', line 340, column 36 to line 342, column 1)",
-                                                      " (in 'full', line 340, column 0 to line 342, column 1)",
-                                                      " (in 'full', line 347, column 2 to column 47)",
-                                                      " (in 'full', line 346, column 7 to line 348, column 1)",
-                                                      " (in 'full', line 345, column 2 to column 107)",
-                                                      " (in 'full', line 344, column 40 to line 346, column 1)",
-                                                      " (in 'full', line 344, column 0 to line 348, column 1)",
-                                                      " (in 'full', line 351, column 6 to column 88)",
-                                                      " (in 'full', line 350, column 34 to line 352, column 5)",
-                                                      " (in 'full', line 350, column 4 to line 352, column 5)",
-                                                      " (in 'full', line 349, column 37 to line 353, column 3)",
-                                                      " (in 'full', line 349, column 2 to line 353, column 3)",
-                                                      " (in 'full', line 355, column 4 to column 129)",
-                                                      " (in 'full', line 354, column 56 to line 356, column 3)",
-                                                      " (in 'full', line 354, column 2 to line 356, column 3)",
-                                                      " (in 'full', line 358, column 4 to column 55)",
-                                                      " (in 'full', line 357, column 23 to line 359, column 3)",
-                                                      " (in 'full', line 357, column 2 to line 359, column 3)",
-                                                      " (in 'full', line 75, column 0 to column 15)",
-                                                      " (in 'full', line 76, column 0 to column 15)",
-                                                      " (in 'full', line 77, column 12 to column 13)",
-                                                      " (in 'full', line 77, column 7 to column 8)",
-                                                      " (in 'full', line 77, column 0 to column 15)",
-                                                      " (in 'full', line 78, column 7 to column 8)",
-                                                      " (in 'full', line 78, column 0 to column 12)",
-                                                      " (in 'full', line 79, column 7 to column 8)",
-                                                      " (in 'full', line 79, column 0 to column 18)",
-                                                      " (in 'full', line 81, column 0 to column 26)",
-                                                      " (in 'full', line 82, column 7 to column 8)",
-                                                      " (in 'full', line 82, column 10 to column 22)",
-                                                      " (in 'full', line 82, column 0 to column 37)",
-                                                      " (in 'full', line 83, column 7 to column 19)",
-                                                      " (in 'full', line 83, column 0 to column 32)",
-                                                      " (in 'full', line 84, column 7 to column 19)",
-                                                      " (in 'full', line 84, column 21 to column 33)",
-                                                      " (in 'full', line 84, column 0 to column 51)",
-                                                      " (in 'full', line 86, column 0 to column 27)",
-                                                      " (in 'full', line 87, column 7 to column 8)",
-                                                      " (in 'full', line 87, column 10 to column 23)",
-                                                      " (in 'full', line 87, column 0 to column 39)",
-                                                      " (in 'full', line 88, column 0 to column 40)",
-                                                      " (in 'full', line 89, column 0 to column 40)",
-                                                      " (in 'full', line 91, column 0 to column 37)",
-                                                      " (in 'full', line 92, column 0 to column 37)",
-                                                      " (in 'full', line 94, column 0 to column 25)",
-                                                      " (in 'full', line 95, column 0 to column 33)",
-                                                      " (in 'full', line 96, column 7 to column 8)",
-                                                      " (in 'full', line 96, column 10 to column 29)",
-                                                      " (in 'full', line 96, column 0 to column 51)",
-                                                      " (in 'full', line 98, column 0 to column 31)",
-                                                      " (in 'full', line 99, column 7 to column 8)",
-                                                      " (in 'full', line 99, column 10 to column 27)",
-                                                      " (in 'full', line 99, column 0 to column 47)",
-                                                      " (in 'full', line 100, column 7 to column 24)",
-                                                      " (in 'full', line 100, column 0 to column 45)",
-                                                      " (in 'full', line 101, column 11 to column 28)",
-                                                      " (in 'full', line 101, column 0 to column 54)",
-                                                      " (in 'full', line 103, column 0 to column 32)",
-                                                      " (in 'full', line 104, column 7 to column 8)",
-                                                      " (in 'full', line 104, column 10 to column 28)",
-                                                      " (in 'full', line 104, column 0 to column 49)",
-                                                      " (in 'full', line 105, column 0 to column 37)",
-                                                      " (in 'full', line 106, column 0 to column 41)",
-                                                      " (in 'full', line 107, column 0 to column 45)",
-                                                      " (in 'full', line 108, column 0 to column 45)",
-                                                      " (in 'full', line 109, column 2 to column 37)",
-                                                      " (in 'full', line 110, column 2 to column 27)",
-                                                      " (in 'full', line 111, column 74 to column 75)",
-                                                      " (in 'full', line 111, column 2 to column 77)",
-                                                      " (in 'full', line 112, column 2 to column 25)",
-                                                      " (in 'full', line 113, column 2 to column 24)",
-                                                      " (in 'full', line 114, column 20 to column 29)",
-                                                      " (in 'full', line 114, column 2 to column 31)",
-                                                      " (in 'full', line 115, column 23 to column 31)",
-                                                      " (in 'full', line 115, column 2 to column 33)",
-                                                      " (in 'full', line 116, column 24 to column 32)",
-                                                      " (in 'full', line 116, column 2 to column 34)",
-                                                      " (in 'full', line 117, column 18 to column 43)",
-                                                      " (in 'full', line 117, column 2 to column 63)",
-                                                      " (in 'full', line 118, column 18 to column 43)",
-                                                      " (in 'full', line 118, column 2 to column 63)",
-                                                      " (in 'full', line 119, column 2 to column 34)",
-                                                      " (in 'full', line 124, column 0 to column 48)",
-                                                      " (in 'full', line 125, column 7 to column 8)",
-                                                      " (in 'full', line 125, column 10 to column 22)",
-                                                      " (in 'full', line 125, column 0 to column 73)",
-                                                      " (in 'full', line 126, column 7 to column 19)",
-                                                      " (in 'full', line 126, column 0 to column 62)",
-                                                      " (in 'full', line 127, column 7 to column 8)",
-                                                      " (in 'full', line 127, column 0 to column 50)",
-                                                      " (in 'full', line 129, column 0 to column 52)",
-                                                      " (in 'full', line 130, column 28 to column 40)",
-                                                      " (in 'full', line 130, column 42 to column 50)",
-                                                      " (in 'full', line 130, column 0 to column 52)",
-                                                      " (in 'full', line 131, column 22 to column 30)",
-                                                      " (in 'full', line 131, column 0 to column 32)",
-                                                      " (in 'full', line 132, column 0 to column 30)",
-                                                      " (in 'full', line 135, column 0 to column 58)",
-                                                      " (in 'full', line 138, column 2 to column 72)",
-                                                      " (in 'full', line 139, column 28 to column 39)",
-                                                      " (in 'full', line 139, column 2 to column 41)",
-                                                      " (in 'full', line 141, column 2 to line 143, column 4)",
-                                                      " (in 'full', line 144, column 2 to column 27)",
-                                                      " (in 'full', line 147, column 6 to column 32)",
-                                                      " (in 'full', line 148, column 6 to column 59)",
-                                                      " (in 'full', line 146, column 76 to line 149, column 5)",
-                                                      " (in 'full', line 146, column 4 to line 149, column 5)",
-                                                      " (in 'full', line 145, column 28 to line 150, column 3)",
-                                                      " (in 'full', line 145, column 2 to line 150, column 3)",
-                                                      " (in 'full', line 152, column 2 to column 50)",
-                                                      " (in 'full', line 137, column 22 to line 153, column 1)",
-                                                      " (in 'full', line 137, column 0 to line 153, column 1)",
-                                                      " (in 'full', line 160, column 7 to column 24)",
-                                                      " (in 'full', line 161, column 7 to column 25)",
-                                                      " (in 'full', line 165, column 18 to column 39)",
-                                                      " (in 'full', line 166, column 18 to column 37)",
-                                                      " (in 'full', line 167, column 23 to column 34)",
-                                                      " (in 'full', line 171, column 7 to column 19)",
-                                                      " (in 'full', line 23, column 9 to column 10)",
-                                                      " (in 'full', line 23, column 12 to column 13)",
-                                                      " (in 'full', line 23, column 2 to column 54)",
-                                                      " (in 'full', line 25, column 4 to column 18)",
-                                                      " (in 'full', line 24, column 14 to line 26, column 3)",
-                                                      " (in 'full', line 24, column 2 to line 26, column 3)",
-                                                      " (in 'full', line 28, column 4 to column 26)",
-                                                      " (in 'full', line 29, column 4 to column 26)",
-                                                      " (in 'full', line 27, column 17 to line 30, column 3)",
-                                                      " (in 'full', line 27, column 2 to line 30, column 3)",
-                                                      " (in 'full', line 31, column 2 to column 19)",
-                                                      " (in 'full', line 32, column 2 to column 32)",
-                                                      " (in 'full', line 22, column 49 to line 33, column 1)",
-                                                      " (in 'full', line 36, column 9 to column 10)",
-                                                      " (in 'full', line 36, column 12 to column 13)",
-                                                      " (in 'full', line 36, column 2 to column 44)",
-                                                      " (in 'full', line 37, column 2 to column 20)",
-                                                      " (in 'full', line 38, column 2 to column 21)",
-                                                      " (in 'full', line 39, column 2 to column 15)",
-                                                      " (in 'full', line 40, column 2 to column 15)",
-                                                      " (in 'full', line 43, column 4 to column 37)",
+                                                      " (in 'full', line 290, column 0 to column 38)",
+                                                      " (in 'full', line 291, column 0 to column 35)",
+                                                      " (in 'full', line 293, column 0 to column 40)",
+                                                      " (in 'full', line 294, column 0 to column 42)",
+                                                      " (in 'full', line 296, column 0 to column 35)",
+                                                      " (in 'full', line 297, column 0 to column 43)",
+                                                      " (in 'full', line 298, column 2 to column 68)",
+                                                      " (in 'full', line 299, column 2 to column 64)",
+                                                      " (in 'full', line 300, column 2 to column 48)",
+                                                      " (in 'full', line 304, column 0 to column 36)",
+                                                      " (in 'full', line 305, column 0 to column 18)",
+                                                      " (in 'full', line 307, column 23 to column 24)",
+                                                      " (in 'full', line 307, column 11 to column 12)",
+                                                      " (in 'full', line 307, column 4 to column 26)",
+                                                      " (in 'full', line 309, column 0 to column 17)",
+                                                      " (in 'full', line 310, column 0 to column 28)",
+                                                      " (in 'full', line 311, column 7 to column 19)",
+                                                      " (in 'full', line 311, column 21 to column 33)",
+                                                      " (in 'full', line 311, column 0 to column 86)",
+                                                      " (in 'full', line 312, column 7 to column 19)",
+                                                      " (in 'full', line 312, column 0 to column 58)",
+                                                      " (in 'full', line 313, column 7 to column 19)",
+                                                      " (in 'full', line 313, column 0 to column 64)",
+                                                      " (in 'full', line 314, column 7 to column 19)",
+                                                      " (in 'full', line 314, column 21 to column 33)",
+                                                      " (in 'full', line 314, column 0 to column 106)",
+                                                      " (in 'full', line 315, column 7 to column 19)",
+                                                      " (in 'full', line 315, column 21 to column 33)",
+                                                      " (in 'full', line 315, column 0 to column 58)",
+                                                      " (in 'full', line 316, column 7 to column 19)",
+                                                      " (in 'full', line 316, column 21 to column 33)",
+                                                      " (in 'full', line 316, column 0 to column 64)",
+                                                      " (in 'full', line 317, column 7 to column 19)",
+                                                      " (in 'full', line 317, column 21 to column 33)",
+                                                      " (in 'full', line 317, column 0 to column 56)",
+                                                      " (in 'full', line 318, column 7 to column 19)",
+                                                      " (in 'full', line 318, column 0 to column 36)",
+                                                      " (in 'full', line 320, column 7 to column 8)",
+                                                      " (in 'full', line 320, column 0 to column 33)",
+                                                      " (in 'full', line 321, column 7 to column 8)",
+                                                      " (in 'full', line 321, column 0 to column 23)",
+                                                      " (in 'full', line 323, column 2 to column 52)",
+                                                      " (in 'full', line 322, column 0 to line 324, column 13)",
+                                                      " (in 'full', line 326, column 0 to column 59)",
+                                                      " (in 'full', line 328, column 2 to column 64)",
+                                                      " (in 'full', line 327, column 28 to line 329, column 1)",
+                                                      " (in 'full', line 327, column 0 to line 329, column 1)",
+                                                      " (in 'full', line 330, column 0 to column 49)",
+                                                      " (in 'full', line 333, column 8 to line 335, column 33)",
+                                                      " (in 'full', line 332, column 25 to line 336, column 7)",
+                                                      " (in 'full', line 332, column 6 to line 336, column 7)",
+                                                      " (in 'full', line 337, column 6 to column 92)",
+                                                      " (in 'full', line 339, column 8 to column 49)",
+                                                      " (in 'full', line 338, column 27 to line 340, column 7)",
+                                                      " (in 'full', line 338, column 6 to line 340, column 7)",
+                                                      " (in 'full', line 331, column 19 to line 341, column 5)",
+                                                      " (in 'full', line 331, column 4 to line 341, column 5)",
+                                                      " (in 'full', line 362, column 6 to line 378, column 8)",
+                                                      " (in 'full', line 361, column 11 to line 379, column 5)",
+                                                      " (in 'full', line 343, column 6 to line 360, column 8)",
+                                                      " (in 'full', line 342, column 26 to line 361, column 5)",
+                                                      " (in 'full', line 342, column 4 to line 379, column 5)",
+                                                      " (in 'full', line 381, column 0 to column 24)",
+                                                      " (in 'full', line 382, column 0 to column 35)",
+                                                      " (in 'full', line 383, column 0 to line 387, column 2)",
+                                                      " (in 'full', line 388, column 0 to line 392, column 2)",
+                                                      " (in 'full', line 393, column 0 to line 395, column 2)",
+                                                      " (in 'full', line 397, column 0 to column 75)",
+                                                      " (in 'full', line 399, column 2 to line 405, column 4)",
+                                                      " (in 'full', line 398, column 33 to line 406, column 1)",
+                                                      " (in 'full', line 398, column 0 to line 406, column 1)",
+                                                      " (in 'full', line 408, column 0 to column 59)",
+                                                      " (in 'full', line 410, column 0 to column 78)",
+                                                      " (in 'full', line 411, column 0 to column 66)",
+                                                      " (in 'full', line 412, column 0 to column 37)",
+                                                      " (in 'full', line 413, column 0 to column 72)",
+                                                      " (in 'full', line 416, column 0 to line 425, column 2)",
+                                                      " (in 'full', line 306, column 2 to line 426, column 3)",
+                                                      " (in 'full', line 430, column 0 to column 23)",
+                                                      " (in 'full', line 435, column 2 to column 42)",
+                                                      " (in 'full', line 434, column 7 to line 436, column 1)",
+                                                      " (in 'full', line 433, column 2 to column 92)",
+                                                      " (in 'full', line 432, column 35 to line 434, column 1)",
+                                                      " (in 'full', line 432, column 0 to line 436, column 1)",
+                                                      " (in 'full', line 441, column 2 to column 39)",
+                                                      " (in 'full', line 440, column 7 to line 442, column 1)",
+                                                      " (in 'full', line 439, column 2 to column 83)",
+                                                      " (in 'full', line 438, column 32 to line 440, column 1)",
+                                                      " (in 'full', line 438, column 0 to line 442, column 1)",
+                                                      " (in 'full', line 444, column 0 to column 79)",
+                                                      " (in 'full', line 447, column 2 to line 455, column 4)",
+                                                      " (in 'full', line 446, column 28 to line 456, column 1)",
+                                                      " (in 'full', line 446, column 0 to line 456, column 1)",
+                                                      " (in 'full', line 459, column 2 to column 63)",
+                                                      " (in 'full', line 458, column 36 to line 460, column 1)",
+                                                      " (in 'full', line 458, column 0 to line 460, column 1)",
+                                                      " (in 'full', line 465, column 2 to column 47)",
+                                                      " (in 'full', line 464, column 7 to line 466, column 1)",
+                                                      " (in 'full', line 463, column 2 to column 107)",
+                                                      " (in 'full', line 462, column 40 to line 464, column 1)",
+                                                      " (in 'full', line 462, column 0 to line 466, column 1)",
+                                                      " (in 'full', line 469, column 6 to column 88)",
+                                                      " (in 'full', line 468, column 34 to line 470, column 5)",
+                                                      " (in 'full', line 468, column 4 to line 470, column 5)",
+                                                      " (in 'full', line 467, column 37 to line 471, column 3)",
+                                                      " (in 'full', line 467, column 2 to line 471, column 3)",
+                                                      " (in 'full', line 473, column 4 to column 129)",
+                                                      " (in 'full', line 472, column 56 to line 474, column 3)",
+                                                      " (in 'full', line 472, column 2 to line 474, column 3)",
+                                                      " (in 'full', line 476, column 4 to column 55)",
+                                                      " (in 'full', line 475, column 23 to line 477, column 3)",
+                                                      " (in 'full', line 475, column 2 to line 477, column 3)",
+                                                      " (in 'full', line 206, column 0 to column 15)",
+                                                      " (in 'full', line 207, column 0 to column 15)",
+                                                      " (in 'full', line 208, column 12 to column 13)",
+                                                      " (in 'full', line 208, column 7 to column 8)",
+                                                      " (in 'full', line 208, column 0 to column 15)",
+                                                      " (in 'full', line 209, column 7 to column 8)",
+                                                      " (in 'full', line 209, column 0 to column 12)",
+                                                      " (in 'full', line 210, column 7 to column 8)",
+                                                      " (in 'full', line 210, column 0 to column 18)",
+                                                      " (in 'full', line 212, column 0 to column 26)",
+                                                      " (in 'full', line 213, column 7 to column 8)",
+                                                      " (in 'full', line 213, column 10 to column 22)",
+                                                      " (in 'full', line 213, column 0 to column 37)",
+                                                      " (in 'full', line 214, column 7 to column 19)",
+                                                      " (in 'full', line 214, column 0 to column 32)",
+                                                      " (in 'full', line 215, column 7 to column 19)",
+                                                      " (in 'full', line 215, column 21 to column 33)",
+                                                      " (in 'full', line 215, column 0 to column 51)",
+                                                      " (in 'full', line 217, column 0 to column 27)",
+                                                      " (in 'full', line 218, column 7 to column 8)",
+                                                      " (in 'full', line 218, column 10 to column 23)",
+                                                      " (in 'full', line 218, column 0 to column 39)",
+                                                      " (in 'full', line 219, column 0 to column 40)",
+                                                      " (in 'full', line 220, column 0 to column 40)",
+                                                      " (in 'full', line 222, column 0 to column 37)",
+                                                      " (in 'full', line 223, column 0 to column 37)",
+                                                      " (in 'full', line 225, column 0 to column 25)",
+                                                      " (in 'full', line 226, column 0 to column 33)",
+                                                      " (in 'full', line 227, column 7 to column 8)",
+                                                      " (in 'full', line 227, column 10 to column 29)",
+                                                      " (in 'full', line 227, column 0 to column 51)",
+                                                      " (in 'full', line 229, column 0 to column 31)",
+                                                      " (in 'full', line 230, column 7 to column 8)",
+                                                      " (in 'full', line 230, column 10 to column 27)",
+                                                      " (in 'full', line 230, column 0 to column 47)",
+                                                      " (in 'full', line 231, column 7 to column 24)",
+                                                      " (in 'full', line 231, column 0 to column 45)",
+                                                      " (in 'full', line 232, column 11 to column 28)",
+                                                      " (in 'full', line 232, column 0 to column 54)",
+                                                      " (in 'full', line 234, column 0 to column 32)",
+                                                      " (in 'full', line 235, column 7 to column 8)",
+                                                      " (in 'full', line 235, column 10 to column 28)",
+                                                      " (in 'full', line 235, column 0 to column 49)",
+                                                      " (in 'full', line 236, column 0 to column 37)",
+                                                      " (in 'full', line 237, column 0 to column 41)",
+                                                      " (in 'full', line 238, column 0 to column 45)",
+                                                      " (in 'full', line 239, column 0 to column 45)",
+                                                      " (in 'full', line 240, column 2 to column 37)",
+                                                      " (in 'full', line 241, column 2 to column 27)",
+                                                      " (in 'full', line 242, column 74 to column 75)",
+                                                      " (in 'full', line 242, column 2 to column 77)",
+                                                      " (in 'full', line 243, column 2 to column 25)",
+                                                      " (in 'full', line 244, column 2 to column 24)",
+                                                      " (in 'full', line 245, column 20 to column 29)",
+                                                      " (in 'full', line 245, column 2 to column 31)",
+                                                      " (in 'full', line 246, column 23 to column 31)",
+                                                      " (in 'full', line 246, column 2 to column 33)",
+                                                      " (in 'full', line 247, column 24 to column 32)",
+                                                      " (in 'full', line 247, column 2 to column 34)",
+                                                      " (in 'full', line 248, column 18 to column 43)",
+                                                      " (in 'full', line 248, column 2 to column 63)",
+                                                      " (in 'full', line 249, column 18 to column 43)",
+                                                      " (in 'full', line 249, column 2 to column 63)",
+                                                      " (in 'full', line 250, column 2 to column 34)",
+                                                      " (in 'full', line 251, column 2 to column 19)",
+                                                      " (in 'full', line 252, column 2 to column 26)",
+                                                      " (in 'full', line 257, column 0 to column 48)",
+                                                      " (in 'full', line 258, column 7 to column 8)",
+                                                      " (in 'full', line 258, column 10 to column 22)",
+                                                      " (in 'full', line 258, column 0 to column 73)",
+                                                      " (in 'full', line 259, column 7 to column 19)",
+                                                      " (in 'full', line 259, column 0 to column 62)",
+                                                      " (in 'full', line 260, column 7 to column 8)",
+                                                      " (in 'full', line 260, column 0 to column 50)",
+                                                      " (in 'full', line 262, column 0 to column 52)",
+                                                      " (in 'full', line 263, column 28 to column 40)",
+                                                      " (in 'full', line 263, column 42 to column 50)",
+                                                      " (in 'full', line 263, column 0 to column 52)",
+                                                      " (in 'full', line 264, column 22 to column 30)",
+                                                      " (in 'full', line 264, column 0 to column 32)",
+                                                      " (in 'full', line 265, column 0 to column 30)",
+                                                      " (in 'full', line 268, column 0 to column 58)",
+                                                      " (in 'full', line 271, column 2 to column 72)",
+                                                      " (in 'full', line 272, column 28 to column 39)",
+                                                      " (in 'full', line 272, column 2 to column 41)",
+                                                      " (in 'full', line 274, column 2 to line 276, column 4)",
+                                                      " (in 'full', line 277, column 2 to column 27)",
+                                                      " (in 'full', line 280, column 6 to column 32)",
+                                                      " (in 'full', line 281, column 6 to column 59)",
+                                                      " (in 'full', line 279, column 76 to line 282, column 5)",
+                                                      " (in 'full', line 279, column 4 to line 282, column 5)",
+                                                      " (in 'full', line 278, column 28 to line 283, column 3)",
+                                                      " (in 'full', line 278, column 2 to line 283, column 3)",
+                                                      " (in 'full', line 285, column 2 to column 50)",
+                                                      " (in 'full', line 270, column 22 to line 286, column 1)",
+                                                      " (in 'full', line 270, column 0 to line 286, column 1)",
+                                                      " (in 'full', line 293, column 7 to column 24)",
+                                                      " (in 'full', line 294, column 7 to column 25)",
+                                                      " (in 'full', line 298, column 18 to column 39)",
+                                                      " (in 'full', line 299, column 18 to column 37)",
+                                                      " (in 'full', line 300, column 23 to column 34)",
+                                                      " (in 'full', line 304, column 7 to column 19)",
+                                                      " (in 'full', line 20, column 9 to column 10)",
+                                                      " (in 'full', line 20, column 12 to column 13)",
+                                                      " (in 'full', line 20, column 2 to column 54)",
+                                                      " (in 'full', line 22, column 4 to column 18)",
+                                                      " (in 'full', line 21, column 14 to line 23, column 3)",
+                                                      " (in 'full', line 21, column 2 to line 23, column 3)",
+                                                      " (in 'full', line 25, column 4 to column 26)",
+                                                      " (in 'full', line 26, column 4 to column 26)",
+                                                      " (in 'full', line 24, column 17 to line 27, column 3)",
+                                                      " (in 'full', line 24, column 2 to line 27, column 3)",
+                                                      " (in 'full', line 28, column 2 to column 19)",
+                                                      " (in 'full', line 29, column 2 to column 32)",
+                                                      " (in 'full', line 19, column 49 to line 30, column 1)",
+                                                      " (in 'full', line 33, column 9 to column 10)",
+                                                      " (in 'full', line 33, column 12 to column 13)",
+                                                      " (in 'full', line 33, column 2 to column 44)",
+                                                      " (in 'full', line 34, column 2 to column 20)",
+                                                      " (in 'full', line 35, column 2 to column 21)",
+                                                      " (in 'full', line 36, column 2 to column 15)",
+                                                      " (in 'full', line 37, column 2 to column 15)",
+                                                      " (in 'full', line 40, column 4 to column 37)",
+                                                      " (in 'full', line 39, column 14 to line 41, column 3)",
+                                                      " (in 'full', line 39, column 2 to line 41, column 3)",
+                                                      " (in 'full', line 43, column 4 to column 18)",
                                                       " (in 'full', line 42, column 14 to line 44, column 3)",
                                                       " (in 'full', line 42, column 2 to line 44, column 3)",
-                                                      " (in 'full', line 46, column 4 to column 18)",
-                                                      " (in 'full', line 45, column 14 to line 47, column 3)",
-                                                      " (in 'full', line 45, column 2 to line 47, column 3)",
-                                                      " (in 'full', line 48, column 2 to column 35)",
-                                                      " (in 'full', line 49, column 2 to column 40)",
-                                                      " (in 'full', line 50, column 2 to column 48)",
-                                                      " (in 'full', line 51, column 2 to column 47)",
-                                                      " (in 'full', line 53, column 2 to column 29)",
-                                                      " (in 'full', line 55, column 4 to column 35)",
-                                                      " (in 'full', line 56, column 4 to column 32)",
-                                                      " (in 'full', line 57, column 4 to column 32)",
-                                                      " (in 'full', line 54, column 21 to line 58, column 3)",
-                                                      " (in 'full', line 54, column 2 to line 58, column 3)",
-                                                      " (in 'full', line 59, column 2 to column 30)",
-                                                      " (in 'full', line 60, column 2 to column 30)",
-                                                      " (in 'full', line 61, column 2 to column 29)",
-                                                      " (in 'full', line 62, column 2 to column 32)",
-                                                      " (in 'full', line 35, column 72 to line 63, column 1)",
-                                                      " (in 'full', line 70, column 2 to column 64)",
-                                                      " (in 'full', line 69, column 2 to line 71, column 1)"};
+                                                      " (in 'full', line 45, column 2 to column 35)",
+                                                      " (in 'full', line 46, column 2 to column 40)",
+                                                      " (in 'full', line 47, column 2 to column 48)",
+                                                      " (in 'full', line 48, column 2 to column 47)",
+                                                      " (in 'full', line 50, column 2 to column 29)",
+                                                      " (in 'full', line 52, column 4 to column 35)",
+                                                      " (in 'full', line 53, column 4 to column 32)",
+                                                      " (in 'full', line 54, column 4 to column 32)",
+                                                      " (in 'full', line 51, column 21 to line 55, column 3)",
+                                                      " (in 'full', line 51, column 2 to line 55, column 3)",
+                                                      " (in 'full', line 56, column 2 to column 30)",
+                                                      " (in 'full', line 57, column 2 to column 30)",
+                                                      " (in 'full', line 58, column 2 to column 29)",
+                                                      " (in 'full', line 59, column 2 to column 32)",
+                                                      " (in 'full', line 32, column 72 to line 60, column 1)",
+                                                      " (in 'full', line 67, column 2 to column 64)",
+                                                      " (in 'full', line 66, column 2 to line 68, column 1)",
+                                                      " (in 'full', line 74, column 4 to column 39)",
+                                                      " (in 'full', line 73, column 9 to line 75, column 3)",
+                                                      " (in 'full', line 72, column 4 to column 13)",
+                                                      " (in 'full', line 71, column 14 to line 73, column 3)",
+                                                      " (in 'full', line 71, column 2 to line 75, column 3)",
+                                                      " (in 'full', line 70, column 51 to line 76, column 1)",
+                                                      " (in 'full', line 79, column 2 to column 40)",
+                                                      " (in 'full', line 80, column 2 to column 32)",
+                                                      " (in 'full', line 81, column 2 to column 22)",
+                                                      " (in 'full', line 83, column 4 to column 68)",
+                                                      " (in 'full', line 85, column 6 to column 30)",
+                                                      " (in 'full', line 84, column 33 to line 86, column 5)",
+                                                      " (in 'full', line 84, column 4 to line 86, column 5)",
+                                                      " (in 'full', line 87, column 4 to column 52)",
+                                                      " (in 'full', line 82, column 24 to line 88, column 3)",
+                                                      " (in 'full', line 82, column 2 to line 88, column 3)",
+                                                      " (in 'full', line 89, column 2 to column 21)",
+                                                      " (in 'full', line 78, column 44 to line 90, column 1)",
+                                                      " (in 'full', line 127, column 0 to column 26)",
+                                                      " (in 'full', line 129, column 0 to column 17)",
+                                                      " (in 'full', line 130, column 0 to column 28)",
+                                                      " (in 'full', line 131, column 7 to column 13)",
+                                                      " (in 'full', line 131, column 15 to column 21)",
+                                                      " (in 'full', line 131, column 0 to column 62)",
+                                                      " (in 'full', line 132, column 7 to column 13)",
+                                                      " (in 'full', line 132, column 0 to column 46)",
+                                                      " (in 'full', line 133, column 7 to column 13)",
+                                                      " (in 'full', line 133, column 0 to column 52)",
+                                                      " (in 'full', line 136, column 2 to column 57)",
+                                                      " (in 'full', line 137, column 2 to column 62)",
+                                                      " (in 'full', line 138, column 9 to column 24)",
+                                                      " (in 'full', line 138, column 26 to column 41)",
+                                                      " (in 'full', line 138, column 2 to column 51)",
+                                                      " (in 'full', line 139, column 9 to column 24)",
+                                                      " (in 'full', line 139, column 26 to column 41)",
+                                                      " (in 'full', line 139, column 2 to column 51)",
+                                                      " (in 'full', line 140, column 9 to column 24)",
+                                                      " (in 'full', line 140, column 26 to column 46)",
+                                                      " (in 'full', line 140, column 2 to column 62)",
+                                                      " (in 'full', line 141, column 9 to column 24)",
+                                                      " (in 'full', line 141, column 2 to column 40)",
+                                                      " (in 'full', line 142, column 9 to column 24)",
+                                                      " (in 'full', line 142, column 2 to column 46)",
+                                                      " (in 'full', line 143, column 28 to column 43)",
+                                                      " (in 'full', line 143, column 2 to line 145, column 4)",
+                                                      " (in 'full', line 146, column 2 to column 71)",
+                                                      " (in 'full', line 147, column 4 to line 152, column 6)",
+                                                      " (in 'full', line 154, column 1 to column 39)",
+                                                      " (in 'full', line 155, column 2 to line 161, column 4)",
+                                                      " (in 'full', line 162, column 2 to line 165, column 4)",
+                                                      " (in 'full', line 166, column 2 to line 169, column 4)",
+                                                      " (in 'full', line 170, column 2 to line 175, column 4)",
+                                                      " (in 'full', line 176, column 2 to line 178, column 4)",
+                                                      " (in 'full', line 179, column 2 to line 182, column 4)",
+                                                      " (in 'full', line 183, column 2 to line 186, column 4)",
+                                                      " (in 'full', line 187, column 2 to line 192, column 4)",
+                                                      " (in 'full', line 135, column 21 to line 193, column 1)",
+                                                      " (in 'full', line 135, column 0 to line 193, column 1)",
+                                                      " (in 'full', line 195, column 7 to column 39)",
+                                                      " (in 'full', line 195, column 0 to column 48)",
+                                                      " (in 'full', line 196, column 0 to column 20)",
+                                                      " (in 'full', line 197, column 0 to column 31)",
+                                                      " (in 'full', line 198, column 0 to column 52)",
+                                                      " (in 'full', line 199, column 0 to column 81)",
+                                                      " (in 'full', line 200, column 0 to column 66)",
+                                                      " (in 'full', line 201, column 0 to column 14)",
+                                                      " (in 'full', line 125, column 2 to line 202, column 1)"};
 template <typename T0__, typename T1__, typename T2__>
 Eigen::Matrix<stan::promote_args_t<T0__, stan::value_type_t<T1__>,
 T2__>, -1, -1>
@@ -353,9 +400,6 @@ geowarp_process_covariance_1d(const T0__& sigma_squared_nugget,
                               const std::vector<T2__>& x,
                               const double& smoothness,
                               std::ostream* pstream__) ;
-int
-get_N_block_max(const std::vector<int>& block_last_index,
-                std::ostream* pstream__) ;
 template <typename T1__>
 Eigen::Matrix<stan::promote_args_t<T1__>, -1, -1>
 rw1d_precision(const int& n, const T1__& sigma_squared,
@@ -367,39 +411,39 @@ rw1d_precision(const int& n, const T1__& sigma_squared,
   (void) DUMMY_VAR__;  // suppress unused var warning
   
   try {
-    current_statement__ = 235;
+    current_statement__ = 215;
     validate_non_negative_index("output", "n", n);
-    current_statement__ = 236;
+    current_statement__ = 216;
     validate_non_negative_index("output", "n", n);
     Eigen::Matrix<local_scalar_t__, -1, -1> output;
     output = Eigen::Matrix<local_scalar_t__, -1, -1>(n, n);
     stan::math::fill(output, DUMMY_VAR__);
     
-    current_statement__ = 237;
+    current_statement__ = 217;
     assign(output, nil_index_list(), diag_matrix(rep_vector(2, n)),
       "assigning variable output");
-    current_statement__ = 240;
+    current_statement__ = 220;
     if (logical_eq(n, 0)) {
-      current_statement__ = 238;
+      current_statement__ = 218;
       return output;
     } 
-    current_statement__ = 244;
+    current_statement__ = 224;
     for (int i = 2; i <= n; ++i) {
-      current_statement__ = 241;
+      current_statement__ = 221;
       assign(output,
         cons_list(index_uni(i),
           cons_list(index_uni((i - 1)), nil_index_list())), -1,
         "assigning variable output");
-      current_statement__ = 242;
+      current_statement__ = 222;
       assign(output,
         cons_list(index_uni((i - 1)),
           cons_list(index_uni(i), nil_index_list())), -1,
         "assigning variable output");}
-    current_statement__ = 245;
+    current_statement__ = 225;
     assign(output,
       cons_list(index_uni(n), cons_list(index_uni(n), nil_index_list())), 1,
       "assigning variable output");
-    current_statement__ = 246;
+    current_statement__ = 226;
     return divide(output, sigma_squared);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -428,15 +472,15 @@ exp1d_precision(const int& n, const T1__& delta, const T2__& ell,
   (void) DUMMY_VAR__;  // suppress unused var warning
   
   try {
-    current_statement__ = 248;
+    current_statement__ = 228;
     validate_non_negative_index("output", "n", n);
-    current_statement__ = 249;
+    current_statement__ = 229;
     validate_non_negative_index("output", "n", n);
     Eigen::Matrix<local_scalar_t__, -1, -1> output;
     output = Eigen::Matrix<local_scalar_t__, -1, -1>(n, n);
     stan::math::fill(output, DUMMY_VAR__);
     
-    current_statement__ = 250;
+    current_statement__ = 230;
     assign(output, nil_index_list(), rep_matrix(0, n, n),
       "assigning variable output");
     local_scalar_t__ e_lambda_d_x;
@@ -451,61 +495,61 @@ exp1d_precision(const int& n, const T1__& delta, const T2__& ell,
     local_scalar_t__ r_minor;
     r_minor = DUMMY_VAR__;
     
-    current_statement__ = 257;
+    current_statement__ = 237;
     if (logical_eq(n, 1)) {
-      current_statement__ = 255;
+      current_statement__ = 235;
       assign(output,
         cons_list(index_uni(1), cons_list(index_uni(1), nil_index_list())),
         (1 / sigma_squared), "assigning variable output");
     } 
-    current_statement__ = 260;
+    current_statement__ = 240;
     if (logical_lte(n, 1)) {
-      current_statement__ = 258;
+      current_statement__ = 238;
       return output;
     } 
-    current_statement__ = 261;
+    current_statement__ = 241;
     e_lambda_d_x = stan::math::exp((-delta / ell));
-    current_statement__ = 262;
+    current_statement__ = 242;
     e_2lambda_d_x = stan::math::exp(((-2 * delta) / ell));
-    current_statement__ = 263;
+    current_statement__ = 243;
     r_major = (e_2lambda_d_x / (1 - e_2lambda_d_x));
-    current_statement__ = 264;
+    current_statement__ = 244;
     r_minor = (e_lambda_d_x / (1 - e_2lambda_d_x));
-    current_statement__ = 265;
+    current_statement__ = 245;
     assign(output,
       cons_list(index_uni(1), cons_list(index_uni(1), nil_index_list())),
       (1 + r_major), "assigning variable output");
-    current_statement__ = 270;
+    current_statement__ = 250;
     for (int i = 2; i <= (n - 1); ++i) {
-      current_statement__ = 266;
+      current_statement__ = 246;
       assign(output,
         cons_list(index_uni(i), cons_list(index_uni(i), nil_index_list())),
         (1 + (2 * r_major)), "assigning variable output");
-      current_statement__ = 267;
+      current_statement__ = 247;
       assign(output,
         cons_list(index_uni(i),
           cons_list(index_uni((i - 1)), nil_index_list())), -r_minor,
         "assigning variable output");
-      current_statement__ = 268;
+      current_statement__ = 248;
       assign(output,
         cons_list(index_uni((i - 1)),
           cons_list(index_uni(i), nil_index_list())), -r_minor,
         "assigning variable output");}
-    current_statement__ = 271;
+    current_statement__ = 251;
     assign(output,
       cons_list(index_uni(n),
         cons_list(index_uni((n - 1)), nil_index_list())), -r_minor,
       "assigning variable output");
-    current_statement__ = 272;
+    current_statement__ = 252;
     assign(output,
       cons_list(index_uni((n - 1)),
         cons_list(index_uni(n), nil_index_list())), -r_minor,
       "assigning variable output");
-    current_statement__ = 273;
+    current_statement__ = 253;
     assign(output,
       cons_list(index_uni(n), cons_list(index_uni(n), nil_index_list())),
       (1 + r_major), "assigning variable output");
-    current_statement__ = 274;
+    current_statement__ = 254;
     return divide(output, sigma_squared);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -539,7 +583,7 @@ chol_solve_L_b(const T0__& L_arg__, const T1__& b_arg__,
   (void) DUMMY_VAR__;  // suppress unused var warning
   
   try {
-    current_statement__ = 276;
+    current_statement__ = 256;
     return transpose(
              mdivide_right_tri_low(transpose(mdivide_left_tri_low(L, b)), L));
   } catch (const std::exception& e) {
@@ -556,6 +600,480 @@ stan::value_type_t<T1__>>, -1, 1>
 operator()(const T0__& L, const T1__& b, std::ostream* pstream__)  const 
 {
 return chol_solve_L_b(L, b, pstream__);
+}
+};
+int
+get_block_start(const int& i, const std::vector<int>& block_last_index,
+                std::ostream* pstream__) {
+  using local_scalar_t__ = double;
+  const static bool propto__ = true;
+  (void) propto__;
+  local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+  (void) DUMMY_VAR__;  // suppress unused var warning
+  
+  try {
+    current_statement__ = 262;
+    if (logical_eq(i, 1)) {
+      current_statement__ = 260;
+      return 1;
+    } else {
+      current_statement__ = 258;
+      return (block_last_index[((i - 1) - 1)] + 1);
+    }
+  } catch (const std::exception& e) {
+    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+      // Next line prevents compiler griping about no return
+      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
+  }
+  
+}
+struct get_block_start_functor__ {
+int
+operator()(const int& i, const std::vector<int>& block_last_index,
+           std::ostream* pstream__)  const 
+{
+return get_block_start(i, block_last_index, pstream__);
+}
+};
+int
+get_N_block_max(const std::vector<int>& block_last_index,
+                std::ostream* pstream__) {
+  using local_scalar_t__ = double;
+  const static bool propto__ = true;
+  (void) propto__;
+  local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+  (void) DUMMY_VAR__;  // suppress unused var warning
+  
+  try {
+    int N_blocks;
+    N_blocks = std::numeric_limits<int>::min();
+    
+    current_statement__ = 264;
+    N_blocks = stan::math::size(block_last_index);
+    int current_block_start_d;
+    current_block_start_d = std::numeric_limits<int>::min();
+    
+    current_statement__ = 265;
+    current_block_start_d = 1;
+    int N_block_max;
+    N_block_max = std::numeric_limits<int>::min();
+    
+    current_statement__ = 266;
+    N_block_max = 0;
+    current_statement__ = 273;
+    for (int i = 1; i <= N_blocks; ++i) {
+      int N_block_i;
+      N_block_i = std::numeric_limits<int>::min();
+      
+      current_statement__ = 267;
+      N_block_i = ((block_last_index[(i - 1)] - current_block_start_d) + 1);
+      current_statement__ = 270;
+      if (logical_gt(N_block_i, N_block_max)) {
+        current_statement__ = 268;
+        N_block_max = N_block_i;
+      } 
+      current_statement__ = 271;
+      current_block_start_d = (block_last_index[(i - 1)] + 1);}
+    current_statement__ = 274;
+    return N_block_max;
+  } catch (const std::exception& e) {
+    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+      // Next line prevents compiler griping about no return
+      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
+  }
+  
+}
+struct get_N_block_max_functor__ {
+int
+operator()(const std::vector<int>& block_last_index, std::ostream* pstream__)  const 
+{
+return get_N_block_max(block_last_index, pstream__);
+}
+};
+template <typename T3__, typename T4__, typename T5__, typename T6__,
+typename T7__, typename T8__>
+Eigen::Matrix<stan::promote_args_t<T3__, T4__, stan::value_type_t<T5__>,
+stan::value_type_t<T6__>,
+stan::value_type_t<T7__>, stan::promote_args_t<stan::value_type_t<T8__>>>, -1, 1>
+geowarp_vecchia_reduce_sum_full(const int& start, const int& end,
+                                const int& grainsize,
+                                const std::vector<Eigen::Matrix<T3__, -1, 1>>& x_warped,
+                                const T4__& sigma_squared_nugget,
+                                const T5__& deviation_sd_arg__,
+                                const T6__& y_arg__,
+                                const T7__& y_tilde_arg__,
+                                const T8__& X_mean_arg__,
+                                const std::vector<int>& block_indices,
+                                const std::vector<int>& block_last_index,
+                                const std::vector<int>& block_N_responses,
+                                const std::vector<std::vector<int>>& indices_X_mean_non_zero,
+                                const std::vector<int>& P_X_mean_non_zero,
+                                const int& N_block_max,
+                                const double& smoothness,
+                                std::ostream* pstream__) ;
+template <typename T2__, typename T3__, typename T4__, typename T5__,
+typename T6__, typename T7__>
+Eigen::Matrix<stan::promote_args_t<T2__, T3__, stan::value_type_t<T4__>,
+stan::value_type_t<T5__>,
+stan::value_type_t<T6__>, stan::promote_args_t<stan::value_type_t<T7__>>>, -1, 1>
+geowarp_vecchia_partial_sums_full(const int& start, const int& end,
+                                  const std::vector<Eigen::Matrix<T2__, -1, 1>>& x_warped,
+                                  const T3__& sigma_squared_nugget,
+                                  const T4__& deviation_sd_arg__,
+                                  const T5__& y_arg__,
+                                  const T6__& y_tilde_arg__,
+                                  const T7__& X_mean_arg__,
+                                  const std::vector<int>& block_indices,
+                                  const std::vector<int>& block_last_index,
+                                  const std::vector<int>& block_N_responses,
+                                  const std::vector<std::vector<int>>& indices_X_mean_non_zero,
+                                  const std::vector<int>& P_X_mean_non_zero,
+                                  const int& N_block_max,
+                                  const double& smoothness,
+                                  std::ostream* pstream__) {
+  using local_scalar_t__ = stan::promote_args_t<T2__,
+          T3__,
+          stan::value_type_t<T4__>,
+          stan::value_type_t<T5__>,
+          stan::value_type_t<T6__>, stan::promote_args_t<stan::value_type_t<T7__>>>;
+  const auto& deviation_sd = to_ref(deviation_sd_arg__);
+  const auto& y = to_ref(y_arg__);
+  const auto& y_tilde = to_ref(y_tilde_arg__);
+  const auto& X_mean = to_ref(X_mean_arg__);
+  const static bool propto__ = true;
+  (void) propto__;
+  local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+  (void) DUMMY_VAR__;  // suppress unused var warning
+  
+  try {
+    int P_mean;
+    P_mean = std::numeric_limits<int>::min();
+    
+    current_statement__ = 276;
+    P_mean = cols(X_mean);
+    local_scalar_t__ log_det;
+    log_det = DUMMY_VAR__;
+    
+    current_statement__ = 277;
+    log_det = 0;
+    local_scalar_t__ y_tildet_Q_y_tilde;
+    y_tildet_Q_y_tilde = DUMMY_VAR__;
+    
+    current_statement__ = 278;
+    y_tildet_Q_y_tilde = 0;
+    current_statement__ = 279;
+    validate_non_negative_index("Xt_Q_X", "P_mean", P_mean);
+    current_statement__ = 280;
+    validate_non_negative_index("Xt_Q_X", "P_mean", P_mean);
+    Eigen::Matrix<local_scalar_t__, -1, -1> Xt_Q_X;
+    Xt_Q_X = Eigen::Matrix<local_scalar_t__, -1, -1>(P_mean, P_mean);
+    stan::math::fill(Xt_Q_X, DUMMY_VAR__);
+    
+    current_statement__ = 281;
+    assign(Xt_Q_X, nil_index_list(), rep_matrix(0, P_mean, P_mean),
+      "assigning variable Xt_Q_X");
+    current_statement__ = 282;
+    validate_non_negative_index("Xt_Q_y", "P_mean", P_mean);
+    Eigen::Matrix<local_scalar_t__, -1, 1> Xt_Q_y;
+    Xt_Q_y = Eigen::Matrix<local_scalar_t__, -1, 1>(P_mean);
+    stan::math::fill(Xt_Q_y, DUMMY_VAR__);
+    
+    current_statement__ = 283;
+    assign(Xt_Q_y, nil_index_list(), rep_vector(0, P_mean),
+      "assigning variable Xt_Q_y");
+    current_statement__ = 284;
+    validate_non_negative_index("Xt_Q_y_tilde", "P_mean", P_mean);
+    Eigen::Matrix<local_scalar_t__, -1, 1> Xt_Q_y_tilde;
+    Xt_Q_y_tilde = Eigen::Matrix<local_scalar_t__, -1, 1>(P_mean);
+    stan::math::fill(Xt_Q_y_tilde, DUMMY_VAR__);
+    
+    current_statement__ = 285;
+    assign(Xt_Q_y_tilde, nil_index_list(), rep_vector(0, P_mean),
+      "assigning variable Xt_Q_y_tilde");
+    current_statement__ = 315;
+    for (int i = start; i <= end; ++i) {
+      int block_start;
+      block_start = std::numeric_limits<int>::min();
+      
+      current_statement__ = 286;
+      block_start = get_block_start(i, block_last_index, pstream__);
+      int N_current_block;
+      N_current_block = std::numeric_limits<int>::min();
+      
+      current_statement__ = 287;
+      N_current_block = ((block_last_index[(i - 1)] - block_start) + 1);
+      current_statement__ = 288;
+      validate_non_negative_index("K_block", "N_current_block",
+                                  N_current_block);
+      current_statement__ = 289;
+      validate_non_negative_index("K_block", "N_current_block",
+                                  N_current_block);
+      Eigen::Matrix<local_scalar_t__, -1, -1> K_block;
+      K_block = Eigen::Matrix<local_scalar_t__, -1, -1>(N_current_block, N_current_block);
+      stan::math::fill(K_block, DUMMY_VAR__);
+      
+      current_statement__ = 291;
+      validate_non_negative_index("L_block", "N_current_block",
+                                  N_current_block);
+      current_statement__ = 292;
+      validate_non_negative_index("L_block", "N_current_block",
+                                  N_current_block);
+      Eigen::Matrix<local_scalar_t__, -1, -1> L_block;
+      L_block = Eigen::Matrix<local_scalar_t__, -1, -1>(N_current_block, N_current_block);
+      stan::math::fill(L_block, DUMMY_VAR__);
+      
+      current_statement__ = 294;
+      validate_non_negative_index("L_inv_X_block", "N_current_block",
+                                  N_current_block);
+      current_statement__ = 295;
+      validate_non_negative_index("L_inv_X_block", "P_X_mean_non_zero[i]",
+                                  P_X_mean_non_zero[(i - 1)]);
+      Eigen::Matrix<local_scalar_t__, -1, -1> L_inv_X_block;
+      L_inv_X_block = Eigen::Matrix<local_scalar_t__, -1, -1>(N_current_block, P_X_mean_non_zero[
+        (i - 1)]);
+      stan::math::fill(L_inv_X_block, DUMMY_VAR__);
+      
+      current_statement__ = 297;
+      validate_non_negative_index("L_inv_y_block", "N_current_block",
+                                  N_current_block);
+      Eigen::Matrix<local_scalar_t__, -1, 1> L_inv_y_block;
+      L_inv_y_block = Eigen::Matrix<local_scalar_t__, -1, 1>(N_current_block);
+      stan::math::fill(L_inv_y_block, DUMMY_VAR__);
+      
+      current_statement__ = 299;
+      validate_non_negative_index("L_inv_y_tilde_block", "N_current_block",
+                                  N_current_block);
+      Eigen::Matrix<local_scalar_t__, -1, 1> L_inv_y_tilde_block;
+      L_inv_y_tilde_block = Eigen::Matrix<local_scalar_t__, -1, 1>(N_current_block);
+      stan::math::fill(L_inv_y_tilde_block, DUMMY_VAR__);
+      
+      current_statement__ = 301;
+      validate_non_negative_index("indices_current_block", "N_current_block",
+                                  N_current_block);
+      std::vector<int> indices_current_block;
+      indices_current_block = std::vector<int>(N_current_block, std::numeric_limits<int>::min());
+      
+      current_statement__ = 302;
+      assign(indices_current_block, nil_index_list(),
+        rvalue(block_indices,
+          cons_list(index_min_max(block_start, block_last_index[(i - 1)]),
+            nil_index_list()), "block_indices"),
+        "assigning variable indices_current_block");
+      int N_parents_current_block;
+      N_parents_current_block = std::numeric_limits<int>::min();
+      
+      current_statement__ = 303;
+      N_parents_current_block = (N_current_block -
+                                  block_N_responses[(i - 1)]);
+      current_statement__ = 304;
+      assign(K_block, nil_index_list(),
+        geowarp_process_covariance(sigma_squared_nugget,
+          rvalue(deviation_sd,
+            cons_list(index_multi(indices_current_block), nil_index_list()),
+            "deviation_sd"),
+          rvalue(x_warped,
+            cons_list(index_multi(indices_current_block), nil_index_list()),
+            "x_warped"), smoothness, pstream__), "assigning variable K_block");
+      current_statement__ = 305;
+      assign(L_block, nil_index_list(), cholesky_decompose(K_block),
+        "assigning variable L_block");
+      current_statement__ = 306;
+      assign(L_inv_X_block, nil_index_list(),
+        mdivide_left_tri_low(L_block,
+          rvalue(X_mean,
+            cons_list(index_multi(indices_current_block),
+              cons_list(
+                index_multi(rvalue(indices_X_mean_non_zero,
+                              cons_list(
+                                index_min_max(1, P_X_mean_non_zero[(i - 1)]),
+                                cons_list(index_uni(i), nil_index_list())),
+                              "indices_X_mean_non_zero")), nil_index_list())),
+            "X_mean")), "assigning variable L_inv_X_block");
+      current_statement__ = 307;
+      assign(L_inv_y_block, nil_index_list(),
+        mdivide_left_tri_low(L_block,
+          rvalue(y,
+            cons_list(index_multi(indices_current_block), nil_index_list()),
+            "y")), "assigning variable L_inv_y_block");
+      current_statement__ = 308;
+      assign(L_inv_y_tilde_block, nil_index_list(),
+        mdivide_left_tri_low(L_block,
+          rvalue(y_tilde,
+            cons_list(index_multi(indices_current_block), nil_index_list()),
+            "y_tilde")), "assigning variable L_inv_y_tilde_block");
+      current_statement__ = 309;
+      log_det = (log_det +
+                  (2 *
+                    sum(
+                      stan::math::log(
+                        diagonal(
+                          rvalue(L_block,
+                            cons_list(
+                              index_min((N_parents_current_block + 1)),
+                              cons_list(
+                                index_min((N_parents_current_block + 1)),
+                                nil_index_list())), "L_block"))))));
+      current_statement__ = 310;
+      y_tildet_Q_y_tilde = (y_tildet_Q_y_tilde +
+                             sum(
+                               square(
+                                 rvalue(L_inv_y_tilde_block,
+                                   cons_list(
+                                     index_min((N_parents_current_block + 1)),
+                                     nil_index_list()),
+                                   "L_inv_y_tilde_block"))));
+      current_statement__ = 311;
+      assign(Xt_Q_y,
+        cons_list(
+          index_multi(rvalue(indices_X_mean_non_zero,
+                        cons_list(
+                          index_min_max(1, P_X_mean_non_zero[(i - 1)]),
+                          cons_list(index_uni(i), nil_index_list())),
+                        "indices_X_mean_non_zero")), nil_index_list()),
+        add(
+          stan::model::deep_copy(
+            rvalue(Xt_Q_y,
+              cons_list(
+                index_multi(rvalue(indices_X_mean_non_zero,
+                              cons_list(
+                                index_min_max(1, P_X_mean_non_zero[(i - 1)]),
+                                cons_list(index_uni(i), nil_index_list())),
+                              "indices_X_mean_non_zero")), nil_index_list()),
+              "Xt_Q_y")),
+          multiply(
+            transpose(
+              rvalue(L_inv_X_block,
+                cons_list(index_min((N_parents_current_block + 1)),
+                  cons_list(index_min_max(1, P_X_mean_non_zero[(i - 1)]),
+                    nil_index_list())), "L_inv_X_block")),
+            rvalue(L_inv_y_block,
+              cons_list(index_min((N_parents_current_block + 1)),
+                nil_index_list()), "L_inv_y_block"))),
+        "assigning variable Xt_Q_y");
+      current_statement__ = 312;
+      assign(Xt_Q_y_tilde,
+        cons_list(
+          index_multi(rvalue(indices_X_mean_non_zero,
+                        cons_list(
+                          index_min_max(1, P_X_mean_non_zero[(i - 1)]),
+                          cons_list(index_uni(i), nil_index_list())),
+                        "indices_X_mean_non_zero")), nil_index_list()),
+        add(
+          stan::model::deep_copy(
+            rvalue(Xt_Q_y_tilde,
+              cons_list(
+                index_multi(rvalue(indices_X_mean_non_zero,
+                              cons_list(
+                                index_min_max(1, P_X_mean_non_zero[(i - 1)]),
+                                cons_list(index_uni(i), nil_index_list())),
+                              "indices_X_mean_non_zero")), nil_index_list()),
+              "Xt_Q_y_tilde")),
+          multiply(
+            transpose(
+              rvalue(L_inv_X_block,
+                cons_list(index_min((N_parents_current_block + 1)),
+                  cons_list(index_min_max(1, P_X_mean_non_zero[(i - 1)]),
+                    nil_index_list())), "L_inv_X_block")),
+            rvalue(L_inv_y_tilde_block,
+              cons_list(index_min((N_parents_current_block + 1)),
+                nil_index_list()), "L_inv_y_tilde_block"))),
+        "assigning variable Xt_Q_y_tilde");
+      current_statement__ = 313;
+      assign(Xt_Q_X,
+        cons_list(
+          index_multi(rvalue(indices_X_mean_non_zero,
+                        cons_list(
+                          index_min_max(1, P_X_mean_non_zero[(i - 1)]),
+                          cons_list(index_uni(i), nil_index_list())),
+                        "indices_X_mean_non_zero")),
+          cons_list(
+            index_multi(rvalue(indices_X_mean_non_zero,
+                          cons_list(
+                            index_min_max(1, P_X_mean_non_zero[(i - 1)]),
+                            cons_list(index_uni(i), nil_index_list())),
+                          "indices_X_mean_non_zero")), nil_index_list())),
+        add(
+          stan::model::deep_copy(
+            rvalue(Xt_Q_X,
+              cons_list(
+                index_multi(rvalue(indices_X_mean_non_zero,
+                              cons_list(
+                                index_min_max(1, P_X_mean_non_zero[(i - 1)]),
+                                cons_list(index_uni(i), nil_index_list())),
+                              "indices_X_mean_non_zero")),
+                cons_list(
+                  index_multi(rvalue(indices_X_mean_non_zero,
+                                cons_list(
+                                  index_min_max(1, P_X_mean_non_zero[
+                                  (i - 1)]),
+                                  cons_list(index_uni(i), nil_index_list())),
+                                "indices_X_mean_non_zero")),
+                  nil_index_list())), "Xt_Q_X")),
+          crossprod(
+            rvalue(L_inv_X_block,
+              cons_list(index_min((N_parents_current_block + 1)),
+                cons_list(index_omni(), nil_index_list())), "L_inv_X_block"))),
+        "assigning variable Xt_Q_X");}
+    current_statement__ = 316;
+    validate_non_negative_index("output", "2 + P_mean * P_mean + 2 * P_mean",
+                                ((2 + (P_mean * P_mean)) + (2 * P_mean)));
+    Eigen::Matrix<local_scalar_t__, -1, 1> output;
+    output = Eigen::Matrix<local_scalar_t__, -1, 1>(((2 + (P_mean * P_mean))
+                                                      + (2 * P_mean)));
+    stan::math::fill(output, DUMMY_VAR__);
+    
+    current_statement__ = 318;
+    assign(output, cons_list(index_uni(1), nil_index_list()), log_det,
+      "assigning variable output");
+    current_statement__ = 319;
+    assign(output, cons_list(index_uni(2), nil_index_list()),
+      y_tildet_Q_y_tilde, "assigning variable output");
+    current_statement__ = 320;
+    assign(output,
+      cons_list(index_min_max(3, (2 + (P_mean * P_mean))), nil_index_list()),
+      to_vector(Xt_Q_X), "assigning variable output");
+    current_statement__ = 321;
+    assign(output,
+      cons_list(
+        index_min_max((3 + (P_mean * P_mean)), ((2 + (P_mean * P_mean)) +
+                                                 P_mean)), nil_index_list()),
+      to_vector(Xt_Q_y), "assigning variable output");
+    current_statement__ = 322;
+    assign(output,
+      cons_list(index_min(((3 + (P_mean * P_mean)) + P_mean)),
+        nil_index_list()), to_vector(Xt_Q_y_tilde),
+      "assigning variable output");
+    current_statement__ = 323;
+    return output;
+  } catch (const std::exception& e) {
+    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+      // Next line prevents compiler griping about no return
+      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
+  }
+  
+}
+struct geowarp_vecchia_partial_sums_full_functor__ {
+template <typename T2__, typename T3__, typename T4__, typename T5__,
+typename T6__, typename T7__>
+Eigen::Matrix<stan::promote_args_t<T2__, T3__, stan::value_type_t<T4__>,
+stan::value_type_t<T5__>,
+stan::value_type_t<T6__>, stan::promote_args_t<stan::value_type_t<T7__>>>, -1, 1>
+operator()(const int& start, const int& end,
+           const std::vector<Eigen::Matrix<T2__, -1, 1>>& x_warped,
+           const T3__& sigma_squared_nugget, const T4__& deviation_sd,
+           const T5__& y, const T6__& y_tilde, const T7__& X_mean,
+           const std::vector<int>& block_indices,
+           const std::vector<int>& block_last_index,
+           const std::vector<int>& block_N_responses,
+           const std::vector<std::vector<int>>& indices_X_mean_non_zero,
+           const std::vector<int>& P_X_mean_non_zero, const int& N_block_max,
+           const double& smoothness, std::ostream* pstream__)  const 
+{
+return geowarp_vecchia_partial_sums_full(start, end, x_warped,
+         sigma_squared_nugget, deviation_sd, y, y_tilde, X_mean,
+         block_indices, block_last_index, block_N_responses,
+         indices_X_mean_non_zero, P_X_mean_non_zero, N_block_max, smoothness,
+         pstream__);
 }
 };
 #include <stan_meta_header.hpp>
@@ -600,6 +1118,8 @@ private:
   Eigen::Matrix<double, -1, 1> gamma_deviation_a;
   Eigen::Matrix<double, -1, 1> gamma_deviation_b;
   double L_deviation_shape;
+  int use_parallel;
+  int grain_size;
   int P_mean_total;
   Eigen::Matrix<double, -1, -1> X_mean;
   Eigen::Matrix<double, -1, 1> alpha_Q_mu;
@@ -635,31 +1155,31 @@ public:
       pos__ = std::numeric_limits<int>::min();
       
       pos__ = 1;
-      current_statement__ = 135;
+      current_statement__ = 113;
       context__.validate_dims("data initialization","N","int",
           context__.to_vec());
       N = std::numeric_limits<int>::min();
       
-      current_statement__ = 135;
+      current_statement__ = 113;
       N = context__.vals_i("N")[(1 - 1)];
-      current_statement__ = 135;
-      current_statement__ = 135;
+      current_statement__ = 113;
+      current_statement__ = 113;
       check_greater_or_equal(function__, "N", N, 1);
-      current_statement__ = 136;
+      current_statement__ = 114;
       context__.validate_dims("data initialization","D","int",
           context__.to_vec());
       D = std::numeric_limits<int>::min();
       
-      current_statement__ = 136;
+      current_statement__ = 114;
       D = context__.vals_i("D")[(1 - 1)];
-      current_statement__ = 136;
-      current_statement__ = 136;
+      current_statement__ = 114;
+      current_statement__ = 114;
       check_greater_or_equal(function__, "D", D, 2);
-      current_statement__ = 137;
+      current_statement__ = 115;
       validate_non_negative_index("x", "N", N);
-      current_statement__ = 138;
+      current_statement__ = 116;
       validate_non_negative_index("x", "D", D);
-      current_statement__ = 139;
+      current_statement__ = 117;
       context__.validate_dims("data initialization","x","double",
           context__.to_vec(N, D));
       x = std::vector<Eigen::Matrix<double, -1, 1>>(N, Eigen::Matrix<double, -1, 1>(D));
@@ -667,26 +1187,26 @@ public:
       
       {
         std::vector<local_scalar_t__> x_flat__;
-        current_statement__ = 139;
+        current_statement__ = 117;
         assign(x_flat__, nil_index_list(), context__.vals_r("x"),
           "assigning variable x_flat__");
-        current_statement__ = 139;
+        current_statement__ = 117;
         pos__ = 1;
-        current_statement__ = 139;
+        current_statement__ = 117;
         for (int sym1__ = 1; sym1__ <= D; ++sym1__) {
-          current_statement__ = 139;
+          current_statement__ = 117;
           for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-            current_statement__ = 139;
+            current_statement__ = 117;
             assign(x,
               cons_list(index_uni(sym2__),
                 cons_list(index_uni(sym1__), nil_index_list())),
               x_flat__[(pos__ - 1)], "assigning variable x");
-            current_statement__ = 139;
+            current_statement__ = 117;
             pos__ = (pos__ + 1);}}
       }
-      current_statement__ = 140;
+      current_statement__ = 118;
       validate_non_negative_index("y", "N", N);
-      current_statement__ = 141;
+      current_statement__ = 119;
       context__.validate_dims("data initialization","y","double",
           context__.to_vec(N));
       y = Eigen::Matrix<double, -1, 1>(N);
@@ -694,22 +1214,22 @@ public:
       
       {
         std::vector<local_scalar_t__> y_flat__;
-        current_statement__ = 141;
+        current_statement__ = 119;
         assign(y_flat__, nil_index_list(), context__.vals_r("y"),
           "assigning variable y_flat__");
-        current_statement__ = 141;
+        current_statement__ = 119;
         pos__ = 1;
-        current_statement__ = 141;
+        current_statement__ = 119;
         for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          current_statement__ = 141;
+          current_statement__ = 119;
           assign(y, cons_list(index_uni(sym1__), nil_index_list()),
             y_flat__[(pos__ - 1)], "assigning variable y");
-          current_statement__ = 141;
+          current_statement__ = 119;
           pos__ = (pos__ + 1);}
       }
-      current_statement__ = 142;
+      current_statement__ = 120;
       validate_non_negative_index("scaling", "D", D);
-      current_statement__ = 143;
+      current_statement__ = 121;
       context__.validate_dims("data initialization","scaling","double",
           context__.to_vec(D));
       scaling = Eigen::Matrix<double, -1, 1>(D);
@@ -717,35 +1237,35 @@ public:
       
       {
         std::vector<local_scalar_t__> scaling_flat__;
-        current_statement__ = 143;
+        current_statement__ = 121;
         assign(scaling_flat__, nil_index_list(), context__.vals_r("scaling"),
           "assigning variable scaling_flat__");
-        current_statement__ = 143;
+        current_statement__ = 121;
         pos__ = 1;
-        current_statement__ = 143;
+        current_statement__ = 121;
         for (int sym1__ = 1; sym1__ <= D; ++sym1__) {
-          current_statement__ = 143;
+          current_statement__ = 121;
           assign(scaling, cons_list(index_uni(sym1__), nil_index_list()),
             scaling_flat__[(pos__ - 1)], "assigning variable scaling");
-          current_statement__ = 143;
+          current_statement__ = 121;
           pos__ = (pos__ + 1);}
       }
-      current_statement__ = 144;
+      current_statement__ = 122;
       context__.validate_dims("data initialization","P_mean_fixed","int",
           context__.to_vec());
       P_mean_fixed = std::numeric_limits<int>::min();
       
-      current_statement__ = 144;
+      current_statement__ = 122;
       P_mean_fixed = context__.vals_i("P_mean_fixed")[(1 - 1)];
-      current_statement__ = 144;
-      current_statement__ = 144;
+      current_statement__ = 122;
+      current_statement__ = 122;
       check_greater_or_equal(function__, "P_mean_fixed", P_mean_fixed, 1);
-      current_statement__ = 145;
+      current_statement__ = 123;
       validate_non_negative_index("X_mean_fixed", "N", N);
-      current_statement__ = 146;
+      current_statement__ = 124;
       validate_non_negative_index("X_mean_fixed", "P_mean_fixed",
                                   P_mean_fixed);
-      current_statement__ = 147;
+      current_statement__ = 125;
       context__.validate_dims("data initialization","X_mean_fixed","double",
           context__.to_vec(N, P_mean_fixed));
       X_mean_fixed = Eigen::Matrix<double, -1, -1>(N, P_mean_fixed);
@@ -753,28 +1273,28 @@ public:
       
       {
         std::vector<local_scalar_t__> X_mean_fixed_flat__;
-        current_statement__ = 147;
+        current_statement__ = 125;
         assign(X_mean_fixed_flat__, nil_index_list(),
           context__.vals_r("X_mean_fixed"),
           "assigning variable X_mean_fixed_flat__");
-        current_statement__ = 147;
+        current_statement__ = 125;
         pos__ = 1;
-        current_statement__ = 147;
+        current_statement__ = 125;
         for (int sym1__ = 1; sym1__ <= P_mean_fixed; ++sym1__) {
-          current_statement__ = 147;
+          current_statement__ = 125;
           for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-            current_statement__ = 147;
+            current_statement__ = 125;
             assign(X_mean_fixed,
               cons_list(index_uni(sym2__),
                 cons_list(index_uni(sym1__), nil_index_list())),
               X_mean_fixed_flat__[(pos__ - 1)],
               "assigning variable X_mean_fixed");
-            current_statement__ = 147;
+            current_statement__ = 125;
             pos__ = (pos__ + 1);}}
       }
-      current_statement__ = 148;
+      current_statement__ = 126;
       validate_non_negative_index("alpha_mean", "P_mean_fixed", P_mean_fixed);
-      current_statement__ = 149;
+      current_statement__ = 127;
       context__.validate_dims("data initialization","alpha_mean","double",
           context__.to_vec(P_mean_fixed));
       alpha_mean = Eigen::Matrix<double, -1, 1>(P_mean_fixed);
@@ -782,27 +1302,27 @@ public:
       
       {
         std::vector<local_scalar_t__> alpha_mean_flat__;
-        current_statement__ = 149;
+        current_statement__ = 127;
         assign(alpha_mean_flat__, nil_index_list(),
           context__.vals_r("alpha_mean"),
           "assigning variable alpha_mean_flat__");
-        current_statement__ = 149;
+        current_statement__ = 127;
         pos__ = 1;
-        current_statement__ = 149;
+        current_statement__ = 127;
         for (int sym1__ = 1; sym1__ <= P_mean_fixed; ++sym1__) {
-          current_statement__ = 149;
+          current_statement__ = 127;
           assign(alpha_mean, cons_list(index_uni(sym1__), nil_index_list()),
             alpha_mean_flat__[(pos__ - 1)], "assigning variable alpha_mean");
-          current_statement__ = 149;
+          current_statement__ = 127;
           pos__ = (pos__ + 1);}
       }
-      current_statement__ = 150;
+      current_statement__ = 128;
       validate_non_negative_index("alpha_precision", "P_mean_fixed",
                                   P_mean_fixed);
-      current_statement__ = 151;
+      current_statement__ = 129;
       validate_non_negative_index("alpha_precision", "P_mean_fixed",
                                   P_mean_fixed);
-      current_statement__ = 152;
+      current_statement__ = 130;
       context__.validate_dims("data initialization","alpha_precision",
           "double",context__.to_vec(P_mean_fixed, P_mean_fixed));
       alpha_precision = Eigen::Matrix<double, -1, -1>(P_mean_fixed, P_mean_fixed);
@@ -810,41 +1330,41 @@ public:
       
       {
         std::vector<local_scalar_t__> alpha_precision_flat__;
-        current_statement__ = 152;
+        current_statement__ = 130;
         assign(alpha_precision_flat__, nil_index_list(),
           context__.vals_r("alpha_precision"),
           "assigning variable alpha_precision_flat__");
-        current_statement__ = 152;
+        current_statement__ = 130;
         pos__ = 1;
-        current_statement__ = 152;
+        current_statement__ = 130;
         for (int sym1__ = 1; sym1__ <= P_mean_fixed; ++sym1__) {
-          current_statement__ = 152;
+          current_statement__ = 130;
           for (int sym2__ = 1; sym2__ <= P_mean_fixed; ++sym2__) {
-            current_statement__ = 152;
+            current_statement__ = 130;
             assign(alpha_precision,
               cons_list(index_uni(sym2__),
                 cons_list(index_uni(sym1__), nil_index_list())),
               alpha_precision_flat__[(pos__ - 1)],
               "assigning variable alpha_precision");
-            current_statement__ = 152;
+            current_statement__ = 130;
             pos__ = (pos__ + 1);}}
       }
-      current_statement__ = 153;
+      current_statement__ = 131;
       context__.validate_dims("data initialization","P_mean_random","int",
           context__.to_vec());
       P_mean_random = std::numeric_limits<int>::min();
       
-      current_statement__ = 153;
+      current_statement__ = 131;
       P_mean_random = context__.vals_i("P_mean_random")[(1 - 1)];
-      current_statement__ = 153;
-      current_statement__ = 153;
+      current_statement__ = 131;
+      current_statement__ = 131;
       check_greater_or_equal(function__, "P_mean_random", P_mean_random, 0);
-      current_statement__ = 154;
+      current_statement__ = 132;
       validate_non_negative_index("X_mean_random", "N", N);
-      current_statement__ = 155;
+      current_statement__ = 133;
       validate_non_negative_index("X_mean_random", "P_mean_random",
                                   P_mean_random);
-      current_statement__ = 156;
+      current_statement__ = 134;
       context__.validate_dims("data initialization","X_mean_random","double",
           context__.to_vec(N, P_mean_random));
       X_mean_random = Eigen::Matrix<double, -1, -1>(N, P_mean_random);
@@ -852,100 +1372,100 @@ public:
       
       {
         std::vector<local_scalar_t__> X_mean_random_flat__;
-        current_statement__ = 156;
+        current_statement__ = 134;
         assign(X_mean_random_flat__, nil_index_list(),
           context__.vals_r("X_mean_random"),
           "assigning variable X_mean_random_flat__");
-        current_statement__ = 156;
+        current_statement__ = 134;
         pos__ = 1;
-        current_statement__ = 156;
+        current_statement__ = 134;
         for (int sym1__ = 1; sym1__ <= P_mean_random; ++sym1__) {
-          current_statement__ = 156;
+          current_statement__ = 134;
           for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-            current_statement__ = 156;
+            current_statement__ = 134;
             assign(X_mean_random,
               cons_list(index_uni(sym2__),
                 cons_list(index_uni(sym1__), nil_index_list())),
               X_mean_random_flat__[(pos__ - 1)],
               "assigning variable X_mean_random");
-            current_statement__ = 156;
+            current_statement__ = 134;
             pos__ = (pos__ + 1);}}
       }
-      current_statement__ = 157;
+      current_statement__ = 135;
       context__.validate_dims("data initialization",
           "tau_squared_mean_random_a","double",context__.to_vec());
       tau_squared_mean_random_a = std::numeric_limits<double>::quiet_NaN();
       
-      current_statement__ = 157;
+      current_statement__ = 135;
       tau_squared_mean_random_a = context__.vals_r("tau_squared_mean_random_a")[
           (1 - 1)];
-      current_statement__ = 157;
-      current_statement__ = 157;
+      current_statement__ = 135;
+      current_statement__ = 135;
       check_greater_or_equal(function__, "tau_squared_mean_random_a",
                              tau_squared_mean_random_a, 0);
-      current_statement__ = 158;
+      current_statement__ = 136;
       context__.validate_dims("data initialization",
           "tau_squared_mean_random_b","double",context__.to_vec());
       tau_squared_mean_random_b = std::numeric_limits<double>::quiet_NaN();
       
-      current_statement__ = 158;
+      current_statement__ = 136;
       tau_squared_mean_random_b = context__.vals_r("tau_squared_mean_random_b")[
           (1 - 1)];
-      current_statement__ = 158;
-      current_statement__ = 158;
+      current_statement__ = 136;
+      current_statement__ = 136;
       check_greater_or_equal(function__, "tau_squared_mean_random_b",
                              tau_squared_mean_random_b, 0);
-      current_statement__ = 159;
+      current_statement__ = 137;
       context__.validate_dims("data initialization","sigma_squared_nugget_a",
           "double",context__.to_vec());
       sigma_squared_nugget_a = std::numeric_limits<double>::quiet_NaN();
       
-      current_statement__ = 159;
+      current_statement__ = 137;
       sigma_squared_nugget_a = context__.vals_r("sigma_squared_nugget_a")[
           (1 - 1)];
-      current_statement__ = 159;
-      current_statement__ = 159;
+      current_statement__ = 137;
+      current_statement__ = 137;
       check_greater_or_equal(function__, "sigma_squared_nugget_a",
                              sigma_squared_nugget_a, 0);
-      current_statement__ = 160;
+      current_statement__ = 138;
       context__.validate_dims("data initialization","sigma_squared_nugget_b",
           "double",context__.to_vec());
       sigma_squared_nugget_b = std::numeric_limits<double>::quiet_NaN();
       
-      current_statement__ = 160;
+      current_statement__ = 138;
       sigma_squared_nugget_b = context__.vals_r("sigma_squared_nugget_b")[
           (1 - 1)];
-      current_statement__ = 160;
-      current_statement__ = 160;
+      current_statement__ = 138;
+      current_statement__ = 138;
       check_greater_or_equal(function__, "sigma_squared_nugget_b",
                              sigma_squared_nugget_b, 0);
-      current_statement__ = 161;
+      current_statement__ = 139;
       context__.validate_dims("data initialization","smoothness","double",
           context__.to_vec());
       smoothness = std::numeric_limits<double>::quiet_NaN();
       
-      current_statement__ = 161;
+      current_statement__ = 139;
       smoothness = context__.vals_r("smoothness")[(1 - 1)];
-      current_statement__ = 161;
-      current_statement__ = 161;
+      current_statement__ = 139;
+      current_statement__ = 139;
       check_greater_or_equal(function__, "smoothness", smoothness, 0);
-      current_statement__ = 162;
+      current_statement__ = 140;
       context__.validate_dims("data initialization","P_deviation_warping",
           "int",context__.to_vec());
       P_deviation_warping = std::numeric_limits<int>::min();
       
-      current_statement__ = 162;
+      current_statement__ = 140;
       P_deviation_warping = context__.vals_i("P_deviation_warping")[(1 - 1)];
-      current_statement__ = 162;
-      current_statement__ = 162;
+      current_statement__ = 140;
+      current_statement__ = 140;
       check_greater_or_equal(function__, "P_deviation_warping",
                              P_deviation_warping, 1);
-      current_statement__ = 163;
+      current_statement__ = 141;
       validate_non_negative_index("X_deviation_warping", "N", N);
-      current_statement__ = 164;
+      current_statement__ = 142;
       validate_non_negative_index("X_deviation_warping",
                                   "P_deviation_warping", P_deviation_warping);
-      current_statement__ = 165;
+      current_statement__ = 143;
       context__.validate_dims("data initialization","X_deviation_warping",
           "double",context__.to_vec(N, P_deviation_warping));
       X_deviation_warping = Eigen::Matrix<double, -1, -1>(N, P_deviation_warping);
@@ -953,42 +1473,42 @@ public:
       
       {
         std::vector<local_scalar_t__> X_deviation_warping_flat__;
-        current_statement__ = 165;
+        current_statement__ = 143;
         assign(X_deviation_warping_flat__, nil_index_list(),
           context__.vals_r("X_deviation_warping"),
           "assigning variable X_deviation_warping_flat__");
-        current_statement__ = 165;
+        current_statement__ = 143;
         pos__ = 1;
-        current_statement__ = 165;
+        current_statement__ = 143;
         for (int sym1__ = 1; sym1__ <= P_deviation_warping; ++sym1__) {
-          current_statement__ = 165;
+          current_statement__ = 143;
           for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-            current_statement__ = 165;
+            current_statement__ = 143;
             assign(X_deviation_warping,
               cons_list(index_uni(sym2__),
                 cons_list(index_uni(sym1__), nil_index_list())),
               X_deviation_warping_flat__[(pos__ - 1)],
               "assigning variable X_deviation_warping");
-            current_statement__ = 165;
+            current_statement__ = 143;
             pos__ = (pos__ + 1);}}
       }
-      current_statement__ = 166;
+      current_statement__ = 144;
       context__.validate_dims("data initialization","P_deviation_fixed",
           "int",context__.to_vec());
       P_deviation_fixed = std::numeric_limits<int>::min();
       
-      current_statement__ = 166;
+      current_statement__ = 144;
       P_deviation_fixed = context__.vals_i("P_deviation_fixed")[(1 - 1)];
-      current_statement__ = 166;
-      current_statement__ = 166;
+      current_statement__ = 144;
+      current_statement__ = 144;
       check_greater_or_equal(function__, "P_deviation_fixed",
                              P_deviation_fixed, 1);
-      current_statement__ = 167;
+      current_statement__ = 145;
       validate_non_negative_index("X_deviation_fixed", "N", N);
-      current_statement__ = 168;
+      current_statement__ = 146;
       validate_non_negative_index("X_deviation_fixed", "P_deviation_fixed",
                                   P_deviation_fixed);
-      current_statement__ = 169;
+      current_statement__ = 147;
       context__.validate_dims("data initialization","X_deviation_fixed",
           "double",context__.to_vec(N, P_deviation_fixed));
       X_deviation_fixed = Eigen::Matrix<double, -1, -1>(N, P_deviation_fixed);
@@ -996,29 +1516,29 @@ public:
       
       {
         std::vector<local_scalar_t__> X_deviation_fixed_flat__;
-        current_statement__ = 169;
+        current_statement__ = 147;
         assign(X_deviation_fixed_flat__, nil_index_list(),
           context__.vals_r("X_deviation_fixed"),
           "assigning variable X_deviation_fixed_flat__");
-        current_statement__ = 169;
+        current_statement__ = 147;
         pos__ = 1;
-        current_statement__ = 169;
+        current_statement__ = 147;
         for (int sym1__ = 1; sym1__ <= P_deviation_fixed; ++sym1__) {
-          current_statement__ = 169;
+          current_statement__ = 147;
           for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-            current_statement__ = 169;
+            current_statement__ = 147;
             assign(X_deviation_fixed,
               cons_list(index_uni(sym2__),
                 cons_list(index_uni(sym1__), nil_index_list())),
               X_deviation_fixed_flat__[(pos__ - 1)],
               "assigning variable X_deviation_fixed");
-            current_statement__ = 169;
+            current_statement__ = 147;
             pos__ = (pos__ + 1);}}
       }
-      current_statement__ = 170;
+      current_statement__ = 148;
       validate_non_negative_index("eta_deviation_mean", "P_deviation_fixed",
                                   P_deviation_fixed);
-      current_statement__ = 171;
+      current_statement__ = 149;
       context__.validate_dims("data initialization","eta_deviation_mean",
           "double",context__.to_vec(P_deviation_fixed));
       eta_deviation_mean = Eigen::Matrix<double, -1, 1>(P_deviation_fixed);
@@ -1026,29 +1546,29 @@ public:
       
       {
         std::vector<local_scalar_t__> eta_deviation_mean_flat__;
-        current_statement__ = 171;
+        current_statement__ = 149;
         assign(eta_deviation_mean_flat__, nil_index_list(),
           context__.vals_r("eta_deviation_mean"),
           "assigning variable eta_deviation_mean_flat__");
-        current_statement__ = 171;
+        current_statement__ = 149;
         pos__ = 1;
-        current_statement__ = 171;
+        current_statement__ = 149;
         for (int sym1__ = 1; sym1__ <= P_deviation_fixed; ++sym1__) {
-          current_statement__ = 171;
+          current_statement__ = 149;
           assign(eta_deviation_mean,
             cons_list(index_uni(sym1__), nil_index_list()),
             eta_deviation_mean_flat__[(pos__ - 1)],
             "assigning variable eta_deviation_mean");
-          current_statement__ = 171;
+          current_statement__ = 149;
           pos__ = (pos__ + 1);}
       }
-      current_statement__ = 172;
+      current_statement__ = 150;
       validate_non_negative_index("eta_deviation_precision",
                                   "P_deviation_fixed", P_deviation_fixed);
-      current_statement__ = 172;
+      current_statement__ = 150;
       validate_non_negative_index("eta_deviation_precision",
                                   "P_deviation_fixed", P_deviation_fixed);
-      current_statement__ = 173;
+      current_statement__ = 151;
       context__.validate_dims("data initialization",
           "eta_deviation_precision","double",
           context__.to_vec(P_deviation_fixed, P_deviation_fixed));
@@ -1057,46 +1577,46 @@ public:
       
       {
         std::vector<local_scalar_t__> eta_deviation_precision_flat__;
-        current_statement__ = 173;
+        current_statement__ = 151;
         assign(eta_deviation_precision_flat__, nil_index_list(),
           context__.vals_r("eta_deviation_precision"),
           "assigning variable eta_deviation_precision_flat__");
-        current_statement__ = 173;
+        current_statement__ = 151;
         pos__ = 1;
-        current_statement__ = 173;
+        current_statement__ = 151;
         for (int sym1__ = 1; sym1__ <= P_deviation_fixed; ++sym1__) {
-          current_statement__ = 173;
+          current_statement__ = 151;
           for (int sym2__ = 1; sym2__ <= P_deviation_fixed; ++sym2__) {
-            current_statement__ = 173;
+            current_statement__ = 151;
             assign(eta_deviation_precision,
               cons_list(index_uni(sym2__),
                 cons_list(index_uni(sym1__), nil_index_list())),
               eta_deviation_precision_flat__[(pos__ - 1)],
               "assigning variable eta_deviation_precision");
-            current_statement__ = 173;
+            current_statement__ = 151;
             pos__ = (pos__ + 1);}}
       }
-      current_statement__ = 173;
-      current_statement__ = 173;
+      current_statement__ = 151;
+      current_statement__ = 151;
       check_cov_matrix(function__, "eta_deviation_precision",
                        eta_deviation_precision);
-      current_statement__ = 174;
+      current_statement__ = 152;
       context__.validate_dims("data initialization","P_deviation_random",
           "int",context__.to_vec());
       P_deviation_random = std::numeric_limits<int>::min();
       
-      current_statement__ = 174;
+      current_statement__ = 152;
       P_deviation_random = context__.vals_i("P_deviation_random")[(1 - 1)];
-      current_statement__ = 174;
-      current_statement__ = 174;
+      current_statement__ = 152;
+      current_statement__ = 152;
       check_greater_or_equal(function__, "P_deviation_random",
                              P_deviation_random, 0);
-      current_statement__ = 175;
+      current_statement__ = 153;
       validate_non_negative_index("X_deviation_random", "N", N);
-      current_statement__ = 176;
+      current_statement__ = 154;
       validate_non_negative_index("X_deviation_random", "P_deviation_random",
                                   P_deviation_random);
-      current_statement__ = 177;
+      current_statement__ = 155;
       context__.validate_dims("data initialization","X_deviation_random",
           "double",context__.to_vec(N, P_deviation_random));
       X_deviation_random = Eigen::Matrix<double, -1, -1>(N, P_deviation_random);
@@ -1104,177 +1624,177 @@ public:
       
       {
         std::vector<local_scalar_t__> X_deviation_random_flat__;
-        current_statement__ = 177;
+        current_statement__ = 155;
         assign(X_deviation_random_flat__, nil_index_list(),
           context__.vals_r("X_deviation_random"),
           "assigning variable X_deviation_random_flat__");
-        current_statement__ = 177;
+        current_statement__ = 155;
         pos__ = 1;
-        current_statement__ = 177;
+        current_statement__ = 155;
         for (int sym1__ = 1; sym1__ <= P_deviation_random; ++sym1__) {
-          current_statement__ = 177;
+          current_statement__ = 155;
           for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-            current_statement__ = 177;
+            current_statement__ = 155;
             assign(X_deviation_random,
               cons_list(index_uni(sym2__),
                 cons_list(index_uni(sym1__), nil_index_list())),
               X_deviation_random_flat__[(pos__ - 1)],
               "assigning variable X_deviation_random");
-            current_statement__ = 177;
+            current_statement__ = 155;
             pos__ = (pos__ + 1);}}
       }
-      current_statement__ = 178;
+      current_statement__ = 156;
       context__.validate_dims("data initialization","delta_deviation_random",
           "double",context__.to_vec());
       delta_deviation_random = std::numeric_limits<double>::quiet_NaN();
       
-      current_statement__ = 178;
+      current_statement__ = 156;
       delta_deviation_random = context__.vals_r("delta_deviation_random")[
           (1 - 1)];
-      current_statement__ = 178;
-      current_statement__ = 178;
+      current_statement__ = 156;
+      current_statement__ = 156;
       check_greater_or_equal(function__, "delta_deviation_random",
                              delta_deviation_random, 0);
-      current_statement__ = 179;
+      current_statement__ = 157;
       context__.validate_dims("data initialization",
           "ell_deviation_random_scale","double",context__.to_vec());
       ell_deviation_random_scale = std::numeric_limits<double>::quiet_NaN();
       
-      current_statement__ = 179;
+      current_statement__ = 157;
       ell_deviation_random_scale = context__.vals_r("ell_deviation_random_scale")[
           (1 - 1)];
-      current_statement__ = 179;
-      current_statement__ = 179;
+      current_statement__ = 157;
+      current_statement__ = 157;
       check_greater_or_equal(function__, "ell_deviation_random_scale",
                              ell_deviation_random_scale, 0);
-      current_statement__ = 180;
+      current_statement__ = 158;
       context__.validate_dims("data initialization",
           "tau_squared_deviation_random_a","double",context__.to_vec());
       tau_squared_deviation_random_a = std::numeric_limits<double>::quiet_NaN();
       
-      current_statement__ = 180;
+      current_statement__ = 158;
       tau_squared_deviation_random_a = context__.vals_r("tau_squared_deviation_random_a")[
           (1 - 1)];
-      current_statement__ = 180;
-      current_statement__ = 180;
+      current_statement__ = 158;
+      current_statement__ = 158;
       check_greater_or_equal(function__, "tau_squared_deviation_random_a",
                              tau_squared_deviation_random_a, 0);
-      current_statement__ = 181;
+      current_statement__ = 159;
       context__.validate_dims("data initialization",
           "tau_squared_deviation_random_b","double",context__.to_vec());
       tau_squared_deviation_random_b = std::numeric_limits<double>::quiet_NaN();
       
-      current_statement__ = 181;
+      current_statement__ = 159;
       tau_squared_deviation_random_b = context__.vals_r("tau_squared_deviation_random_b")[
           (1 - 1)];
-      current_statement__ = 181;
-      current_statement__ = 181;
+      current_statement__ = 159;
+      current_statement__ = 159;
       check_greater_or_equal(function__, "tau_squared_deviation_random_b",
                              tau_squared_deviation_random_b, 0);
-      current_statement__ = 182;
+      current_statement__ = 160;
       context__.validate_dims("data initialization","D_horizontal_warpings",
           "int",context__.to_vec());
       D_horizontal_warpings = std::numeric_limits<int>::min();
       
-      current_statement__ = 182;
+      current_statement__ = 160;
       D_horizontal_warpings = context__.vals_i("D_horizontal_warpings")[
           (1 - 1)];
-      current_statement__ = 182;
-      current_statement__ = 182;
+      current_statement__ = 160;
+      current_statement__ = 160;
       check_greater_or_equal(function__, "D_horizontal_warpings",
                              D_horizontal_warpings, 1);
-      current_statement__ = 183;
+      current_statement__ = 161;
       context__.validate_dims("data initialization","D_geometric","int",
           context__.to_vec());
       D_geometric = std::numeric_limits<int>::min();
       
-      current_statement__ = 183;
+      current_statement__ = 161;
       D_geometric = context__.vals_i("D_geometric")[(1 - 1)];
-      current_statement__ = 183;
-      current_statement__ = 183;
+      current_statement__ = 161;
+      current_statement__ = 161;
       check_greater_or_equal(function__, "D_geometric", D_geometric, 0);
-      current_statement__ = 184;
+      current_statement__ = 162;
       validate_non_negative_index("axial_warping_unit_mapping", "D", D);
-      current_statement__ = 185;
+      current_statement__ = 163;
       context__.validate_dims("data initialization",
           "axial_warping_unit_mapping","int",context__.to_vec(D));
       axial_warping_unit_mapping = std::vector<int>(D, std::numeric_limits<int>::min());
       
-      current_statement__ = 185;
+      current_statement__ = 163;
       assign(axial_warping_unit_mapping, nil_index_list(),
         context__.vals_i("axial_warping_unit_mapping"),
         "assigning variable axial_warping_unit_mapping");
-      current_statement__ = 185;
+      current_statement__ = 163;
       for (int sym1__ = 1; sym1__ <= D; ++sym1__) {
-        current_statement__ = 185;
-        current_statement__ = 185;
+        current_statement__ = 163;
+        current_statement__ = 163;
         check_greater_or_equal(function__,
                                "axial_warping_unit_mapping[sym1__]",
                                axial_warping_unit_mapping[(sym1__ - 1)], 1);}
-      current_statement__ = 185;
+      current_statement__ = 163;
       for (int sym1__ = 1; sym1__ <= D; ++sym1__) {
-        current_statement__ = 185;
-        current_statement__ = 185;
+        current_statement__ = 163;
+        current_statement__ = 163;
         check_less_or_equal(function__, "axial_warping_unit_mapping[sym1__]",
                             axial_warping_unit_mapping[(sym1__ - 1)],
                             (D_horizontal_warpings + 1));}
-      current_statement__ = 186;
+      current_statement__ = 164;
       context__.validate_dims("data initialization","N_indices","int",
           context__.to_vec());
       N_indices = std::numeric_limits<int>::min();
       
-      current_statement__ = 186;
+      current_statement__ = 164;
       N_indices = context__.vals_i("N_indices")[(1 - 1)];
-      current_statement__ = 186;
-      current_statement__ = 186;
+      current_statement__ = 164;
+      current_statement__ = 164;
       check_greater_or_equal(function__, "N_indices", N_indices, 1);
-      current_statement__ = 187;
+      current_statement__ = 165;
       context__.validate_dims("data initialization","N_blocks","int",
           context__.to_vec());
       N_blocks = std::numeric_limits<int>::min();
       
-      current_statement__ = 187;
+      current_statement__ = 165;
       N_blocks = context__.vals_i("N_blocks")[(1 - 1)];
-      current_statement__ = 187;
-      current_statement__ = 187;
+      current_statement__ = 165;
+      current_statement__ = 165;
       check_greater_or_equal(function__, "N_blocks", N_blocks, 1);
-      current_statement__ = 188;
+      current_statement__ = 166;
       validate_non_negative_index("block_indices", "N_indices", N_indices);
-      current_statement__ = 189;
+      current_statement__ = 167;
       context__.validate_dims("data initialization","block_indices","int",
           context__.to_vec(N_indices));
       block_indices = std::vector<int>(N_indices, std::numeric_limits<int>::min());
       
-      current_statement__ = 189;
+      current_statement__ = 167;
       assign(block_indices, nil_index_list(),
         context__.vals_i("block_indices"), "assigning variable block_indices");
-      current_statement__ = 190;
+      current_statement__ = 168;
       validate_non_negative_index("block_last_index", "N_blocks", N_blocks);
-      current_statement__ = 191;
+      current_statement__ = 169;
       context__.validate_dims("data initialization","block_last_index","int",
           context__.to_vec(N_blocks));
       block_last_index = std::vector<int>(N_blocks, std::numeric_limits<int>::min());
       
-      current_statement__ = 191;
+      current_statement__ = 169;
       assign(block_last_index, nil_index_list(),
         context__.vals_i("block_last_index"),
         "assigning variable block_last_index");
-      current_statement__ = 192;
+      current_statement__ = 170;
       validate_non_negative_index("block_N_responses", "N_blocks", N_blocks);
-      current_statement__ = 193;
+      current_statement__ = 171;
       context__.validate_dims("data initialization","block_N_responses",
           "int",context__.to_vec(N_blocks));
       block_N_responses = std::vector<int>(N_blocks, std::numeric_limits<int>::min());
       
-      current_statement__ = 193;
+      current_statement__ = 171;
       assign(block_N_responses, nil_index_list(),
         context__.vals_i("block_N_responses"),
         "assigning variable block_N_responses");
-      current_statement__ = 194;
+      current_statement__ = 172;
       validate_non_negative_index("gamma_deviation_a",
                                   "D_horizontal_warpings + 1",
                                   (D_horizontal_warpings + 1));
-      current_statement__ = 195;
+      current_statement__ = 173;
       context__.validate_dims("data initialization","gamma_deviation_a",
           "double",context__.to_vec((D_horizontal_warpings + 1)));
       gamma_deviation_a = Eigen::Matrix<double, -1, 1>((D_horizontal_warpings
@@ -1283,33 +1803,33 @@ public:
       
       {
         std::vector<local_scalar_t__> gamma_deviation_a_flat__;
-        current_statement__ = 195;
+        current_statement__ = 173;
         assign(gamma_deviation_a_flat__, nil_index_list(),
           context__.vals_r("gamma_deviation_a"),
           "assigning variable gamma_deviation_a_flat__");
-        current_statement__ = 195;
+        current_statement__ = 173;
         pos__ = 1;
-        current_statement__ = 195;
+        current_statement__ = 173;
         for (int sym1__ = 1; sym1__ <= (D_horizontal_warpings + 1); ++sym1__) {
-          current_statement__ = 195;
+          current_statement__ = 173;
           assign(gamma_deviation_a,
             cons_list(index_uni(sym1__), nil_index_list()),
             gamma_deviation_a_flat__[(pos__ - 1)],
             "assigning variable gamma_deviation_a");
-          current_statement__ = 195;
+          current_statement__ = 173;
           pos__ = (pos__ + 1);}
       }
-      current_statement__ = 195;
+      current_statement__ = 173;
       for (int sym1__ = 1; sym1__ <= (D_horizontal_warpings + 1); ++sym1__) {
-        current_statement__ = 195;
-        current_statement__ = 195;
+        current_statement__ = 173;
+        current_statement__ = 173;
         check_greater_or_equal(function__, "gamma_deviation_a[sym1__]",
                                gamma_deviation_a[(sym1__ - 1)], 0);}
-      current_statement__ = 196;
+      current_statement__ = 174;
       validate_non_negative_index("gamma_deviation_b",
                                   "D_horizontal_warpings + 1",
                                   (D_horizontal_warpings + 1));
-      current_statement__ = 197;
+      current_statement__ = 175;
       context__.validate_dims("data initialization","gamma_deviation_b",
           "double",context__.to_vec((D_horizontal_warpings + 1)));
       gamma_deviation_b = Eigen::Matrix<double, -1, 1>((D_horizontal_warpings
@@ -1318,118 +1838,135 @@ public:
       
       {
         std::vector<local_scalar_t__> gamma_deviation_b_flat__;
-        current_statement__ = 197;
+        current_statement__ = 175;
         assign(gamma_deviation_b_flat__, nil_index_list(),
           context__.vals_r("gamma_deviation_b"),
           "assigning variable gamma_deviation_b_flat__");
-        current_statement__ = 197;
+        current_statement__ = 175;
         pos__ = 1;
-        current_statement__ = 197;
+        current_statement__ = 175;
         for (int sym1__ = 1; sym1__ <= (D_horizontal_warpings + 1); ++sym1__) {
-          current_statement__ = 197;
+          current_statement__ = 175;
           assign(gamma_deviation_b,
             cons_list(index_uni(sym1__), nil_index_list()),
             gamma_deviation_b_flat__[(pos__ - 1)],
             "assigning variable gamma_deviation_b");
-          current_statement__ = 197;
+          current_statement__ = 175;
           pos__ = (pos__ + 1);}
       }
-      current_statement__ = 197;
+      current_statement__ = 175;
       for (int sym1__ = 1; sym1__ <= (D_horizontal_warpings + 1); ++sym1__) {
-        current_statement__ = 197;
-        current_statement__ = 197;
+        current_statement__ = 175;
+        current_statement__ = 175;
         check_greater_or_equal(function__, "gamma_deviation_b[sym1__]",
                                gamma_deviation_b[(sym1__ - 1)], 0);}
-      current_statement__ = 198;
+      current_statement__ = 176;
       context__.validate_dims("data initialization","L_deviation_shape",
           "double",context__.to_vec());
       L_deviation_shape = std::numeric_limits<double>::quiet_NaN();
       
-      current_statement__ = 198;
+      current_statement__ = 176;
       L_deviation_shape = context__.vals_r("L_deviation_shape")[(1 - 1)];
-      current_statement__ = 198;
-      current_statement__ = 198;
+      current_statement__ = 176;
+      current_statement__ = 176;
       check_greater_or_equal(function__, "L_deviation_shape",
                              L_deviation_shape, 0);
-      current_statement__ = 199;
+      current_statement__ = 177;
+      context__.validate_dims("data initialization","use_parallel","int",
+          context__.to_vec());
+      use_parallel = std::numeric_limits<int>::min();
+      
+      current_statement__ = 177;
+      use_parallel = context__.vals_i("use_parallel")[(1 - 1)];
+      current_statement__ = 178;
+      context__.validate_dims("data initialization","grain_size","int",
+          context__.to_vec());
+      grain_size = std::numeric_limits<int>::min();
+      
+      current_statement__ = 178;
+      grain_size = context__.vals_i("grain_size")[(1 - 1)];
+      current_statement__ = 178;
+      current_statement__ = 178;
+      check_greater_or_equal(function__, "grain_size", grain_size, 1);
+      current_statement__ = 179;
       P_mean_total = std::numeric_limits<int>::min();
       
-      current_statement__ = 199;
+      current_statement__ = 179;
       P_mean_total = (P_mean_fixed + P_mean_random);
-      current_statement__ = 200;
+      current_statement__ = 180;
       validate_non_negative_index("X_mean", "N", N);
-      current_statement__ = 201;
+      current_statement__ = 181;
       validate_non_negative_index("X_mean", "P_mean_total", P_mean_total);
-      current_statement__ = 202;
+      current_statement__ = 182;
       X_mean = Eigen::Matrix<double, -1, -1>(N, P_mean_total);
       stan::math::fill(X_mean, std::numeric_limits<double>::quiet_NaN());
       
-      current_statement__ = 202;
+      current_statement__ = 182;
       assign(X_mean, nil_index_list(),
         append_col(X_mean_fixed, X_mean_random), "assigning variable X_mean");
-      current_statement__ = 203;
+      current_statement__ = 183;
       validate_non_negative_index("alpha_Q_mu", "P_mean_total", P_mean_total);
-      current_statement__ = 204;
+      current_statement__ = 184;
       alpha_Q_mu = Eigen::Matrix<double, -1, 1>(P_mean_total);
       stan::math::fill(alpha_Q_mu, std::numeric_limits<double>::quiet_NaN());
       
-      current_statement__ = 204;
+      current_statement__ = 184;
       assign(alpha_Q_mu, nil_index_list(), rep_vector(0, P_mean_total),
         "assigning variable alpha_Q_mu");
-      current_statement__ = 205;
+      current_statement__ = 185;
       validate_non_negative_index("y_tilde", "N", N);
-      current_statement__ = 206;
+      current_statement__ = 186;
       y_tilde = Eigen::Matrix<double, -1, 1>(N);
       stan::math::fill(y_tilde, std::numeric_limits<double>::quiet_NaN());
       
-      current_statement__ = 206;
+      current_statement__ = 186;
       assign(y_tilde, nil_index_list(),
         subtract(y, multiply(X_mean_fixed, alpha_mean)),
         "assigning variable y_tilde");
-      current_statement__ = 207;
+      current_statement__ = 187;
       N_block_max = std::numeric_limits<int>::min();
       
-      current_statement__ = 207;
+      current_statement__ = 187;
       N_block_max = get_N_block_max(block_last_index, pstream__);
-      current_statement__ = 208;
+      current_statement__ = 188;
       validate_non_negative_index("indices_X_mean_non_zero", "P_mean_total",
                                   P_mean_total);
-      current_statement__ = 209;
+      current_statement__ = 189;
       validate_non_negative_index("indices_X_mean_non_zero", "N_blocks",
                                   N_blocks);
-      current_statement__ = 210;
+      current_statement__ = 190;
       indices_X_mean_non_zero = std::vector<std::vector<int>>(P_mean_total, std::vector<int>(N_blocks, std::numeric_limits<int>::min()));
       
-      current_statement__ = 211;
+      current_statement__ = 191;
       validate_non_negative_index("P_X_mean_non_zero", "N_blocks", N_blocks);
-      current_statement__ = 212;
+      current_statement__ = 192;
       P_X_mean_non_zero = std::vector<int>(N_blocks, std::numeric_limits<int>::min());
       
-      current_statement__ = 213;
+      current_statement__ = 193;
       current_block_start_a = std::numeric_limits<int>::min();
       
-      current_statement__ = 213;
+      current_statement__ = 193;
       current_block_start_a = 1;
-      current_statement__ = 214;
+      current_statement__ = 194;
       assign(alpha_Q_mu,
         cons_list(index_min_max(1, P_mean_fixed), nil_index_list()),
         multiply(alpha_precision, alpha_mean),
         "assigning variable alpha_Q_mu");
-      current_statement__ = 228;
+      current_statement__ = 208;
       for (int i = 1; i <= N_blocks; ++i) {
         int N_current_block;
         N_current_block = std::numeric_limits<int>::min();
         
-        current_statement__ = 215;
+        current_statement__ = 195;
         N_current_block = ((block_last_index[(i - 1)] -
                              current_block_start_a) + 1);
-        current_statement__ = 216;
+        current_statement__ = 196;
         validate_non_negative_index("indices_current_block", "N_block_max",
                                     N_block_max);
         std::vector<int> indices_current_block;
         indices_current_block = std::vector<int>(N_block_max, std::numeric_limits<int>::min());
         
-        current_statement__ = 218;
+        current_statement__ = 198;
         assign(indices_current_block,
           cons_list(index_min_max(1, N_current_block), nil_index_list()),
           rvalue(block_indices,
@@ -1437,12 +1974,12 @@ public:
               index_min_max(current_block_start_a, block_last_index[(i - 1)]),
               nil_index_list()), "block_indices"),
           "assigning variable indices_current_block");
-        current_statement__ = 219;
+        current_statement__ = 199;
         assign(P_X_mean_non_zero, cons_list(index_uni(i), nil_index_list()),
           0, "assigning variable P_X_mean_non_zero");
-        current_statement__ = 225;
+        current_statement__ = 205;
         for (int k = 1; k <= P_mean_total; ++k) {
-          current_statement__ = 223;
+          current_statement__ = 203;
           if (logical_neq(
                 max(
                   stan::math::fabs(
@@ -1455,37 +1992,37 @@ public:
                                       "indices_current_block")),
                         cons_list(index_uni(k), nil_index_list())), "X_mean"))),
                 0)) {
-            current_statement__ = 220;
+            current_statement__ = 200;
             assign(P_X_mean_non_zero,
               cons_list(index_uni(i), nil_index_list()),
               (P_X_mean_non_zero[(i - 1)] + 1),
               "assigning variable P_X_mean_non_zero");
-            current_statement__ = 221;
+            current_statement__ = 201;
             assign(indices_X_mean_non_zero,
               cons_list(index_uni(P_X_mean_non_zero[(i - 1)]),
                 cons_list(index_uni(i), nil_index_list())), k,
               "assigning variable indices_X_mean_non_zero");
           } }
-        current_statement__ = 226;
+        current_statement__ = 206;
         current_block_start_a = (block_last_index[(i - 1)] + 1);}
-      current_statement__ = 229;
+      current_statement__ = 209;
       validate_non_negative_index("eta_deviation", "P_deviation_fixed",
                                   P_deviation_fixed);
-      current_statement__ = 230;
+      current_statement__ = 210;
       validate_non_negative_index("zeta_deviation", "P_deviation_random",
                                   P_deviation_random);
-      current_statement__ = 231;
+      current_statement__ = 211;
       validate_non_negative_index("gamma_deviation_horizontal",
                                   "D_horizontal_warpings",
                                   D_horizontal_warpings);
-      current_statement__ = 232;
+      current_statement__ = 212;
       validate_non_negative_index("gamma_deviation_vertical",
                                   "P_deviation_warping", P_deviation_warping);
-      current_statement__ = 233;
+      current_statement__ = 213;
       validate_non_negative_index("L_deviation", "D_geometric", D_geometric);
-      current_statement__ = 233;
+      current_statement__ = 213;
       validate_non_negative_index("L_deviation", "D_geometric", D_geometric);
-      current_statement__ = 234;
+      current_statement__ = 214;
       validate_non_negative_index("alpha_beta_hat", "P_mean_total",
                                   P_mean_total);
     } catch (const std::exception& e) {
@@ -1792,83 +2329,41 @@ public:
         stan::math::fill(deviation_sd, DUMMY_VAR__);
         
         current_statement__ = 42;
-        validate_non_negative_index("K_block", "N_block_max", N_block_max);
-        current_statement__ = 43;
-        validate_non_negative_index("K_block", "N_block_max", N_block_max);
-        Eigen::Matrix<local_scalar_t__, -1, -1> K_block;
-        K_block = Eigen::Matrix<local_scalar_t__, -1, -1>(N_block_max, N_block_max);
-        stan::math::fill(K_block, DUMMY_VAR__);
+        validate_non_negative_index("components",
+                                    "2 + P_mean_total * P_mean_total + 2 * P_mean_total",
+                                    ((2 + (P_mean_total * P_mean_total)) +
+                                      (2 * P_mean_total)));
+        Eigen::Matrix<local_scalar_t__, -1, 1> components;
+        components = Eigen::Matrix<local_scalar_t__, -1, 1>(((2 +
+                                                               (P_mean_total
+                                                                 *
+                                                                 P_mean_total))
+                                                              +
+                                                              (2 *
+                                                                P_mean_total)));
+        stan::math::fill(components, DUMMY_VAR__);
         
-        current_statement__ = 45;
-        validate_non_negative_index("L_block", "N_block_max", N_block_max);
-        current_statement__ = 46;
-        validate_non_negative_index("L_block", "N_block_max", N_block_max);
-        Eigen::Matrix<local_scalar_t__, -1, -1> L_block;
-        L_block = Eigen::Matrix<local_scalar_t__, -1, -1>(N_block_max, N_block_max);
-        stan::math::fill(L_block, DUMMY_VAR__);
-        
-        current_statement__ = 48;
-        validate_non_negative_index("L_inv_X_block", "N_block_max",
-                                    N_block_max);
-        current_statement__ = 49;
-        validate_non_negative_index("L_inv_X_block", "P_mean_total",
-                                    P_mean_total);
-        Eigen::Matrix<local_scalar_t__, -1, -1> L_inv_X_block;
-        L_inv_X_block = Eigen::Matrix<local_scalar_t__, -1, -1>(N_block_max, P_mean_total);
-        stan::math::fill(L_inv_X_block, DUMMY_VAR__);
-        
-        current_statement__ = 51;
-        validate_non_negative_index("L_inv_y_block", "N_block_max",
-                                    N_block_max);
-        Eigen::Matrix<local_scalar_t__, -1, 1> L_inv_y_block;
-        L_inv_y_block = Eigen::Matrix<local_scalar_t__, -1, 1>(N_block_max);
-        stan::math::fill(L_inv_y_block, DUMMY_VAR__);
-        
-        current_statement__ = 53;
-        validate_non_negative_index("L_inv_y_tilde_block", "N_block_max",
-                                    N_block_max);
-        Eigen::Matrix<local_scalar_t__, -1, 1> L_inv_y_tilde_block;
-        L_inv_y_tilde_block = Eigen::Matrix<local_scalar_t__, -1, 1>(N_block_max);
-        stan::math::fill(L_inv_y_tilde_block, DUMMY_VAR__);
-        
-        int current_block_start;
-        current_block_start = std::numeric_limits<int>::min();
-        
-        current_statement__ = 55;
-        current_block_start = 1;
-        int N_current_block;
-        N_current_block = std::numeric_limits<int>::min();
-        
-        int N_parents_current_block;
-        N_parents_current_block = std::numeric_limits<int>::min();
-        
-        current_statement__ = 58;
-        validate_non_negative_index("indices_current_block", "N_block_max",
-                                    N_block_max);
-        std::vector<int> indices_current_block;
-        indices_current_block = std::vector<int>(N_block_max, std::numeric_limits<int>::min());
-        
-        current_statement__ = 60;
+        current_statement__ = 44;
         assign(deviation_log_variance, nil_index_list(),
           multiply(X_deviation_fixed, eta_deviation),
           "assigning variable deviation_log_variance");
-        current_statement__ = 63;
+        current_statement__ = 47;
         if (logical_gt(P_deviation_random, 0)) {
-          current_statement__ = 61;
+          current_statement__ = 45;
           assign(deviation_log_variance, nil_index_list(),
             add(stan::model::deep_copy(deviation_log_variance),
               multiply(X_deviation_random, zeta_deviation)),
             "assigning variable deviation_log_variance");
         } 
-        current_statement__ = 64;
+        current_statement__ = 48;
         assign(deviation_sd, nil_index_list(),
           stan::math::exp(multiply(0.5, deviation_log_variance)),
           "assigning variable deviation_sd");
-        current_statement__ = 73;
+        current_statement__ = 57;
         for (int i = 1; i <= N; ++i) {
-          current_statement__ = 67;
+          current_statement__ = 51;
           for (int j = 1; j <= (D - 1); ++j) {
-            current_statement__ = 65;
+            current_statement__ = 49;
             assign(x_warped,
               cons_list(index_uni(i),
                 cons_list(index_uni(j), nil_index_list())),
@@ -1876,7 +2371,7 @@ public:
                                              (j - 1)] - 1)] *
                  scaling[(j - 1)]) * x[(i - 1)][(j - 1)]),
               "assigning variable x_warped");}
-          current_statement__ = 68;
+          current_statement__ = 52;
           assign(x_warped,
             cons_list(index_uni(i),
               cons_list(index_uni(D), nil_index_list())),
@@ -1887,247 +2382,70 @@ public:
                 "X_deviation_warping"),
               cumulative_sum(gamma_deviation_vertical)),
             "assigning variable x_warped");
-          current_statement__ = 71;
+          current_statement__ = 55;
           if (logical_gt(D_geometric, 0)) {
-            current_statement__ = 69;
+            current_statement__ = 53;
             assign(x_warped, cons_list(index_uni(i), nil_index_list()),
               multiply(transpose(L_deviation),
                 stan::model::deep_copy(x_warped[(i - 1)])),
               "assigning variable x_warped");
           } }
-        current_statement__ = 89;
-        for (int i = 1; i <= N_blocks; ++i) {
-          current_statement__ = 74;
-          N_current_block = ((block_last_index[(i - 1)] -
-                               current_block_start) + 1);
-          current_statement__ = 75;
-          N_parents_current_block = (N_current_block -
-                                      block_N_responses[(i - 1)]);
-          current_statement__ = 76;
-          assign(indices_current_block,
-            cons_list(index_min_max(1, N_current_block), nil_index_list()),
-            rvalue(block_indices,
+        current_statement__ = 62;
+        if (logical_gt(use_parallel, 0)) {
+          current_statement__ = 60;
+          assign(components, nil_index_list(),
+            geowarp_vecchia_reduce_sum_full(1, N_blocks, grain_size,
+              x_warped, sigma_squared_nugget, deviation_sd, y, y_tilde,
+              X_mean, block_indices, block_last_index, block_N_responses,
+              indices_X_mean_non_zero, P_X_mean_non_zero, N_block_max,
+              smoothness, pstream__), "assigning variable components");
+        } else {
+          current_statement__ = 58;
+          assign(components, nil_index_list(),
+            geowarp_vecchia_partial_sums_full(1, N_blocks, x_warped,
+              sigma_squared_nugget, deviation_sd, y, y_tilde, X_mean,
+              block_indices, block_last_index, block_N_responses,
+              indices_X_mean_non_zero, P_X_mean_non_zero, N_block_max,
+              smoothness, pstream__), "assigning variable components");
+        }
+        current_statement__ = 63;
+        log_det = components[(1 - 1)];
+        current_statement__ = 64;
+        y_tildet_Q_y_tilde = components[(2 - 1)];
+        current_statement__ = 65;
+        assign(Xt_Q_X, nil_index_list(),
+          to_matrix(
+            rvalue(components,
               cons_list(
-                index_min_max(current_block_start, block_last_index[(i - 1)]),
-                nil_index_list()), "block_indices"),
-            "assigning variable indices_current_block");
-          current_statement__ = 77;
-          assign(K_block,
-            cons_list(index_min_max(1, N_current_block),
-              cons_list(index_min_max(1, N_current_block), nil_index_list())),
-            geowarp_process_covariance(sigma_squared_nugget,
-              rvalue(deviation_sd,
-                cons_list(
-                  index_multi(rvalue(indices_current_block,
-                                cons_list(index_min_max(1, N_current_block),
-                                  nil_index_list()), "indices_current_block")),
-                  nil_index_list()), "deviation_sd"),
-              rvalue(x_warped,
-                cons_list(
-                  index_multi(rvalue(indices_current_block,
-                                cons_list(index_min_max(1, N_current_block),
-                                  nil_index_list()), "indices_current_block")),
-                  nil_index_list()), "x_warped"), smoothness, pstream__),
-            "assigning variable K_block");
-          current_statement__ = 78;
-          assign(L_block,
-            cons_list(index_min_max(1, N_current_block),
-              cons_list(index_min_max(1, N_current_block), nil_index_list())),
-            cholesky_decompose(
-              rvalue(K_block,
-                cons_list(index_min_max(1, N_current_block),
-                  cons_list(index_min_max(1, N_current_block),
-                    nil_index_list())), "K_block")),
-            "assigning variable L_block");
-          current_statement__ = 79;
-          assign(L_inv_X_block,
-            cons_list(index_min_max(1, N_current_block),
-              cons_list(index_min_max(1, P_X_mean_non_zero[(i - 1)]),
-                nil_index_list())),
-            mdivide_left_tri_low(
-              rvalue(L_block,
-                cons_list(index_min_max(1, N_current_block),
-                  cons_list(index_min_max(1, N_current_block),
-                    nil_index_list())), "L_block"),
-              rvalue(X_mean,
-                cons_list(
-                  index_multi(rvalue(indices_current_block,
-                                cons_list(index_min_max(1, N_current_block),
-                                  nil_index_list()), "indices_current_block")),
-                  cons_list(
-                    index_multi(rvalue(indices_X_mean_non_zero,
-                                  cons_list(
-                                    index_min_max(1, P_X_mean_non_zero[
-                                    (i - 1)]),
-                                    cons_list(index_uni(i), nil_index_list())),
-                                  "indices_X_mean_non_zero")),
-                    nil_index_list())), "X_mean")),
-            "assigning variable L_inv_X_block");
-          current_statement__ = 80;
-          assign(L_inv_y_block,
-            cons_list(index_min_max(1, N_current_block), nil_index_list()),
-            mdivide_left_tri_low(
-              rvalue(L_block,
-                cons_list(index_min_max(1, N_current_block),
-                  cons_list(index_min_max(1, N_current_block),
-                    nil_index_list())), "L_block"),
-              rvalue(y,
-                cons_list(
-                  index_multi(rvalue(indices_current_block,
-                                cons_list(index_min_max(1, N_current_block),
-                                  nil_index_list()), "indices_current_block")),
-                  nil_index_list()), "y")),
-            "assigning variable L_inv_y_block");
-          current_statement__ = 81;
-          assign(L_inv_y_tilde_block,
-            cons_list(index_min_max(1, N_current_block), nil_index_list()),
-            mdivide_left_tri_low(
-              rvalue(L_block,
-                cons_list(index_min_max(1, N_current_block),
-                  cons_list(index_min_max(1, N_current_block),
-                    nil_index_list())), "L_block"),
-              rvalue(y_tilde,
-                cons_list(
-                  index_multi(rvalue(indices_current_block,
-                                cons_list(index_min_max(1, N_current_block),
-                                  nil_index_list()), "indices_current_block")),
-                  nil_index_list()), "y_tilde")),
-            "assigning variable L_inv_y_tilde_block");
-          current_statement__ = 82;
-          log_det = (log_det +
-                      (2 *
-                        sum(
-                          stan::math::log(
-                            diagonal(
-                              rvalue(L_block,
-                                cons_list(
-                                  index_min_max((N_parents_current_block + 1), N_current_block),
-                                  cons_list(
-                                    index_min_max((N_parents_current_block +
-                                                    1), N_current_block),
-                                    nil_index_list())), "L_block"))))));
-          current_statement__ = 83;
-          y_tildet_Q_y_tilde = (y_tildet_Q_y_tilde +
-                                 sum(
-                                   square(
-                                     rvalue(L_inv_y_tilde_block,
-                                       cons_list(
-                                         index_min_max((N_parents_current_block
-                                                         + 1), N_current_block),
-                                         nil_index_list()),
-                                       "L_inv_y_tilde_block"))));
-          current_statement__ = 84;
-          assign(Xt_Q_y,
+                index_min_max(3, (2 + (P_mean_total * P_mean_total))),
+                nil_index_list()), "components"), P_mean_total, P_mean_total),
+          "assigning variable Xt_Q_X");
+        current_statement__ = 66;
+        assign(Xt_Q_y, nil_index_list(),
+          rvalue(components,
             cons_list(
-              index_multi(rvalue(indices_X_mean_non_zero,
-                            cons_list(
-                              index_min_max(1, P_X_mean_non_zero[(i - 1)]),
-                              cons_list(index_uni(i), nil_index_list())),
-                            "indices_X_mean_non_zero")), nil_index_list()),
-            add(
-              stan::model::deep_copy(
-                rvalue(Xt_Q_y,
-                  cons_list(
-                    index_multi(rvalue(indices_X_mean_non_zero,
-                                  cons_list(
-                                    index_min_max(1, P_X_mean_non_zero[
-                                    (i - 1)]),
-                                    cons_list(index_uni(i), nil_index_list())),
-                                  "indices_X_mean_non_zero")),
-                    nil_index_list()), "Xt_Q_y")),
-              multiply(
-                transpose(
-                  rvalue(L_inv_X_block,
-                    cons_list(
-                      index_min_max((N_parents_current_block + 1), N_current_block),
-                      cons_list(index_min_max(1, P_X_mean_non_zero[(i - 1)]),
-                        nil_index_list())), "L_inv_X_block")),
-                rvalue(L_inv_y_block,
-                  cons_list(
-                    index_min_max((N_parents_current_block + 1), N_current_block),
-                    nil_index_list()), "L_inv_y_block"))),
-            "assigning variable Xt_Q_y");
-          current_statement__ = 85;
-          assign(Xt_Q_y_tilde,
+              index_min_max((3 + (P_mean_total * P_mean_total)), ((2 +
+                                                                    (P_mean_total
+                                                                    *
+                                                                    P_mean_total))
+                                                                   +
+                                                                   P_mean_total)),
+              nil_index_list()), "components"), "assigning variable Xt_Q_y");
+        current_statement__ = 67;
+        assign(Xt_Q_y_tilde, nil_index_list(),
+          rvalue(components,
             cons_list(
-              index_multi(rvalue(indices_X_mean_non_zero,
-                            cons_list(
-                              index_min_max(1, P_X_mean_non_zero[(i - 1)]),
-                              cons_list(index_uni(i), nil_index_list())),
-                            "indices_X_mean_non_zero")), nil_index_list()),
-            add(
-              stan::model::deep_copy(
-                rvalue(Xt_Q_y_tilde,
-                  cons_list(
-                    index_multi(rvalue(indices_X_mean_non_zero,
-                                  cons_list(
-                                    index_min_max(1, P_X_mean_non_zero[
-                                    (i - 1)]),
-                                    cons_list(index_uni(i), nil_index_list())),
-                                  "indices_X_mean_non_zero")),
-                    nil_index_list()), "Xt_Q_y_tilde")),
-              multiply(
-                transpose(
-                  rvalue(L_inv_X_block,
-                    cons_list(
-                      index_min_max((N_parents_current_block + 1), N_current_block),
-                      cons_list(index_min_max(1, P_X_mean_non_zero[(i - 1)]),
-                        nil_index_list())), "L_inv_X_block")),
-                rvalue(L_inv_y_tilde_block,
-                  cons_list(
-                    index_min_max((N_parents_current_block + 1), N_current_block),
-                    nil_index_list()), "L_inv_y_tilde_block"))),
-            "assigning variable Xt_Q_y_tilde");
-          current_statement__ = 86;
-          assign(Xt_Q_X,
-            cons_list(
-              index_multi(rvalue(indices_X_mean_non_zero,
-                            cons_list(
-                              index_min_max(1, P_X_mean_non_zero[(i - 1)]),
-                              cons_list(index_uni(i), nil_index_list())),
-                            "indices_X_mean_non_zero")),
-              cons_list(
-                index_multi(rvalue(indices_X_mean_non_zero,
-                              cons_list(
-                                index_min_max(1, P_X_mean_non_zero[(i - 1)]),
-                                cons_list(index_uni(i), nil_index_list())),
-                              "indices_X_mean_non_zero")), nil_index_list())),
-            add(
-              stan::model::deep_copy(
-                rvalue(Xt_Q_X,
-                  cons_list(
-                    index_multi(rvalue(indices_X_mean_non_zero,
-                                  cons_list(
-                                    index_min_max(1, P_X_mean_non_zero[
-                                    (i - 1)]),
-                                    cons_list(index_uni(i), nil_index_list())),
-                                  "indices_X_mean_non_zero")),
-                    cons_list(
-                      index_multi(rvalue(indices_X_mean_non_zero,
-                                    cons_list(
-                                      index_min_max(1, P_X_mean_non_zero[
-                                      (i - 1)]),
-                                      cons_list(index_uni(i),
-                                        nil_index_list())),
-                                    "indices_X_mean_non_zero")),
-                      nil_index_list())), "Xt_Q_X")),
-              crossprod(
-                rvalue(L_inv_X_block,
-                  cons_list(
-                    index_min_max((N_parents_current_block + 1), N_current_block),
-                    cons_list(index_min_max(1, P_X_mean_non_zero[(i - 1)]),
-                      nil_index_list())), "L_inv_X_block"))),
-            "assigning variable Xt_Q_X");
-          current_statement__ = 87;
-          current_block_start = (block_last_index[(i - 1)] + 1);}
-        current_statement__ = 90;
+              index_min(((3 + (P_mean_total * P_mean_total)) + P_mean_total)),
+              nil_index_list()), "components"),
+          "assigning variable Xt_Q_y_tilde");
+        current_statement__ = 68;
         assign(alpha_beta_prior_precision,
           cons_list(index_min_max(1, P_mean_fixed),
             cons_list(index_min_max(1, P_mean_fixed), nil_index_list())),
           alpha_precision, "assigning variable alpha_beta_prior_precision");
-        current_statement__ = 93;
+        current_statement__ = 71;
         if (logical_gt(P_mean_total, P_mean_fixed)) {
-          current_statement__ = 91;
+          current_statement__ = 69;
           assign(alpha_beta_prior_precision,
             cons_list(index_min_max((P_mean_fixed + 1), P_mean_total),
               cons_list(index_min_max((P_mean_fixed + 1), P_mean_total),
@@ -2135,26 +2453,26 @@ public:
             rw1d_precision(P_mean_random, tau_squared_mean_random, pstream__),
             "assigning variable alpha_beta_prior_precision");
         } 
-        current_statement__ = 94;
+        current_statement__ = 72;
         assign(alpha_beta_precision, nil_index_list(),
           add(Xt_Q_X, alpha_beta_prior_precision),
           "assigning variable alpha_beta_precision");
-        current_statement__ = 95;
+        current_statement__ = 73;
         assign(L_alpha_beta_prior_precision, nil_index_list(),
           cholesky_decompose(alpha_beta_prior_precision),
           "assigning variable L_alpha_beta_prior_precision");
-        current_statement__ = 96;
+        current_statement__ = 74;
         assign(L_alpha_beta_precision, nil_index_list(),
           cholesky_decompose(alpha_beta_precision),
           "assigning variable L_alpha_beta_precision");
-        current_statement__ = 97;
+        current_statement__ = 75;
         assign(alpha_beta_rhs, nil_index_list(), add(Xt_Q_y, alpha_Q_mu),
           "assigning variable alpha_beta_rhs");
-        current_statement__ = 98;
+        current_statement__ = 76;
         assign(alpha_beta_hat, nil_index_list(),
           chol_solve_L_b(L_alpha_beta_precision, alpha_beta_rhs, pstream__),
           "assigning variable alpha_beta_hat");
-        current_statement__ = 99;
+        current_statement__ = 77;
         log_marginal = (-0.5 *
                          (((((2 *
                                sum(
@@ -2171,35 +2489,35 @@ public:
                                  Xt_Q_y_tilde)))));
       }
       {
-        current_statement__ = 101;
+        current_statement__ = 79;
         lp_accum__.add(log_marginal);
-        current_statement__ = 106;
+        current_statement__ = 84;
         if (logical_gt(tau_squared_mean_random_b, 0)) {
-          current_statement__ = 104;
+          current_statement__ = 82;
           lp_accum__.add(
             inv_gamma_lpdf<propto__>(tau_squared_mean_random,
               tau_squared_mean_random_a, tau_squared_mean_random_b));
         } else {
-          current_statement__ = 102;
+          current_statement__ = 80;
           lp_accum__.add(-stan::math::log(tau_squared_mean_random));
         }
-        current_statement__ = 111;
+        current_statement__ = 89;
         if (logical_gt(sigma_squared_nugget_b, 0)) {
-          current_statement__ = 109;
+          current_statement__ = 87;
           lp_accum__.add(
             inv_gamma_lpdf<propto__>(sigma_squared_nugget,
               sigma_squared_nugget_a, sigma_squared_nugget_b));
         } else {
-          current_statement__ = 107;
+          current_statement__ = 85;
           lp_accum__.add(-stan::math::log(sigma_squared_nugget));
         }
-        current_statement__ = 112;
+        current_statement__ = 90;
         lp_accum__.add(
           multi_normal_prec_lpdf<propto__>(eta_deviation, eta_deviation_mean,
             eta_deviation_precision));
-        current_statement__ = 115;
+        current_statement__ = 93;
         if (logical_gt(P_deviation_random, 0)) {
-          current_statement__ = 113;
+          current_statement__ = 91;
           lp_accum__.add(
             multi_normal_prec_lpdf<propto__>(zeta_deviation,
               rep_vector(0, P_deviation_random),
@@ -2207,44 +2525,44 @@ public:
                 ell_deviation_random,
                 tau_squared_deviation_random, pstream__)));
         } 
-        current_statement__ = 118;
+        current_statement__ = 96;
         if (logical_gt(ell_deviation_random_scale, 0)) {
-          current_statement__ = 116;
+          current_statement__ = 94;
           lp_accum__.add(
             normal_lpdf<propto__>(ell_deviation_random, 0,
               ell_deviation_random_scale));
         } 
-        current_statement__ = 123;
+        current_statement__ = 101;
         if (logical_gt(tau_squared_deviation_random_b, 0)) {
-          current_statement__ = 121;
+          current_statement__ = 99;
           lp_accum__.add(
             inv_gamma_lpdf<propto__>(tau_squared_deviation_random,
               tau_squared_deviation_random_a, tau_squared_deviation_random_b));
         } else {
-          current_statement__ = 119;
+          current_statement__ = 97;
           lp_accum__.add(-stan::math::log(tau_squared_deviation_random));
         }
-        current_statement__ = 128;
+        current_statement__ = 106;
         for (int i = 1; i <= D_horizontal_warpings; ++i) {
-          current_statement__ = 126;
+          current_statement__ = 104;
           if (logical_gt(gamma_deviation_b[(i - 1)], 0)) {
-            current_statement__ = 124;
+            current_statement__ = 102;
             lp_accum__.add(
               gamma_lpdf<propto__>(gamma_deviation_horizontal[(i - 1)],
                 gamma_deviation_a[(i - 1)], gamma_deviation_b[(i - 1)]));
           } }
-        current_statement__ = 131;
+        current_statement__ = 109;
         if (logical_gt(gamma_deviation_b[((D_horizontal_warpings + 1) - 1)],
               0)) {
-          current_statement__ = 129;
+          current_statement__ = 107;
           lp_accum__.add(
             gamma_lpdf<propto__>(gamma_deviation_vertical,
               gamma_deviation_a[((D_horizontal_warpings + 1) - 1)],
               gamma_deviation_b[((D_horizontal_warpings + 1) - 1)]));
         } 
-        current_statement__ = 134;
+        current_statement__ = 112;
         if (logical_gt(D_geometric, 0)) {
-          current_statement__ = 132;
+          current_statement__ = 110;
           lp_accum__.add(
             lkj_corr_cholesky_lpdf<propto__>(L_deviation, L_deviation_shape));
         } 
@@ -2507,83 +2825,38 @@ public:
         stan::math::fill(deviation_sd, std::numeric_limits<double>::quiet_NaN());
         
         current_statement__ = 42;
-        validate_non_negative_index("K_block", "N_block_max", N_block_max);
-        current_statement__ = 43;
-        validate_non_negative_index("K_block", "N_block_max", N_block_max);
-        Eigen::Matrix<double, -1, -1> K_block;
-        K_block = Eigen::Matrix<double, -1, -1>(N_block_max, N_block_max);
-        stan::math::fill(K_block, std::numeric_limits<double>::quiet_NaN());
+        validate_non_negative_index("components",
+                                    "2 + P_mean_total * P_mean_total + 2 * P_mean_total",
+                                    ((2 + (P_mean_total * P_mean_total)) +
+                                      (2 * P_mean_total)));
+        Eigen::Matrix<double, -1, 1> components;
+        components = Eigen::Matrix<double, -1, 1>(((2 +
+                                                     (P_mean_total *
+                                                       P_mean_total)) +
+                                                    (2 * P_mean_total)));
+        stan::math::fill(components, std::numeric_limits<double>::quiet_NaN());
         
-        current_statement__ = 45;
-        validate_non_negative_index("L_block", "N_block_max", N_block_max);
-        current_statement__ = 46;
-        validate_non_negative_index("L_block", "N_block_max", N_block_max);
-        Eigen::Matrix<double, -1, -1> L_block;
-        L_block = Eigen::Matrix<double, -1, -1>(N_block_max, N_block_max);
-        stan::math::fill(L_block, std::numeric_limits<double>::quiet_NaN());
-        
-        current_statement__ = 48;
-        validate_non_negative_index("L_inv_X_block", "N_block_max",
-                                    N_block_max);
-        current_statement__ = 49;
-        validate_non_negative_index("L_inv_X_block", "P_mean_total",
-                                    P_mean_total);
-        Eigen::Matrix<double, -1, -1> L_inv_X_block;
-        L_inv_X_block = Eigen::Matrix<double, -1, -1>(N_block_max, P_mean_total);
-        stan::math::fill(L_inv_X_block, std::numeric_limits<double>::quiet_NaN());
-        
-        current_statement__ = 51;
-        validate_non_negative_index("L_inv_y_block", "N_block_max",
-                                    N_block_max);
-        Eigen::Matrix<double, -1, 1> L_inv_y_block;
-        L_inv_y_block = Eigen::Matrix<double, -1, 1>(N_block_max);
-        stan::math::fill(L_inv_y_block, std::numeric_limits<double>::quiet_NaN());
-        
-        current_statement__ = 53;
-        validate_non_negative_index("L_inv_y_tilde_block", "N_block_max",
-                                    N_block_max);
-        Eigen::Matrix<double, -1, 1> L_inv_y_tilde_block;
-        L_inv_y_tilde_block = Eigen::Matrix<double, -1, 1>(N_block_max);
-        stan::math::fill(L_inv_y_tilde_block, std::numeric_limits<double>::quiet_NaN());
-        
-        int current_block_start;
-        current_block_start = std::numeric_limits<int>::min();
-        
-        current_statement__ = 55;
-        current_block_start = 1;
-        int N_current_block;
-        N_current_block = std::numeric_limits<int>::min();
-        
-        int N_parents_current_block;
-        N_parents_current_block = std::numeric_limits<int>::min();
-        
-        current_statement__ = 58;
-        validate_non_negative_index("indices_current_block", "N_block_max",
-                                    N_block_max);
-        std::vector<int> indices_current_block;
-        indices_current_block = std::vector<int>(N_block_max, std::numeric_limits<int>::min());
-        
-        current_statement__ = 60;
+        current_statement__ = 44;
         assign(deviation_log_variance, nil_index_list(),
           multiply(X_deviation_fixed, eta_deviation),
           "assigning variable deviation_log_variance");
-        current_statement__ = 63;
+        current_statement__ = 47;
         if (logical_gt(P_deviation_random, 0)) {
-          current_statement__ = 61;
+          current_statement__ = 45;
           assign(deviation_log_variance, nil_index_list(),
             add(stan::model::deep_copy(deviation_log_variance),
               multiply(X_deviation_random, zeta_deviation)),
             "assigning variable deviation_log_variance");
         } 
-        current_statement__ = 64;
+        current_statement__ = 48;
         assign(deviation_sd, nil_index_list(),
           stan::math::exp(multiply(0.5, deviation_log_variance)),
           "assigning variable deviation_sd");
-        current_statement__ = 73;
+        current_statement__ = 57;
         for (int i = 1; i <= N; ++i) {
-          current_statement__ = 67;
+          current_statement__ = 51;
           for (int j = 1; j <= (D - 1); ++j) {
-            current_statement__ = 65;
+            current_statement__ = 49;
             assign(x_warped,
               cons_list(index_uni(i),
                 cons_list(index_uni(j), nil_index_list())),
@@ -2591,7 +2864,7 @@ public:
                                              (j - 1)] - 1)] *
                  scaling[(j - 1)]) * x[(i - 1)][(j - 1)]),
               "assigning variable x_warped");}
-          current_statement__ = 68;
+          current_statement__ = 52;
           assign(x_warped,
             cons_list(index_uni(i),
               cons_list(index_uni(D), nil_index_list())),
@@ -2602,247 +2875,70 @@ public:
                 "X_deviation_warping"),
               cumulative_sum(gamma_deviation_vertical)),
             "assigning variable x_warped");
-          current_statement__ = 71;
+          current_statement__ = 55;
           if (logical_gt(D_geometric, 0)) {
-            current_statement__ = 69;
+            current_statement__ = 53;
             assign(x_warped, cons_list(index_uni(i), nil_index_list()),
               multiply(transpose(L_deviation),
                 stan::model::deep_copy(x_warped[(i - 1)])),
               "assigning variable x_warped");
           } }
-        current_statement__ = 89;
-        for (int i = 1; i <= N_blocks; ++i) {
-          current_statement__ = 74;
-          N_current_block = ((block_last_index[(i - 1)] -
-                               current_block_start) + 1);
-          current_statement__ = 75;
-          N_parents_current_block = (N_current_block -
-                                      block_N_responses[(i - 1)]);
-          current_statement__ = 76;
-          assign(indices_current_block,
-            cons_list(index_min_max(1, N_current_block), nil_index_list()),
-            rvalue(block_indices,
+        current_statement__ = 62;
+        if (logical_gt(use_parallel, 0)) {
+          current_statement__ = 60;
+          assign(components, nil_index_list(),
+            geowarp_vecchia_reduce_sum_full(1, N_blocks, grain_size,
+              x_warped, sigma_squared_nugget, deviation_sd, y, y_tilde,
+              X_mean, block_indices, block_last_index, block_N_responses,
+              indices_X_mean_non_zero, P_X_mean_non_zero, N_block_max,
+              smoothness, pstream__), "assigning variable components");
+        } else {
+          current_statement__ = 58;
+          assign(components, nil_index_list(),
+            geowarp_vecchia_partial_sums_full(1, N_blocks, x_warped,
+              sigma_squared_nugget, deviation_sd, y, y_tilde, X_mean,
+              block_indices, block_last_index, block_N_responses,
+              indices_X_mean_non_zero, P_X_mean_non_zero, N_block_max,
+              smoothness, pstream__), "assigning variable components");
+        }
+        current_statement__ = 63;
+        log_det = components[(1 - 1)];
+        current_statement__ = 64;
+        y_tildet_Q_y_tilde = components[(2 - 1)];
+        current_statement__ = 65;
+        assign(Xt_Q_X, nil_index_list(),
+          to_matrix(
+            rvalue(components,
               cons_list(
-                index_min_max(current_block_start, block_last_index[(i - 1)]),
-                nil_index_list()), "block_indices"),
-            "assigning variable indices_current_block");
-          current_statement__ = 77;
-          assign(K_block,
-            cons_list(index_min_max(1, N_current_block),
-              cons_list(index_min_max(1, N_current_block), nil_index_list())),
-            geowarp_process_covariance(sigma_squared_nugget,
-              rvalue(deviation_sd,
-                cons_list(
-                  index_multi(rvalue(indices_current_block,
-                                cons_list(index_min_max(1, N_current_block),
-                                  nil_index_list()), "indices_current_block")),
-                  nil_index_list()), "deviation_sd"),
-              rvalue(x_warped,
-                cons_list(
-                  index_multi(rvalue(indices_current_block,
-                                cons_list(index_min_max(1, N_current_block),
-                                  nil_index_list()), "indices_current_block")),
-                  nil_index_list()), "x_warped"), smoothness, pstream__),
-            "assigning variable K_block");
-          current_statement__ = 78;
-          assign(L_block,
-            cons_list(index_min_max(1, N_current_block),
-              cons_list(index_min_max(1, N_current_block), nil_index_list())),
-            cholesky_decompose(
-              rvalue(K_block,
-                cons_list(index_min_max(1, N_current_block),
-                  cons_list(index_min_max(1, N_current_block),
-                    nil_index_list())), "K_block")),
-            "assigning variable L_block");
-          current_statement__ = 79;
-          assign(L_inv_X_block,
-            cons_list(index_min_max(1, N_current_block),
-              cons_list(index_min_max(1, P_X_mean_non_zero[(i - 1)]),
-                nil_index_list())),
-            mdivide_left_tri_low(
-              rvalue(L_block,
-                cons_list(index_min_max(1, N_current_block),
-                  cons_list(index_min_max(1, N_current_block),
-                    nil_index_list())), "L_block"),
-              rvalue(X_mean,
-                cons_list(
-                  index_multi(rvalue(indices_current_block,
-                                cons_list(index_min_max(1, N_current_block),
-                                  nil_index_list()), "indices_current_block")),
-                  cons_list(
-                    index_multi(rvalue(indices_X_mean_non_zero,
-                                  cons_list(
-                                    index_min_max(1, P_X_mean_non_zero[
-                                    (i - 1)]),
-                                    cons_list(index_uni(i), nil_index_list())),
-                                  "indices_X_mean_non_zero")),
-                    nil_index_list())), "X_mean")),
-            "assigning variable L_inv_X_block");
-          current_statement__ = 80;
-          assign(L_inv_y_block,
-            cons_list(index_min_max(1, N_current_block), nil_index_list()),
-            mdivide_left_tri_low(
-              rvalue(L_block,
-                cons_list(index_min_max(1, N_current_block),
-                  cons_list(index_min_max(1, N_current_block),
-                    nil_index_list())), "L_block"),
-              rvalue(y,
-                cons_list(
-                  index_multi(rvalue(indices_current_block,
-                                cons_list(index_min_max(1, N_current_block),
-                                  nil_index_list()), "indices_current_block")),
-                  nil_index_list()), "y")),
-            "assigning variable L_inv_y_block");
-          current_statement__ = 81;
-          assign(L_inv_y_tilde_block,
-            cons_list(index_min_max(1, N_current_block), nil_index_list()),
-            mdivide_left_tri_low(
-              rvalue(L_block,
-                cons_list(index_min_max(1, N_current_block),
-                  cons_list(index_min_max(1, N_current_block),
-                    nil_index_list())), "L_block"),
-              rvalue(y_tilde,
-                cons_list(
-                  index_multi(rvalue(indices_current_block,
-                                cons_list(index_min_max(1, N_current_block),
-                                  nil_index_list()), "indices_current_block")),
-                  nil_index_list()), "y_tilde")),
-            "assigning variable L_inv_y_tilde_block");
-          current_statement__ = 82;
-          log_det = (log_det +
-                      (2 *
-                        sum(
-                          stan::math::log(
-                            diagonal(
-                              rvalue(L_block,
-                                cons_list(
-                                  index_min_max((N_parents_current_block + 1), N_current_block),
-                                  cons_list(
-                                    index_min_max((N_parents_current_block +
-                                                    1), N_current_block),
-                                    nil_index_list())), "L_block"))))));
-          current_statement__ = 83;
-          y_tildet_Q_y_tilde = (y_tildet_Q_y_tilde +
-                                 sum(
-                                   square(
-                                     rvalue(L_inv_y_tilde_block,
-                                       cons_list(
-                                         index_min_max((N_parents_current_block
-                                                         + 1), N_current_block),
-                                         nil_index_list()),
-                                       "L_inv_y_tilde_block"))));
-          current_statement__ = 84;
-          assign(Xt_Q_y,
+                index_min_max(3, (2 + (P_mean_total * P_mean_total))),
+                nil_index_list()), "components"), P_mean_total, P_mean_total),
+          "assigning variable Xt_Q_X");
+        current_statement__ = 66;
+        assign(Xt_Q_y, nil_index_list(),
+          rvalue(components,
             cons_list(
-              index_multi(rvalue(indices_X_mean_non_zero,
-                            cons_list(
-                              index_min_max(1, P_X_mean_non_zero[(i - 1)]),
-                              cons_list(index_uni(i), nil_index_list())),
-                            "indices_X_mean_non_zero")), nil_index_list()),
-            add(
-              stan::model::deep_copy(
-                rvalue(Xt_Q_y,
-                  cons_list(
-                    index_multi(rvalue(indices_X_mean_non_zero,
-                                  cons_list(
-                                    index_min_max(1, P_X_mean_non_zero[
-                                    (i - 1)]),
-                                    cons_list(index_uni(i), nil_index_list())),
-                                  "indices_X_mean_non_zero")),
-                    nil_index_list()), "Xt_Q_y")),
-              multiply(
-                transpose(
-                  rvalue(L_inv_X_block,
-                    cons_list(
-                      index_min_max((N_parents_current_block + 1), N_current_block),
-                      cons_list(index_min_max(1, P_X_mean_non_zero[(i - 1)]),
-                        nil_index_list())), "L_inv_X_block")),
-                rvalue(L_inv_y_block,
-                  cons_list(
-                    index_min_max((N_parents_current_block + 1), N_current_block),
-                    nil_index_list()), "L_inv_y_block"))),
-            "assigning variable Xt_Q_y");
-          current_statement__ = 85;
-          assign(Xt_Q_y_tilde,
+              index_min_max((3 + (P_mean_total * P_mean_total)), ((2 +
+                                                                    (P_mean_total
+                                                                    *
+                                                                    P_mean_total))
+                                                                   +
+                                                                   P_mean_total)),
+              nil_index_list()), "components"), "assigning variable Xt_Q_y");
+        current_statement__ = 67;
+        assign(Xt_Q_y_tilde, nil_index_list(),
+          rvalue(components,
             cons_list(
-              index_multi(rvalue(indices_X_mean_non_zero,
-                            cons_list(
-                              index_min_max(1, P_X_mean_non_zero[(i - 1)]),
-                              cons_list(index_uni(i), nil_index_list())),
-                            "indices_X_mean_non_zero")), nil_index_list()),
-            add(
-              stan::model::deep_copy(
-                rvalue(Xt_Q_y_tilde,
-                  cons_list(
-                    index_multi(rvalue(indices_X_mean_non_zero,
-                                  cons_list(
-                                    index_min_max(1, P_X_mean_non_zero[
-                                    (i - 1)]),
-                                    cons_list(index_uni(i), nil_index_list())),
-                                  "indices_X_mean_non_zero")),
-                    nil_index_list()), "Xt_Q_y_tilde")),
-              multiply(
-                transpose(
-                  rvalue(L_inv_X_block,
-                    cons_list(
-                      index_min_max((N_parents_current_block + 1), N_current_block),
-                      cons_list(index_min_max(1, P_X_mean_non_zero[(i - 1)]),
-                        nil_index_list())), "L_inv_X_block")),
-                rvalue(L_inv_y_tilde_block,
-                  cons_list(
-                    index_min_max((N_parents_current_block + 1), N_current_block),
-                    nil_index_list()), "L_inv_y_tilde_block"))),
-            "assigning variable Xt_Q_y_tilde");
-          current_statement__ = 86;
-          assign(Xt_Q_X,
-            cons_list(
-              index_multi(rvalue(indices_X_mean_non_zero,
-                            cons_list(
-                              index_min_max(1, P_X_mean_non_zero[(i - 1)]),
-                              cons_list(index_uni(i), nil_index_list())),
-                            "indices_X_mean_non_zero")),
-              cons_list(
-                index_multi(rvalue(indices_X_mean_non_zero,
-                              cons_list(
-                                index_min_max(1, P_X_mean_non_zero[(i - 1)]),
-                                cons_list(index_uni(i), nil_index_list())),
-                              "indices_X_mean_non_zero")), nil_index_list())),
-            add(
-              stan::model::deep_copy(
-                rvalue(Xt_Q_X,
-                  cons_list(
-                    index_multi(rvalue(indices_X_mean_non_zero,
-                                  cons_list(
-                                    index_min_max(1, P_X_mean_non_zero[
-                                    (i - 1)]),
-                                    cons_list(index_uni(i), nil_index_list())),
-                                  "indices_X_mean_non_zero")),
-                    cons_list(
-                      index_multi(rvalue(indices_X_mean_non_zero,
-                                    cons_list(
-                                      index_min_max(1, P_X_mean_non_zero[
-                                      (i - 1)]),
-                                      cons_list(index_uni(i),
-                                        nil_index_list())),
-                                    "indices_X_mean_non_zero")),
-                      nil_index_list())), "Xt_Q_X")),
-              crossprod(
-                rvalue(L_inv_X_block,
-                  cons_list(
-                    index_min_max((N_parents_current_block + 1), N_current_block),
-                    cons_list(index_min_max(1, P_X_mean_non_zero[(i - 1)]),
-                      nil_index_list())), "L_inv_X_block"))),
-            "assigning variable Xt_Q_X");
-          current_statement__ = 87;
-          current_block_start = (block_last_index[(i - 1)] + 1);}
-        current_statement__ = 90;
+              index_min(((3 + (P_mean_total * P_mean_total)) + P_mean_total)),
+              nil_index_list()), "components"),
+          "assigning variable Xt_Q_y_tilde");
+        current_statement__ = 68;
         assign(alpha_beta_prior_precision,
           cons_list(index_min_max(1, P_mean_fixed),
             cons_list(index_min_max(1, P_mean_fixed), nil_index_list())),
           alpha_precision, "assigning variable alpha_beta_prior_precision");
-        current_statement__ = 93;
+        current_statement__ = 71;
         if (logical_gt(P_mean_total, P_mean_fixed)) {
-          current_statement__ = 91;
+          current_statement__ = 69;
           assign(alpha_beta_prior_precision,
             cons_list(index_min_max((P_mean_fixed + 1), P_mean_total),
               cons_list(index_min_max((P_mean_fixed + 1), P_mean_total),
@@ -2850,26 +2946,26 @@ public:
             rw1d_precision(P_mean_random, tau_squared_mean_random, pstream__),
             "assigning variable alpha_beta_prior_precision");
         } 
-        current_statement__ = 94;
+        current_statement__ = 72;
         assign(alpha_beta_precision, nil_index_list(),
           add(Xt_Q_X, alpha_beta_prior_precision),
           "assigning variable alpha_beta_precision");
-        current_statement__ = 95;
+        current_statement__ = 73;
         assign(L_alpha_beta_prior_precision, nil_index_list(),
           cholesky_decompose(alpha_beta_prior_precision),
           "assigning variable L_alpha_beta_prior_precision");
-        current_statement__ = 96;
+        current_statement__ = 74;
         assign(L_alpha_beta_precision, nil_index_list(),
           cholesky_decompose(alpha_beta_precision),
           "assigning variable L_alpha_beta_precision");
-        current_statement__ = 97;
+        current_statement__ = 75;
         assign(alpha_beta_rhs, nil_index_list(), add(Xt_Q_y, alpha_Q_mu),
           "assigning variable alpha_beta_rhs");
-        current_statement__ = 98;
+        current_statement__ = 76;
         assign(alpha_beta_hat, nil_index_list(),
           chol_solve_L_b(L_alpha_beta_precision, alpha_beta_rhs, pstream__),
           "assigning variable alpha_beta_hat");
-        current_statement__ = 99;
+        current_statement__ = 77;
         log_marginal = (-0.5 *
                          (((((2 *
                                sum(

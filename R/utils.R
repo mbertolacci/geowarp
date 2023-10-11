@@ -57,33 +57,3 @@ inverse_gamma_quantile_prior <- function(
 .chol_solve <- function(R, b) {
   backsolve(R, backsolve(R, b, transpose = TRUE))
 }
-
-.optimizing_best_of <- function(max_attempts, best_of, ...) {
-  good_attempts <- 0
-  best_result <- list(value = -Inf)
-  attempts <- list()
-  for (attempt in seq_len(max_attempts)) {
-    log_trace('Running attempt {attempt} of {max_attempts} | completed {good_attempts} of {best_of} | best {best_result$value}')
-    result <- tryCatch({
-      rstan::optimizing(...)
-    }, error = function(e) {
-      print(e)
-      NULL
-    })
-    if (!is.null(result)) {
-      attempts <- c(attempts, list(result))
-    }
-    if (is.null(result)) next
-
-    good_attempts <- good_attempts + 1
-    if (result$value > best_result$value) {
-      best_result <- result
-    }
-    if (good_attempts == best_of) break
-  }
-  cat('\r')
-  if (attempt == max_attempts) stop('Max attempts exceeded')
-
-  best_result$attempts <- attempts
-  best_result
-}

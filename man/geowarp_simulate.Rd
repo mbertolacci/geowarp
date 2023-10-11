@@ -13,7 +13,8 @@ geowarp_simulate(
   nugget = TRUE,
   vecchia = "auto",
   vecchia_n_parents = 50,
-  parent_structure = vecchia_parent_structure(df, model, vecchia_n_parents)
+  parent_structure = vecchia_parent_structure(df, model, vecchia_n_parents),
+  threads = getOption("geowarp.threads")
 )
 }
 \arguments{
@@ -45,6 +46,11 @@ constructed using \code{\link{vecchia_parent_structure}}. The default parent
 structure assumes that the data are vertically dense, which is not
 appropriate if they are uniform or on a grid; see the documentation for that
 function.}
+
+\item{threads}{Number of threads to use for parallelisation, taken from
+\code{getOption('geowarp.threads')} by default, which is itself set to 1 by
+default. The special value -1 picks a number of threads based on the number
+of cores in the system).}
 }
 \value{
 A copy of the input data frame \code{df} with tje simulated values added

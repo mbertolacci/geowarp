@@ -10,7 +10,9 @@
 #' @param best_of Number of times to run the optimisation algorithm. The
 #' algorithm is run repeatedly with different starting values in order to help
 #' find the global posterior mode.
-#' @param algorithm Optimisation algorithm to use, passed to
+#' @param method Optimisation algorithm to use, one of either 'stan_trust_optim'
+#' or 'optimizing'. The first, the default, uses the
+#' \code{\link{stan_trust_optim}} function, while the second uses
 #' \code{\link[rstan]{optimizing}}.
 #' @param vecchia Whether to use the Vecchia approximation. Can be 'auto',
 #' `TRUE`, or `FALSE`. If 'auto', the Vecchia approximation is used if there
@@ -21,9 +23,14 @@
 #' approximation; see \code{\link{vecchia_parent_structure}}.
 #' @param grouping Grouping structure for the Vecchia approximation; see
 #' \code{\link{vecchia_grouping}}. The default should be fine for most cases.
-#' @param ... Additional parameters to be passed to
-#' \code{\link[rstan]{optimizing}}. You can use this to control the degree of
-#' output.
+#' @param threads Number of threads to use for parallelisation, taken from
+#' `getOption('geowarp.threads')` by default, which is itself set to 1 by
+#' default. The special value -1 picks a number of threads based on the number
+#' of cores in the system).
+#' @param grain_size Used to control the parallelisation. The default, 100,
+#' should be okay. On systems with few cores, a larger value might be better.
+#' @param ... Additional parameters to be passed to the chosen optimisation
+#' routine in \code{method}.
 #'
 #' @return A 'geowarp_fit' object that estimated parameters, suitable for use
 #' with \code{\link{predict.geowarp_fit}} and other methods.
@@ -41,7 +48,7 @@ geowarp_optimise <- function(
   model = geowarp_model(),
   max_attempts = 20,
   best_of = 5,
-  algorithm = 'BFGS',
+  method = c('stan_nlminb', 'stan_nlm', 'stan_trust_optim', 'optimizing'),
   vecchia = 'auto',
   n_parents = 20,
   parent_structure = vecchia_parent_structure(
@@ -50,8 +57,13 @@ geowarp_optimise <- function(
     n_parents,
   ),
   grouping = vecchia_grouping(parent_structure),
+  threads = getOption('geowarp.threads'),
+  grain_size = 100L,
   ...
 ) {
+  method <- match.arg(method)
+
+  .local_tbb_threads(threads)
   .validate_data(df, model)
 
   is_white <- model$deviation_model$name == 'white'
@@ -66,21 +78,34 @@ geowarp_optimise <- function(
   stan_data <- geowarp_stan_data(
     df,
     model,
+    threads,
+    grain_size,
     if (vecchia) parent_structure else NULL,
     if (vecchia) grouping else NULL
   )
 
   log_debug('Running optimisation')
-  stan_fit <- .optimizing_best_of(
-    max_attempts = max_attempts,
-    best_of = best_of,
-    object = stanmodels[[model$deviation_model$name]],
-    data = stan_data,
-    as_vector = FALSE,
-    hessian = FALSE,
-    algorithm = algorithm,
-    ...
-  )
+  stan_fit <- if (method != 'optimizing') {
+    stan_optimizing_best_of(
+      object = stanmodels[[model$deviation_model$name]],
+      data = stan_data,
+      .max_attempts = max_attempts,
+      .best_of = best_of,
+      .method = match.fun(method),
+      ...
+    )
+  } else {
+    stan_optimizing_best_of(
+      object = stanmodels[[model$deviation_model$name]],
+      data = stan_data,
+      as_vector = FALSE,
+      hessian = FALSE,
+      .max_attempts = max_attempts,
+      .best_of = best_of,
+      .method = rstan::optimizing,
+      ...
+    )
+  }
   parameters <- stan_fit$par
   parameters$alpha_beta <- parameters$alpha_beta_hat
   parameters$alpha_beta_hat <- NULL
@@ -129,6 +154,8 @@ geowarp_stan_model <- function(name = c('full', 'vertical_only', 'white')) {
 geowarp_stan_data <- function(
   df,
   model,
+  threads = 1L,
+  grain_size = 100L,
   parent_structure,
   grouping,
   white_block_size = min(nrow(df) - 1L, 30)
@@ -320,6 +347,11 @@ geowarp_stan_data <- function(
     output$block_indices <- array(as.integer(grouping$block_indices))
     output$block_last_index <- array(as.integer(grouping$block_last_index))
     output$block_N_responses <- array(as.integer(grouping$block_N_responses))
+  }
+
+  if (!is_white) {
+    output$use_parallel <- threads == -1L || threads > 1L
+    output$grain_size <- grain_size
   }
 
   output

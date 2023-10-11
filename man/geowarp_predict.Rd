@@ -20,6 +20,7 @@ geowarp_predict(
   n_parents = 50,
   parent_structure = vecchia_parent_structure(observed_df, model, n_parents,
     prediction_df = prediction_df),
+  threads = getOption("geowarp.threads"),
   ...
 )
 
@@ -60,6 +61,11 @@ observed and prediction locations together exceed 1000.}
 
 \item{parent_structure}{Parent structure for Vecchia's approximation,
 produced using \code{\link{vecchia_parent_structure}}.}
+
+\item{threads}{Number of threads to use for parallelisation, taken from
+\code{getOption('geowarp.threads')} by default, which is itself set to 1 by
+default. The special value -1 picks a number of threads based on the number
+of cores in the system). Only applies if using the Vecchia approximation.}
 
 \item{...}{Ignored.}
 }

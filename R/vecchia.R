@@ -594,7 +594,8 @@ plot_parent_structure <- function(
   parents,
   nugget = rep(TRUE, nrow(x)),
   model = fit$model,
-  parameters = fit$parameters
+  parameters = fit$parameters,
+  threads
 ) {
   x_warped <- warped_coordinates(x = x, model = model, parameters = parameters)
   if (model$deviation_model$name == 'vertical_only') {
@@ -626,7 +627,8 @@ plot_parent_structure <- function(
     ),
     model$deviation_model$covariance_function,
     c(0, sigma_deviation),
-    c(TRUE, nugget) * parameters$sigma_squared_nugget
+    c(TRUE, nugget) * parameters$sigma_squared_nugget,
+    threads > 1 || threads == -1
   )
 
   i_entries <- i_entries_raw[t(parents_na0) != 0]

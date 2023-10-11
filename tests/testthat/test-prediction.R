@@ -141,6 +141,21 @@ test_that('prediction with the vecchia approximation works', {
   expect_equal(dim(result$samples), c(nrow(observed_df), 10))
 })
 
+test_that('prediction with the vecchia approximation works with threads > 1', {
+  result <- run_predict(
+    vecchia = TRUE,
+    include_mean = TRUE,
+    include_precision_V = TRUE,
+    include_samples = TRUE,
+    n_samples = 10,
+    threads = 2
+  )
+  expect_equal(length(result$mean), nrow(observed_df))
+  expect_equal(dim(result$precision_V), rep(nrow(observed_df), 2))
+  expect_s4_class(result$precision_V, 'sparseMatrix')
+  expect_equal(dim(result$samples), c(nrow(observed_df), 10))
+})
+
 test_that('prediction with the vecchia approximation and a vertical only model works', {
   result <- run_predict(
     model = geowarp_model(

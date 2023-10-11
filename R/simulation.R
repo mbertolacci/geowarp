@@ -24,6 +24,10 @@
 #' structure assumes that the data are vertically dense, which is not
 #' appropriate if they are uniform or on a grid; see the documentation for that
 #' function.
+#' @param threads Number of threads to use for parallelisation, taken from
+#' `getOption('geowarp.threads')` by default, which is itself set to 1 by
+#' default. The special value -1 picks a number of threads based on the number
+#' of cores in the system).
 #'
 #' @return A copy of the input data frame `df` with tje simulated values added
 #' as a new column.
@@ -46,8 +50,11 @@ geowarp_simulate <- function(
     df,
     model,
     vecchia_n_parents
-  )
+  ),
+  threads = getOption('geowarp.threads')
 ) {
+  .local_tbb_threads(threads)
+
   if (vecchia == 'auto') {
     vecchia <- nrow(df) > 1000
   }
@@ -68,7 +75,8 @@ geowarp_simulate <- function(
       parameters,
       parent_structure,
       n_samples,
-      nugget
+      nugget,
+      threads
     )
   }
   df
@@ -108,7 +116,8 @@ geowarp_simulate <- function(
   parameters,
   parent_structure,
   n_samples,
-  nugget
+  nugget,
+  threads
 ) {
   U <- .create_vecchia_U(
     stan_data$x[parent_structure$observed_ordering, , drop = FALSE],
@@ -117,7 +126,8 @@ geowarp_simulate <- function(
     parents = parent_structure$observed_parents,
     model = model,
     parameters = parameters,
-    nugget = rep(nugget, nrow(stan_data$x))
+    nugget = rep(nugget, nrow(stan_data$x)),
+    threads = threads
   )
 
   output <- as.vector(cbind(

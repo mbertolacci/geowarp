@@ -1,509 +1,254 @@
 #ifndef STAN_META_HEADER_HPP
 #define STAN_META_HEADER_HPP
 
-template <typename T_ss, typename T_sd, typename T_x>
-class geowarp_process_covariance_vari : public stan::math::vari {
-public:
-  const size_t size_;
-  const size_t D_;
-  const size_t size_ltri_;
+#include <geowarp_process_covariance.hpp>
+#include <reduce_sum_vec.hpp>
+#include <reduce_sum_vec_prim.hpp>
+#include <reduce_sum_vec_dynamic_rev.hpp>
+#include <reduce_sum_vec_static_rev.hpp>
 
-  const double smoothness_d_;
-
-  const double sigma_squared_nugget_d_;
-  const Eigen::Matrix<double, Eigen::Dynamic, 1> deviation_sd_d_;
-  const std::vector<Eigen::Matrix<double, Eigen::Dynamic, 1> > x_d_;
-
-  double *tmp_;
-
-  stan::math::vari *sigma_squared_nugget_vari_;
-  stan::math::vari **deviation_sd_vari_;
-  stan::math::vari **x_vari_;
-
-  stan::math::vari **cov_lower_;
-  stan::math::vari **cov_diag_;
-
-  geowarp_process_covariance_vari(
-    const T_ss& sigma_squared_nugget,
-    const T_sd& deviation_sd,
-    const std::vector<Eigen::Matrix<T_x, Eigen::Dynamic, 1> >& x,
-    const double& smoothness
-  ) : vari(0.0),
-      size_(x.size()),
-      D_(x[0].rows()),
-      size_ltri_(size_ * (size_ - 1) / 2),
-      smoothness_d_(smoothness),
-      sigma_squared_nugget_d_(stan::math::value_of(sigma_squared_nugget)),
-      deviation_sd_d_(stan::math::value_of(deviation_sd)),
-      x_d_(stan::math::value_of(x)),
-      tmp_(
-        ChainableStack::instance_->memalloc_.alloc_array<double>(size_ltri_)
-      ),
-      sigma_squared_nugget_vari_(sigma_squared_nugget.vi_),
-      deviation_sd_vari_(
-        ChainableStack::instance_->memalloc_.alloc_array<stan::math::vari *>(size_)
-      ),
-      x_vari_(ChainableStack::instance_->memalloc_.alloc_array<stan::math::vari *>(
-        D_ * size_
-      )),
-      cov_lower_(
-        ChainableStack::instance_->memalloc_.alloc_array<stan::math::vari *>(size_ltri_)
-      ),
-      cov_diag_(
-        ChainableStack::instance_->memalloc_.alloc_array<stan::math::vari *>(size_)
-      ) {
-
-    for (size_t j = 0; j < size_; ++j) {
-      deviation_sd_vari_[j] = deviation_sd.coeff(j).vi_;
-      for (size_t k = 0; k < D_; ++k) {
-        x_vari_[j * D_ + k] = x[j].coeff(k).vi_;
-      }
+struct geowarp_vecchia_partial_sums_full_rsvfunctor {
+    template <
+        typename T2__,
+        typename T3__,
+        typename T4__,
+        typename T5__,
+        typename T6__,
+        typename T7__
+    >
+    Eigen::Matrix<
+        stan::promote_args_t<
+            T2__,
+            T3__,
+            stan::value_type_t<T4__>,
+            stan::value_type_t<T5__>,
+            stan::value_type_t<T6__>,
+            stan::promote_args_t<stan::value_type_t<T7__>>
+        >,
+        -1,
+        1
+    >
+    operator() (
+        const int& start,
+        const int& end,
+        std::ostream* pstream__,
+        const std::vector<Eigen::Matrix<T2__, -1, 1>>& x_warped,
+        const T3__& sigma_squared_nugget,
+        const T4__& deviation_sd_arg__,
+        const T5__& y_arg__,
+        const T6__& y_tilde_arg__,
+        const T7__& X_mean_arg__,
+        const std::vector<int>& block_indices,
+        const std::vector<int>& block_last_index,
+        const std::vector<int>& block_N_responses,
+        const std::vector<std::vector<int>>& indices_X_mean_non_zero,
+        const std::vector<int>& P_X_mean_non_zero,
+        const int& N_block_max,
+        const double& smoothness
+    ) {
+        return geowarp_vecchia_partial_sums_full(
+            start + 1,
+            end,
+            x_warped,
+            sigma_squared_nugget,
+            deviation_sd_arg__,
+            y_arg__,
+            y_tilde_arg__,
+            X_mean_arg__,
+            block_indices,
+            block_last_index,
+            block_N_responses,
+            indices_X_mean_non_zero,
+            P_X_mean_non_zero,
+            N_block_max,
+            smoothness,
+            pstream__
+        );
     }
-
-    size_t pos = 0;
-    if (smoothness_d_ == 0.5) {
-      for (size_t j = 0; j < size_ - 1; ++j) {
-        for (size_t i = j + 1; i < size_; ++i) {
-          tmp_[pos] = distance(x_d_[i], x_d_[j]);
-          cov_lower_[pos] = new stan::math::vari(
-            deviation_sd_d_.coeff(j)
-            * deviation_sd_d_.coeff(i)
-            * std::exp(-tmp_[pos]),
-            false);
-          ++pos;
-        }
-      }
-    } else if (smoothness_d_ == 1.5) {
-      for (size_t j = 0; j < size_ - 1; ++j) {
-        for (size_t i = j + 1; i < size_; ++i) {
-          double sqrt3_dist = std::sqrt(3) * distance(x_d_[i], x_d_[j]);
-          tmp_[pos] = (
-            deviation_sd_d_.coeff(j)
-            * deviation_sd_d_.coeff(i)
-            * std::exp(-sqrt3_dist)
-          );
-          cov_lower_[pos] = new stan::math::vari(
-            (1 + sqrt3_dist) * tmp_[pos],
-            false
-          );
-          ++pos;
-        }
-      }
-    }
-
-    for (size_t i = 0; i < size_; ++i) {
-      cov_diag_[i] = new stan::math::vari(
-        deviation_sd_d_.coeff(i) * deviation_sd_d_.coeff(i)
-        + sigma_squared_nugget_d_,
-        false
-      );
-    }
-  }
-
-  virtual void chain() {
-    size_t pos = 0;
-    if (smoothness_d_ == 0.5) {
-      for (size_t j = 0; j < size_ - 1; ++j) {
-        for (size_t i = j + 1; i < size_; ++i) {
-          vari *el_low = cov_lower_[pos];
-          double base = el_low->adj_ * el_low->val_;
-
-          deviation_sd_vari_[j]->adj_ += base / deviation_sd_d_[j];
-          deviation_sd_vari_[i]->adj_ += base / deviation_sd_d_[i];
-
-          for (size_t k = 0; k < D_; ++k) {
-            double diff = x_d_[j].coeff(k) - x_d_[i].coeff(k);
-            double left = -diff * base / tmp_[pos];
-            x_vari_[j * D_ + k]->adj_ += left;
-            x_vari_[i * D_ + k]->adj_ -= left;
-          }
-
-          ++pos;
-        }
-      }
-    } else if (smoothness_d_ == 1.5) {
-      for (size_t j = 0; j < size_ - 1; ++j) {
-        for (size_t i = j + 1; i < size_; ++i) {
-          vari *el_low = cov_lower_[pos];
-          double base = el_low->adj_ * el_low->val_;
-
-          deviation_sd_vari_[j]->adj_ += base / deviation_sd_d_[j];
-          deviation_sd_vari_[i]->adj_ += base / deviation_sd_d_[i];
-
-          for (size_t k = 0; k < D_; ++k) {
-            double diff = x_d_[j].coeff(k) - x_d_[i].coeff(k);
-            double left = -3 * el_low->adj_ * diff * tmp_[pos];
-            x_vari_[j * D_ + k]->adj_ += left;
-            x_vari_[i * D_ + k]->adj_ -= left;
-          }
-
-          ++pos;
-        }
-      }
-    }
-
-    for (size_t i = 0; i < size_; ++i) {
-      vari *el = cov_diag_[i];
-      sigma_squared_nugget_vari_->adj_ += el->adj_;
-      deviation_sd_vari_[i]->adj_ += 2 * el->adj_ * deviation_sd_d_[i];
-    }
-  }
 };
 
-template <typename T_ss, typename T_sd, typename T_x>
-Eigen::Matrix<
-  stan::promote_args_t<T_ss, stan::value_type_t<T_sd>, T_x>,
-  Eigen::Dynamic,
-  Eigen::Dynamic
+template <
+    typename T3__,
+    typename T4__,
+    typename T5__,
+    typename T6__,
+    typename T7__,
+    typename T8__
 >
-geowarp_process_covariance(
-  const T_ss& sigma_squared_nugget,
-  const T_sd& deviation_sd,
-  const std::vector<Eigen::Matrix<T_x, Eigen::Dynamic, 1> >& x,
-  const double& smoothness,
-  std::ostream* pstream__
-) {
-  int N = deviation_sd.size();
-  Eigen::Matrix<
-    stan::promote_args_t<T_ss, stan::value_type_t<T_sd>, T_x>,
-    Eigen::Dynamic,
-    Eigen::Dynamic
-  > K_block(N, N);
-  if (smoothness == 0.5) {
-    for (int j = 0; j < N; ++j) {
-      K_block.coeffRef(j, j) = (
-        deviation_sd[j] * deviation_sd[j] + sigma_squared_nugget
-      );
-      for (int k = j + 1; k < N; ++k) {
-        auto value_i_j_k = (
-          deviation_sd[j]
-          * deviation_sd[k]
-          * exp(-distance(x[j], x[k]))
-        );
-        K_block.coeffRef(j, k) = value_i_j_k;
-        K_block.coeffRef(k, j) = value_i_j_k;
-      }
-    }
-  } else if (smoothness == 1.5) {
-    for (int j = 0; j < N; ++j) {
-      K_block.coeffRef(j, j) = (
-        deviation_sd[j] * deviation_sd[j] + sigma_squared_nugget
-      );
-      for (int k = j + 1; k < N; ++k) {
-        auto s3_distance_i_j_k = std::sqrt(3) * distance(x[j], x[k]);
-        auto value_i_j_k = (
-          deviation_sd[j]
-          * deviation_sd[k]
-          * (1 + s3_distance_i_j_k)
-          * exp(-s3_distance_i_j_k)
-        );
-        K_block.coeffRef(j, k) = value_i_j_k;
-        K_block.coeffRef(k, j) = value_i_j_k;
-      }
-    }
-  }
-  return K_block;
-}
-
-template<>
-inline
 Eigen::Matrix<
-  stan::math::var,
-  Eigen::Dynamic,
-  Eigen::Dynamic
+    stan::promote_args_t<
+        T3__,
+        T4__,
+        stan::value_type_t<T5__>,
+        stan::value_type_t<T6__>,
+        stan::value_type_t<T7__>,
+        stan::promote_args_t<stan::value_type_t<T8__>>
+    >,
+    -1,
+    1
 >
-geowarp_process_covariance(
-  const stan::math::var& sigma_squared_nugget,
-  const Eigen::Matrix<stan::math::var, Eigen::Dynamic, 1>& deviation_sd,
-  const std::vector<Eigen::Matrix<stan::math::var, Eigen::Dynamic, 1> >& x,
-  const double& smoothness,
-  std::ostream* pstream__
+geowarp_vecchia_reduce_sum_full(
+    const int& start,
+    const int& end,
+    const int& grainsize,
+    const std::vector<Eigen::Matrix<T3__, -1, 1>>& x_warped,
+    const T4__& sigma_squared_nugget,
+    const T5__& deviation_sd_arg__,
+    const T6__& y_arg__,
+    const T7__& y_tilde_arg__,
+    const T8__& X_mean_arg__,
+    const std::vector<int>& block_indices,
+    const std::vector<int>& block_last_index,
+    const std::vector<int>& block_N_responses,
+    const std::vector<std::vector<int>>& indices_X_mean_non_zero,
+    const std::vector<int>& P_X_mean_non_zero,
+    const int& N_block_max,
+    const double& smoothness,
+    std::ostream* pstream__
 ) {
-  using stan::math::var;
-  size_t x_size = x.size();
-
-  Eigen::Matrix<var, Eigen::Dynamic, Eigen::Dynamic> output(x_size, x_size);
-  if (x_size == 0) {
-    return output;
-  }
-
-  geowarp_process_covariance_vari<var, Eigen::Matrix<stan::math::var, Eigen::Dynamic, 1>, var> *baseVari
-    = new geowarp_process_covariance_vari<var, Eigen::Matrix<stan::math::var, Eigen::Dynamic, 1>, var>(
-      sigma_squared_nugget,
-      deviation_sd,
-      x,
-      smoothness
+    int P = X_mean_arg__.cols();
+    return geowarp::reduce_sum_vec_dynamic<geowarp_vecchia_partial_sums_full_rsvfunctor>(
+        start,
+        end,
+        2 + P * P + 2 * P,
+        grainsize,
+        pstream__,
+        x_warped,
+        sigma_squared_nugget,
+        deviation_sd_arg__,
+        y_arg__,
+        y_tilde_arg__,
+        X_mean_arg__,
+        block_indices,
+        block_last_index,
+        block_N_responses,
+        indices_X_mean_non_zero,
+        P_X_mean_non_zero,
+        N_block_max,
+        smoothness
     );
-
-  size_t pos = 0;
-  for (size_t j = 0; j < x_size - 1; ++j) {
-    for (size_t i = (j + 1); i < x_size; ++i) {
-      output.coeffRef(i, j).vi_ = baseVari->cov_lower_[pos];
-      output.coeffRef(j, i).vi_ = output.coeffRef(i, j).vi_;
-      ++pos;
-    }
-    output.coeffRef(j, j).vi_ = baseVari->cov_diag_[j];
-  }
-  output.coeffRef(x_size - 1, x_size - 1).vi_ = baseVari->cov_diag_[x_size - 1];
-  return output;
 }
 
-// 1-D version
-
-template <typename T_ss, typename T_sd, typename T_x>
-class geowarp_process_covariance_1d_vari : public stan::math::vari {
-public:
-  const size_t size_;
-  const size_t size_ltri_;
-
-  const double smoothness_d_;
-
-  const double sigma_squared_nugget_d_;
-  const Eigen::Matrix<double, Eigen::Dynamic, 1> deviation_sd_d_;
-  const std::vector<double> x_d_;
-
-  double *tmp_;
-
-  stan::math::vari *sigma_squared_nugget_vari_;
-  stan::math::vari **deviation_sd_vari_;
-  stan::math::vari **x_vari_;
-
-  stan::math::vari **cov_lower_;
-  stan::math::vari **cov_diag_;
-
-  geowarp_process_covariance_1d_vari(
-    const T_ss& sigma_squared_nugget,
-    const T_sd& deviation_sd,
-    const std::vector<T_x>& x,
-    const double& smoothness
-  ) : vari(0.0),
-      size_(x.size()),
-      size_ltri_(size_ * (size_ - 1) / 2),
-      smoothness_d_(stan::math::value_of(smoothness)),
-      sigma_squared_nugget_d_(stan::math::value_of(sigma_squared_nugget)),
-      deviation_sd_d_(stan::math::value_of(deviation_sd)),
-      x_d_(stan::math::value_of(x)),
-      tmp_(
-        ChainableStack::instance_->memalloc_.alloc_array<double>(size_ltri_)
-      ),
-      sigma_squared_nugget_vari_(sigma_squared_nugget.vi_),
-      deviation_sd_vari_(
-        ChainableStack::instance_->memalloc_.alloc_array<stan::math::vari *>(size_)
-      ),
-      x_vari_(ChainableStack::instance_->memalloc_.alloc_array<stan::math::vari *>(
-        size_
-      )),
-      cov_lower_(
-        ChainableStack::instance_->memalloc_.alloc_array<stan::math::vari *>(size_ltri_)
-      ),
-      cov_diag_(
-        ChainableStack::instance_->memalloc_.alloc_array<stan::math::vari *>(size_)
-      ) {
-
-    for (size_t j = 0; j < size_; ++j) {
-      deviation_sd_vari_[j] = deviation_sd.coeff(j).vi_;
-      x_vari_[j] = x[j].vi_;
+struct geowarp_vecchia_partial_sums_vertical_only_rsvfunctor {
+    template <
+        typename T2__,
+        typename T3__,
+        typename T4__,
+        typename T5__,
+        typename T6__,
+        typename T7__
+    >
+    Eigen::Matrix<
+        stan::promote_args_t<
+            T2__,
+            T3__,
+            stan::value_type_t<T4__>,
+            stan::value_type_t<T5__>,
+            stan::value_type_t<T6__>,
+            stan::promote_args_t<stan::value_type_t<T7__>>
+        >,
+        -1,
+        1
+    >
+    operator() (
+        const int& start,
+        const int& end,
+        std::ostream* pstream__,
+        const std::vector<T2__>& x_vertical_warped,
+        const T3__& sigma_squared_nugget,
+        const T4__& deviation_sd_arg__,
+        const T5__& y_arg__,
+        const T6__& y_tilde_arg__,
+        const T7__& X_mean_arg__,
+        const std::vector<int>& block_indices,
+        const std::vector<int>& block_last_index,
+        const std::vector<int>& block_N_responses,
+        const std::vector<std::vector<int>>& indices_X_mean_non_zero,
+        const std::vector<int>& P_X_mean_non_zero,
+        const int& N_block_max,
+        const double& smoothness
+    ) {
+        return geowarp_vecchia_partial_sums_vertical_only(
+            start + 1,
+            end,
+            x_vertical_warped,
+            sigma_squared_nugget,
+            deviation_sd_arg__,
+            y_arg__,
+            y_tilde_arg__,
+            X_mean_arg__,
+            block_indices,
+            block_last_index,
+            block_N_responses,
+            indices_X_mean_non_zero,
+            P_X_mean_non_zero,
+            N_block_max,
+            smoothness,
+            pstream__
+        );
     }
-
-    size_t pos = 0;
-    if (smoothness_d_ == 0.5) {
-      for (size_t j = 0; j < size_ - 1; ++j) {
-        for (size_t i = j + 1; i < size_; ++i) {
-          tmp_[pos] = abs(x_d_[i] - x_d_[j]);
-          cov_lower_[pos] = new stan::math::vari(
-            deviation_sd_d_.coeff(j)
-            * deviation_sd_d_.coeff(i)
-            * std::exp(-tmp_[pos]),
-            false);
-          ++pos;
-        }
-      }
-    } else if (smoothness_d_ == 1.5) {
-      for (size_t j = 0; j < size_ - 1; ++j) {
-        for (size_t i = j + 1; i < size_; ++i) {
-          double sqrt3_dist = std::sqrt(3) * abs(x_d_[i] - x_d_[j]);
-          tmp_[pos] = (
-            deviation_sd_d_.coeff(j)
-            * deviation_sd_d_.coeff(i)
-            * std::exp(-sqrt3_dist)
-          );
-          cov_lower_[pos] = new stan::math::vari(
-            (1 + sqrt3_dist) * tmp_[pos],
-            false
-          );
-          ++pos;
-        }
-      }
-    }
-
-    for (size_t i = 0; i < size_; ++i) {
-      cov_diag_[i] = new stan::math::vari(
-        deviation_sd_d_.coeff(i) * deviation_sd_d_.coeff(i)
-        + sigma_squared_nugget_d_,
-        false
-      );
-    }
-  }
-
-  virtual void chain() {
-    size_t pos = 0;
-    if (smoothness_d_ == 0.5) {
-      for (size_t j = 0; j < size_ - 1; ++j) {
-        for (size_t i = j + 1; i < size_; ++i) {
-          vari *el_low = cov_lower_[pos];
-          double base = el_low->adj_ * el_low->val_;
-
-          deviation_sd_vari_[j]->adj_ += base / deviation_sd_d_[j];
-          deviation_sd_vari_[i]->adj_ += base / deviation_sd_d_[i];
-
-          double diff = x_d_[j] - x_d_[i];
-          double left = -diff * base / tmp_[pos];
-          x_vari_[j]->adj_ += left;
-          x_vari_[i]->adj_ -= left;
-
-          ++pos;
-        }
-      }
-    } else if (smoothness_d_ == 1.5) {
-      for (size_t j = 0; j < size_ - 1; ++j) {
-        for (size_t i = j + 1; i < size_; ++i) {
-          vari *el_low = cov_lower_[pos];
-          double base = el_low->adj_ * el_low->val_;
-
-          deviation_sd_vari_[j]->adj_ += base / deviation_sd_d_[j];
-          deviation_sd_vari_[i]->adj_ += base / deviation_sd_d_[i];
-
-          double diff = x_d_[j] - x_d_[i];
-          double left = -3 * el_low->adj_ * diff * tmp_[pos];
-          x_vari_[j]->adj_ += left;
-          x_vari_[i]->adj_ -= left;
-
-          ++pos;
-        }
-      }
-    }
-
-    for (size_t i = 0; i < size_; ++i) {
-      vari *el = cov_diag_[i];
-      sigma_squared_nugget_vari_->adj_ += el->adj_;
-      deviation_sd_vari_[i]->adj_ += 2 * el->adj_ * deviation_sd_d_[i];
-    }
-  }
 };
 
-template <typename T_ss, typename T_sd, typename T_x>
-Eigen::Matrix<
-  stan::promote_args_t<T_ss, stan::value_type_t<T_sd>, T_x>,
-  Eigen::Dynamic,
-  Eigen::Dynamic
+template <
+    typename T3__,
+    typename T4__,
+    typename T5__,
+    typename T6__,
+    typename T7__,
+    typename T8__
 >
-inline geowarp_process_covariance_1d(
-  const T_ss& sigma_squared_nugget,
-  const T_sd& deviation_sd,
-  const std::vector<T_x>& x,
-  const double& smoothness,
-  std::ostream* pstream__
-) {
-  int N = deviation_sd.size();
-  Eigen::Matrix<
-  stan::promote_args_t<T_ss, stan::value_type_t<T_sd>, T_x>,
-    Eigen::Dynamic,
-    Eigen::Dynamic
-  > K_block(N, N);
-  if (smoothness == 0.5) {
-    for (int j = 0; j < N; ++j) {
-      K_block.coeffRef(j, j) = (
-        pow(deviation_sd[j], 2) + sigma_squared_nugget
-      );
-      for (int k = j + 1; k < N; ++k) {
-        auto value_i_j_k = (
-          deviation_sd[j]
-          * deviation_sd[k]
-          * exp(-abs(x[j] - x[k]))
-        );
-        K_block.coeffRef(j, k) = value_i_j_k;
-        K_block.coeffRef(k, j) = value_i_j_k;
-      }
-    }
-  } else if (smoothness == 1.5) {
-    for (int j = 0; j < N; ++j) {
-      K_block.coeffRef(j, j) = (
-        pow(deviation_sd[j], 2) + sigma_squared_nugget
-      );
-      for (int k = j + 1; k < N; ++k) {
-        auto s3_distance_i_j_k = std::sqrt(3) * abs(x[j] - x[k]);
-        auto value_i_j_k = (
-          deviation_sd[j]
-          * deviation_sd[k]
-          * (1 + s3_distance_i_j_k)
-          * exp(-s3_distance_i_j_k)
-        );
-        K_block.coeffRef(j, k) = value_i_j_k;
-        K_block.coeffRef(k, j) = value_i_j_k;
-      }
-    }
-  }
-  return K_block;
-}
-
-template<>
 Eigen::Matrix<
-  stan::math::var,
-  Eigen::Dynamic,
-  Eigen::Dynamic
+    stan::promote_args_t<
+        T3__,
+        T4__,
+        stan::value_type_t<T5__>,
+        stan::value_type_t<T6__>,
+        stan::value_type_t<T7__>,
+        stan::promote_args_t<stan::value_type_t<T8__>>
+    >,
+    -1,
+    1
 >
-inline geowarp_process_covariance_1d(
-  const stan::math::var& sigma_squared_nugget,
-  const Eigen::Matrix<stan::math::var, Eigen::Dynamic, 1>& deviation_sd,
-  const std::vector<stan::math::var>& x,
-  const double& smoothness,
-  std::ostream* pstream__
+geowarp_vecchia_reduce_sum_vertical_only(
+    const int& start,
+    const int& end,
+    const int& grainsize,
+    const std::vector<T3__>& x_vertical_warped,
+    const T4__& sigma_squared_nugget,
+    const T5__& deviation_sd_arg__,
+    const T6__& y_arg__,
+    const T7__& y_tilde_arg__,
+    const T8__& X_mean_arg__,
+    const std::vector<int>& block_indices,
+    const std::vector<int>& block_last_index,
+    const std::vector<int>& block_N_responses,
+    const std::vector<std::vector<int>>& indices_X_mean_non_zero,
+    const std::vector<int>& P_X_mean_non_zero,
+    const int& N_block_max,
+    const double& smoothness,
+    std::ostream* pstream__
 ) {
-  using stan::math::var;
-  size_t x_size = x.size();
-
-  Eigen::Matrix<var, Eigen::Dynamic, Eigen::Dynamic> output(x_size, x_size);
-  if (x_size == 0) {
-    return output;
-  }
-
-  geowarp_process_covariance_1d_vari<var, Eigen::Matrix<stan::math::var, Eigen::Dynamic, 1>, var> *baseVari
-    = new geowarp_process_covariance_1d_vari<var, Eigen::Matrix<stan::math::var, Eigen::Dynamic, 1>, var>(
-      sigma_squared_nugget,
-      deviation_sd,
-      x,
-      smoothness
+    int P = X_mean_arg__.cols();
+    return geowarp::reduce_sum_vec_dynamic<geowarp_vecchia_partial_sums_vertical_only_rsvfunctor>(
+        start,
+        end,
+        2 + P * P + 2 * P,
+        grainsize,
+        pstream__,
+        x_vertical_warped,
+        sigma_squared_nugget,
+        deviation_sd_arg__,
+        y_arg__,
+        y_tilde_arg__,
+        X_mean_arg__,
+        block_indices,
+        block_last_index,
+        block_N_responses,
+        indices_X_mean_non_zero,
+        P_X_mean_non_zero,
+        N_block_max,
+        smoothness
     );
-
-  size_t pos = 0;
-  for (size_t j = 0; j < x_size - 1; ++j) {
-    for (size_t i = (j + 1); i < x_size; ++i) {
-      output.coeffRef(i, j).vi_ = baseVari->cov_lower_[pos];
-      output.coeffRef(j, i).vi_ = output.coeffRef(i, j).vi_;
-      ++pos;
-    }
-    output.coeffRef(j, j).vi_ = baseVari->cov_diag_[j];
-  }
-  output.coeffRef(x_size - 1, x_size - 1).vi_ = baseVari->cov_diag_[x_size - 1];
-  return output;
-}
-
-inline
-int get_N_block_max(
-  const std::vector<int>& block_last_index,
-  std::ostream* pstream__
-) {
-  int N_blocks = stan::math::size(block_last_index);
-  int current_block_start_d = 1;
-  int N_block_max = 0;
-  for (int i = 1; i <= N_blocks; ++i) {
-    int N_block_i = (block_last_index[(i - 1)] - current_block_start_d) + 1;
-    if (N_block_i > N_block_max) {
-      N_block_max = N_block_i;
-    }
-    current_block_start_d = block_last_index[(i - 1)] + 1;
-  }
-  return N_block_max;
 }
 
 #endif  // STAN_META_HEADER_HPP

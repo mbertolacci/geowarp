@@ -36,6 +36,25 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// set_tbb_threads
+int set_tbb_threads(int n_threads);
+RcppExport SEXP _geowarp_set_tbb_threads(SEXP n_threadsSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::traits::input_parameter< int >::type n_threads(n_threadsSEXP);
+    rcpp_result_gen = Rcpp::wrap(set_tbb_threads(n_threads));
+    return rcpp_result_gen;
+END_RCPP
+}
+// get_tbb_threads
+int get_tbb_threads();
+RcppExport SEXP _geowarp_get_tbb_threads() {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    rcpp_result_gen = Rcpp::wrap(get_tbb_threads());
+    return rcpp_result_gen;
+END_RCPP
+}
 // quadFormDiag
 Rcpp::NumericMatrix quadFormDiag(Rcpp::NumericMatrix A, Rcpp::NumericVector x);
 RcppExport SEXP _geowarp_quadFormDiag(SEXP ASEXP, SEXP xSEXP) {
@@ -68,8 +87,8 @@ BEGIN_RCPP
 END_RCPP
 }
 // vecchia_U_x_parts
-Rcpp::NumericVector vecchia_U_x_parts(const Eigen::MatrixXi& parents, const Eigen::MatrixXd& xWarped, const std::string& covarianceFunction, const Eigen::VectorXd& sigmaDeviation, const Eigen::VectorXd& sigmaSquaredNugget);
-RcppExport SEXP _geowarp_vecchia_U_x_parts(SEXP parentsSEXP, SEXP xWarpedSEXP, SEXP covarianceFunctionSEXP, SEXP sigmaDeviationSEXP, SEXP sigmaSquaredNuggetSEXP) {
+Rcpp::NumericVector vecchia_U_x_parts(const Eigen::MatrixXi& parents, const Eigen::MatrixXd& xWarped, const std::string& covarianceFunction, const Eigen::VectorXd& sigmaDeviation, const Eigen::VectorXd& sigmaSquaredNugget, bool parallel);
+RcppExport SEXP _geowarp_vecchia_U_x_parts(SEXP parentsSEXP, SEXP xWarpedSEXP, SEXP covarianceFunctionSEXP, SEXP sigmaDeviationSEXP, SEXP sigmaSquaredNuggetSEXP, SEXP parallelSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -78,7 +97,8 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< const std::string& >::type covarianceFunction(covarianceFunctionSEXP);
     Rcpp::traits::input_parameter< const Eigen::VectorXd& >::type sigmaDeviation(sigmaDeviationSEXP);
     Rcpp::traits::input_parameter< const Eigen::VectorXd& >::type sigmaSquaredNugget(sigmaSquaredNuggetSEXP);
-    rcpp_result_gen = Rcpp::wrap(vecchia_U_x_parts(parents, xWarped, covarianceFunction, sigmaDeviation, sigmaSquaredNugget));
+    Rcpp::traits::input_parameter< bool >::type parallel(parallelSEXP);
+    rcpp_result_gen = Rcpp::wrap(vecchia_U_x_parts(parents, xWarped, covarianceFunction, sigmaDeviation, sigmaSquaredNugget, parallel));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -90,10 +110,12 @@ RcppExport SEXP _rcpp_module_boot_stan_fit4white_mod();
 static const R_CallMethodDef CallEntries[] = {
     {"_geowarp_parent_knn_across_groups", (DL_FUNC) &_geowarp_parent_knn_across_groups, 4},
     {"_geowarp_parent_knn", (DL_FUNC) &_geowarp_parent_knn, 3},
+    {"_geowarp_set_tbb_threads", (DL_FUNC) &_geowarp_set_tbb_threads, 1},
+    {"_geowarp_get_tbb_threads", (DL_FUNC) &_geowarp_get_tbb_threads, 0},
     {"_geowarp_quadFormDiag", (DL_FUNC) &_geowarp_quadFormDiag, 2},
     {"_geowarp_uniqueRows", (DL_FUNC) &_geowarp_uniqueRows, 1},
     {"_geowarp_deduplicateParents", (DL_FUNC) &_geowarp_deduplicateParents, 1},
-    {"_geowarp_vecchia_U_x_parts", (DL_FUNC) &_geowarp_vecchia_U_x_parts, 5},
+    {"_geowarp_vecchia_U_x_parts", (DL_FUNC) &_geowarp_vecchia_U_x_parts, 6},
     {"_rcpp_module_boot_stan_fit4full_mod", (DL_FUNC) &_rcpp_module_boot_stan_fit4full_mod, 0},
     {"_rcpp_module_boot_stan_fit4vertical_only_mod", (DL_FUNC) &_rcpp_module_boot_stan_fit4vertical_only_mod, 0},
     {"_rcpp_module_boot_stan_fit4white_mod", (DL_FUNC) &_rcpp_module_boot_stan_fit4white_mod, 0},

@@ -9,6 +9,14 @@
     .Call(`_geowarp_parent_knn`, x, n_parents, leaf_size)
 }
 
+.set_tbb_threads <- function(n_threads) {
+    .Call(`_geowarp_set_tbb_threads`, n_threads)
+}
+
+.get_tbb_threads <- function() {
+    .Call(`_geowarp_get_tbb_threads`)
+}
+
 .quad_form_diag <- function(A, x) {
     .Call(`_geowarp_quadFormDiag`, A, x)
 }
@@ -21,7 +29,7 @@
     .Call(`_geowarp_deduplicateParents`, parents)
 }
 
-vecchia_U_x_parts <- function(parents, xWarped, covarianceFunction, sigmaDeviation, sigmaSquaredNugget) {
-    .Call(`_geowarp_vecchia_U_x_parts`, parents, xWarped, covarianceFunction, sigmaDeviation, sigmaSquaredNugget)
+vecchia_U_x_parts <- function(parents, xWarped, covarianceFunction, sigmaDeviation, sigmaSquaredNugget, parallel) {
+    .Call(`_geowarp_vecchia_U_x_parts`, parents, xWarped, covarianceFunction, sigmaDeviation, sigmaSquaredNugget, parallel)
 }
 

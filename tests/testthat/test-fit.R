@@ -37,6 +37,15 @@ test_that('geowarp_optimise works with simple model', {
   expect_equal(length(fit$parameters$alpha_beta), 6)
 })
 
+test_that('geowarp_optimise works with threading enabled', {
+  fit <- geowarp_optimise(observed_df, simple_model, best_of = 2, threads = 2)
+  expect_equal(length(fit$stan_fit$attempts), 2)
+})
+
+test_that('geowarp_optimise works with optimizing method', {
+  fit <- geowarp_optimise(observed_df, simple_model, best_of = 2, method = 'optimizing')
+  expect_equal(length(fit$stan_fit$attempts), 2)
+})
 
 test_that('geowarp_optimise works with fixed effect precision matrices', {
   simple_model$mean_model$fixed_effect_precision <- as.matrix(

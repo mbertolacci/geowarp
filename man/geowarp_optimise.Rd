@@ -9,11 +9,13 @@ geowarp_optimise(
   model = geowarp_model(),
   max_attempts = 20,
   best_of = 5,
-  algorithm = "BFGS",
+  method = c("stan_nlminb", "stan_nlm", "stan_trust_optim", "optimizing"),
   vecchia = "auto",
   n_parents = 20,
   parent_structure = vecchia_parent_structure(df, model, n_parents, ),
   grouping = vecchia_grouping(parent_structure),
+  threads = getOption("geowarp.threads"),
+  grain_size = 100L,
   ...
 )
 }
@@ -29,7 +31,9 @@ priors,created using \code{\link{geowarp_model}}.}
 algorithm is run repeatedly with different starting values in order to help
 find the global posterior mode.}
 
-\item{algorithm}{Optimisation algorithm to use, passed to
+\item{method}{Optimisation algorithm to use, one of either 'stan_trust_optim'
+or 'optimizing'. The first, the default, uses the
+\code{\link{stan_trust_optim}} function, while the second uses
 \code{\link[rstan]{optimizing}}.}
 
 \item{vecchia}{Whether to use the Vecchia approximation. Can be 'auto',
@@ -45,9 +49,16 @@ approximation; see \code{\link{vecchia_parent_structure}}.}
 \item{grouping}{Grouping structure for the Vecchia approximation; see
 \code{\link{vecchia_grouping}}. The default should be fine for most cases.}
 
-\item{...}{Additional parameters to be passed to
-\code{\link[rstan]{optimizing}}. You can use this to control the degree of
-output.}
+\item{threads}{Number of threads to use for parallelisation, taken from
+\code{getOption('geowarp.threads')} by default, which is itself set to 1 by
+default. The special value -1 picks a number of threads based on the number
+of cores in the system).}
+
+\item{grain_size}{Used to control the parallelisation. The default, 100,
+should be okay. On systems with few cores, a larger value might be better.}
+
+\item{...}{Additional parameters to be passed to the chosen optimisation
+routine in \code{method}.}
 }
 \value{
 A 'geowarp_fit' object that estimated parameters, suitable for use

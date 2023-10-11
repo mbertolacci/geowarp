@@ -1,6 +1,6 @@
 functions {
-#include "include/functions.stan"
- }
+#include "include/functions_start.stan"
+}
 data {
   int<lower=1> N;
   int<lower=2> D;
@@ -53,53 +53,56 @@ transformed parameters {
 #include "include/transformed_parameters_inner_deviation_start.stan"
 
     for (i in 1:N_blocks) {
-      N_current_block = block_last_index[i] - current_block_start + 1;
-      N_parents_current_block = N_current_block - block_N_responses[i];
-
-      indices_current_block[:N_current_block] = block_indices[
-        current_block_start:block_last_index[i]
+      int block_start = get_block_start(i, block_last_index);
+      int N_current_block = block_last_index[i] - block_start + 1;
+      matrix[N_current_block, N_current_block] K_block;
+      matrix[N_current_block, N_current_block] L_block;
+      matrix[N_current_block, P_X_mean_non_zero[i]] L_inv_X_block;
+      vector[N_current_block] L_inv_y_block;
+      vector[N_current_block] L_inv_y_tilde_block;
+      int indices_current_block[N_current_block] = block_indices[
+        block_start:block_last_index[i]
       ];
+      int N_parents_current_block = N_current_block - block_N_responses[i];
 
       for (j in 1:P_X_mean_non_zero[i]) {
-        L_inv_X_block[:N_current_block, j] = X_mean[
-          indices_current_block[:N_current_block],
+        L_inv_X_block[:, j] = X_mean[
+          indices_current_block,
           indices_X_mean_non_zero[j, i]
-        ] ./ deviation_sd[indices_current_block[:N_current_block]];
+        ] ./ deviation_sd[indices_current_block];
       }
-      L_inv_y_block[:N_current_block] = (
-        y[indices_current_block[:N_current_block]]
-        ./ deviation_sd[indices_current_block[:N_current_block]]
+      L_inv_y_block = (
+        y[indices_current_block]
+        ./ deviation_sd[indices_current_block]
       );
-      L_inv_y_tilde_block[:N_current_block] = (
-        y_tilde[indices_current_block[:N_current_block]]
-        ./ deviation_sd[indices_current_block[:N_current_block]]
+      L_inv_y_tilde_block = (
+        y_tilde[indices_current_block]
+        ./ deviation_sd[indices_current_block]
       );
 
       log_det += (
-        2 * sum(log(deviation_sd[indices_current_block[:N_current_block]]))
+        2 * sum(log(deviation_sd[indices_current_block]))
       );
       y_tildet_Q_y_tilde += (
-        sum(square(L_inv_y_tilde_block[(N_parents_current_block+1):N_current_block]))
+        sum(square(L_inv_y_tilde_block[(N_parents_current_block+1):]))
       );
       Xt_Q_y[indices_X_mean_non_zero[:P_X_mean_non_zero[i], i]] += (
-        L_inv_X_block[(N_parents_current_block+1):N_current_block, :P_X_mean_non_zero[i]]'
-        * L_inv_y_block[(N_parents_current_block+1):N_current_block]
+        L_inv_X_block[(N_parents_current_block+1):, :P_X_mean_non_zero[i]]'
+        * L_inv_y_block[(N_parents_current_block+1):]
       );
       Xt_Q_y_tilde[indices_X_mean_non_zero[:P_X_mean_non_zero[i], i]] += (
-        L_inv_X_block[(N_parents_current_block+1):N_current_block, :P_X_mean_non_zero[i]]'
-        * L_inv_y_tilde_block[(N_parents_current_block+1):N_current_block]
+        L_inv_X_block[(N_parents_current_block+1):, :P_X_mean_non_zero[i]]'
+        * L_inv_y_tilde_block[(N_parents_current_block+1):]
       );
       Xt_Q_X[
         indices_X_mean_non_zero[:P_X_mean_non_zero[i], i],
         indices_X_mean_non_zero[:P_X_mean_non_zero[i], i]
       ] += (
         crossprod(L_inv_X_block[
-          (N_parents_current_block+1):N_current_block,
+          (N_parents_current_block+1):,
           :P_X_mean_non_zero[i]
         ])
       );
-
-      current_block_start = block_last_index[i] + 1;
     }
 
 #include "include/transformed_parameters_inner_end.stan"

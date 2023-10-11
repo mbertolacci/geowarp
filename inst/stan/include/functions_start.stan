@@ -14,9 +14,6 @@ matrix geowarp_process_covariance_1d(
   data real smoothness
 );
 
-// Body in stan_meta_header.hpp
-int get_N_block_max(int[] block_last_index);
-
 matrix rw1d_precision(int n, real sigma_squared) {
   matrix[n, n] output = diag_matrix(rep_vector(2, n));
   if (n == 0) {
@@ -66,4 +63,26 @@ vector chol_solve_L_b(
   vector b
 ) {
   return mdivide_right_tri_low(mdivide_left_tri_low(L, b)', L)';
+}
+
+int get_block_start(int i, int[] block_last_index) {
+  if (i == 1) {
+    return 1;
+  } else {
+    return block_last_index[i - 1] + 1;
+  }
+}
+
+int get_N_block_max(int[] block_last_index) {
+  int N_blocks = size(block_last_index);
+  int current_block_start_d = 1;
+  int N_block_max = 0;
+  for (i in 1:N_blocks) {
+    int N_block_i = block_last_index[i] - current_block_start_d + 1;
+    if (N_block_i > N_block_max) {
+      N_block_max = N_block_i;
+    }
+    current_block_start_d = block_last_index[i] + 1;
+  }
+  return N_block_max;
 }
