@@ -135,6 +135,9 @@ geowarp_model <- function(
 #' variance of the vertical basis functions, given as a list with `shape` and
 #' `rate` parameters. Defaults to an inverse gamma prior with 5% and 95%
 #' percentiles of `1e-3^2` and `10^2` respectively
+#' @param vertical_basis_function_boundary_knots The number of knots to place
+#' before after after the domain in order to address boundary effects. Defaults
+#' to three.
 #'
 #' @return A GeoWarp mean model, ready to be passed as an argument to
 #' \code{\link{geowarp_model}}.
@@ -161,7 +164,8 @@ geowarp_mean_model <- function(
   vertical_basis_function_variance_prior = inverse_gamma_quantile_prior(
     1e-3 ^ 2,
     10 ^ 2
-  )
+  ),
+  vertical_basis_function_boundary_knots = 3L
 ) {
   if (is.character(fixed_formula)) {
     fixed_formula <- as.formula(paste('~', fixed_formula))
@@ -173,7 +177,8 @@ geowarp_mean_model <- function(
     vertical_basis_functions = vertical_basis_functions,
     vertical_basis_function_delta = vertical_basis_function_delta,
     vertical_basis_function_effect_precision = vertical_basis_function_effect_precision,
-    vertical_basis_function_variance_prior = vertical_basis_function_variance_prior
+    vertical_basis_function_variance_prior = vertical_basis_function_variance_prior,
+    vertical_basis_function_boundary_knots = vertical_basis_function_boundary_knots
   )
 }
 
@@ -191,6 +196,9 @@ geowarp_mean_model <- function(
 #' `geowarp_deviation_model`). One of \code{\link{geowarp_linear_awu}}, or
 #' \code{\link{geowarp_bernstein_awu}}. At the moment, horizontal coordinates
 #' must only have linear warpings.
+#' @param axial_warping_unit_mapping Specifies the mapping between the axial
+#' warping units and the coordinates. Can be used to share warping units between
+#' coordinates.
 #' @param geometric_warping_unit A geometric warping unit object. Defaults to
 #' `geowarp_geometric_warping_unit()`.
 #' @param variance_model A variance model object. Defaults to
@@ -215,6 +223,7 @@ geowarp_mean_model <- function(
 geowarp_deviation_model <- function(
   covariance_function = c('matern15', 'exponential'),
   axial_warping_units,
+  axial_warping_unit_mapping = seq_len(length(axial_warping_units)),
   geometric_warping_unit = geowarp_geometric_warping_unit(),
   variance_model = geowarp_variance_model()
 ) {
@@ -226,7 +235,7 @@ geowarp_deviation_model <- function(
     name = 'full',
     covariance_function = covariance_function,
     axial_warping_units = axial_warping_units,
-    axial_warping_unit_mapping = seq_len(length(axial_warping_units)),
+    axial_warping_unit_mapping = axial_warping_unit_mapping,
     geometric_warping_unit = geometric_warping_unit,
     variance_model = variance_model
   )
@@ -286,6 +295,9 @@ geowarp_vertical_only_deviation_model <- function(
 #' of the vertical basis functions, given as a list with `shape` and
 #' `rate` parameters. Defaults to an inverse gamma prior with 5% and 95%
 #' percentiles of `1e-3 ^ 2` and `10 ^ 2` respectively
+#' @param vertical_basis_function_boundary_knots The number of knots to place
+#' before after after the domain in order to address boundary effects. Defaults
+#' to three.
 #'
 #' @return A list containing the specifications for the GeoWarp variance model,
 #' ready to be passed as an argument to \code{\link{geowarp_deviation_model}}
@@ -312,7 +324,8 @@ geowarp_variance_model <- function(
   vertical_basis_function_variance_prior = inverse_gamma_quantile_prior(
     1e-3 ^ 2,
     10 ^ 2
-  )
+  ),
+  vertical_basis_function_boundary_knots = 3L
 ) {
   list(
     fixed_formula = fixed_formula,
@@ -321,7 +334,8 @@ geowarp_variance_model <- function(
     vertical_basis_functions = vertical_basis_functions,
     vertical_basis_function_delta = vertical_basis_function_delta,
     vertical_basis_function_length_scale_prior = vertical_basis_function_length_scale_prior,
-    vertical_basis_function_variance_prior = vertical_basis_function_variance_prior
+    vertical_basis_function_variance_prior = vertical_basis_function_variance_prior,
+    vertical_basis_function_boundary_knots = vertical_basis_function_boundary_knots
   )
 }
 
@@ -341,8 +355,13 @@ geowarp_variance_model <- function(
 #' applies after rescaling. This help with numerical issues by making the
 #' inferred parameter closer to one.
 #' @param prior A list giving the parameters for the gamma prior over the
-#' axial warping unit parameters. A list containing two entries, `shape` and
-#' `rate`.
+#' axial warping unit parameters. This contains five entries: `type`, `shape`
+#' `rate`, `lower`, and `upper`. The `type` parameter specifies the distribution
+#' type, one of 'gamma', 'inv_uniform', or 'uniform'. The `shape` and `rate`
+#' parameters specify the shape and rate parameters of the gamma distribution,
+#' if chosen. The `lower` and `upper` parameters specify the lower and upper
+#' bounds of the prior distribution; these can be set to `-Inf` or `Inf` as
+#' needed.
 #' @param order Numeric value specifying the order of the Bernstein polynomial.
 #' Defaults to 20.
 #' @param prior_shape Numeric value specifying the shape parameter for the
@@ -369,7 +388,13 @@ geowarp_variance_model <- function(
 #' @export
 geowarp_linear_awu <- function(
   scaling = 1,
-  prior = list(shape = 1.01, rate = 0.01)
+  prior = list(
+    type = 'gamma',
+    shape = 1.01,
+    rate = 0.01,
+    lower = 0,
+    upper = Inf
+  )
 ) {
   list(name = 'linear_awu', scaling = scaling, prior = prior)
 }
@@ -379,12 +404,19 @@ geowarp_linear_awu <- function(
 #' @export
 geowarp_bernstein_awu <- function(
   order = 20,
-  prior = list(shape = 1.01, rate = 0.01)
+  scaling = 1,
+  prior = list(
+    type = 'gamma',
+    shape = 1.01,
+    rate = 0.01,
+    lower = 0,
+    upper = Inf
+  )
 ) {
   list(
     name = 'bernstein_awu',
     order = order,
-    scaling = 1,
+    scaling = scaling,
     prior = prior
   )
 }

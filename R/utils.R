@@ -57,3 +57,18 @@ inverse_gamma_quantile_prior <- function(
 .chol_solve <- function(R, b) {
   backsolve(R, backsolve(R, b, transpose = TRUE))
 }
+
+.rw1d_precision <- function(n, sigma_squared) {
+  if (n == 0) {
+    return(matrix(numeric(0), n, n))
+  }
+  # Create a diagonal matrix with 2s on the main diagonal
+  output <- diag(2, n, n)
+  output[n, n] <- 1
+  # Modify off-diagonal elements
+  if (n > 1) {
+    output[row(output) == col(output) + 1] <- -1
+    output[row(output) + 1 == col(output)] <- -1
+  }
+  return(output / sigma_squared)
+}

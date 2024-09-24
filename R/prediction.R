@@ -7,7 +7,7 @@
 #' omitted if both `model` and `parameters` are given.
 #' @param model GeoWarp model object (default uses the model from the `fit`
 #' object).
-#' @param parameters GeoWarp Parameters (default uses the parameters from the
+#' @param parameters GeoWarp parameters (default uses the parameters from the
 #' `fit` object).
 #' @param df A data frame containing the observed data (default uses the
 #' observation locations used in \code{fit}).
@@ -64,7 +64,7 @@ marginal_variance_profile <- function(
 #' @param observed_df Data frame containing the observed data. Defaults to the
 # observed data frame in the model fit.
 #' @param model GeoWarp model object (default uses the model from the fit).
-#' @param parameters GeoWarp Parameters (default uses the parameters from the
+#' @param parameters GeoWarp parameters (default uses the parameters from the
 #' fit).
 #' @param include_mean Logical, indicating whether to include the mean in the
 #' output.
@@ -375,4 +375,124 @@ predict.geowarp_fit <- function(object, ...) {
     precision_V = precision_V,
     ordering = seq_len(prediction_stan_data$N)
   )
+}
+
+#' Give the posterior distribution of alpha beta
+#'
+#' This function gives the posterior distribution of the alpha beta parameters
+#' in a fitted GeoWarp model.
+#'
+#' @param fit A GeoWarp fit object from \code{\link{geowarp_optimise}}.
+#' @param df A data frame containing the observed data (default uses the
+#' observation locations used in \code{fit}).
+#' @param parameters GeoWarp parameters (default uses the parameters from the
+#' \code{fit} object).
+#' @param model GeoWarp model object (default uses the model from the \code{fit}
+#' object).
+#' @param include_mean Logical, indicating whether to include the mean in the
+#' output.
+#' @param include_precision Logical, indicating whether to include the precision
+#' matrix in the output (explained below).
+#' @param include_samples Logical, indicating whether to include the predictive
+#' samples in the output.
+#' @param n_samples Number of predictive samples to generate.
+#' @param n_parents Number of parents to consider for Vecchia's approximation.
+#' @param parent_structure Parent structure for Vecchia's approximation,
+#' produced using \code{\link{vecchia_parent_structure}}.
+#' @param threads Number of threads to use for parallelisation, taken from
+#' \code{getOption('geowarp.threads')} by default, which is itself set to 1 by
+#' default. The special value -1 picks a number of threads based on the number
+#' of cores in the system).
+#'
+#' @return A vector containing the sampled alpha beta parameters.
+#' @export
+predict_alpha_beta <- function(
+  fit,
+  df = fit$observed_df,
+  parameters = fit$parameters,
+  model = fit$model,
+  include_mean = TRUE,
+  include_precision = FALSE,
+  include_samples = FALSE,
+  n_samples = 1L,
+  n_parents = 50,
+  parent_structure = vecchia_parent_structure(
+    df,
+    model,
+    n_parents
+  ),
+  threads = getOption('geowarp.threads')
+) {
+  stan_data <- geowarp_stan_data(df, model)
+  stan_data$y <- stan_data$y[parent_structure$observed_ordering]
+  for (name in c(
+    'x', 'X_mean_fixed', 'X_mean_random', 'X_deviation_warping',
+    'X_deviation_fixed', 'X_deviation_random'
+  )) {
+    stan_data[[name]] <- stan_data[[name]][
+      parent_structure$observed_ordering,
+      ,
+      drop = FALSE
+    ]
+  }
+
+  X_mean_all <- cbind(stan_data$X_mean_fixed, stan_data$X_mean_random)
+
+  U <- .create_vecchia_U(
+    x = stan_data$x,
+    X_deviation_fixed = stan_data$X_deviation_fixed,
+    X_deviation_random = stan_data$X_deviation_random,
+    parents = parent_structure$observed_parents,
+    nugget = rep(TRUE, nrow(stan_data$x)),
+    model = model,
+    parameters = parameters,
+    threads = threads
+  )
+  alpha_beta_precision <- (
+    as.matrix(crossprod(
+      X_mean_all,
+      as.matrix(
+        U %*% as.matrix(crossprod(U, X_mean_all))
+      )
+    ))
+    + as.matrix(Matrix::bdiag(
+      stan_data$alpha_precision,
+      .rw1d_precision(
+        ncol(stan_data$X_mean_random),
+        parameters$tau_squared_mean_random
+      )
+    ))
+  )
+  if (include_mean || include_samples) {
+    alpha_beta_hat <- as.vector(solve(
+      alpha_beta_precision,
+      crossprod(X_mean_all, as.matrix(U %*% crossprod(U, stan_data$y)))
+      + c(
+        stan_data$alpha_precision %*% stan_data$alpha_mean,
+        rep(0, ncol(stan_data$X_mean_random))
+      )
+    ))
+  }
+
+  output <- NULL
+  if (include_mean) {
+    output$mean <- alpha_beta_hat
+  }
+  if (include_precision) {
+    output$precision <- alpha_beta_precision
+  }
+  if (include_samples) {
+    output$samples <- t(alpha_beta_hat + backsolve(
+      chol(alpha_beta_precision),
+      matrix(
+        rnorm(n_samples * nrow(alpha_beta_precision)),
+        nrow = nrow(alpha_beta_precision),
+        ncol = n_samples
+      )
+    ))
+    if (n_samples == 1) {
+      output$samples <- output$samples[1, ]
+    }
+  }
+  output
 }

@@ -59,6 +59,9 @@ data {
   int block_last_index[N_blocks];
   int block_N_responses[N_blocks];
 
+  int gamma_deviation_prior_type;
+  real<lower=0> gamma_deviation_lower;
+  real<lower=0> gamma_deviation_upper;
   real<lower=0> gamma_deviation_a;
   real<lower=0> gamma_deviation_b;
 
@@ -71,7 +74,10 @@ transformed data {
 parameters {
 #include "include/parameters_start.stan"
 #include "include/parameters_deviation_start.stan"
-  vector<lower=0>[P_deviation_warping] gamma_deviation_vertical;
+  vector<
+    lower=gamma_deviation_lower,
+    upper=gamma_deviation_upper
+  >[P_deviation_warping] gamma_deviation_vertical;
 }
 transformed parameters {
 #include "include/transformed_parameters_outer_start.stan"
@@ -133,7 +139,12 @@ model {
 #include "include/model_start.stan"
 #include "include/model_deviation_start.stan"
 
-  if (gamma_deviation_b > 0) {
+  if (gamma_deviation_prior_type == 1) {
     gamma_deviation_vertical ~ gamma(gamma_deviation_a, gamma_deviation_b);
+  } else if (gamma_deviation_prior_type == 2) {
+    // Inverse uniform distribution
+    target += -2.0 * sum(log(gamma_deviation_vertical));
+  } else {
+    gamma_deviation_vertical ~ uniform(gamma_deviation_lower, gamma_deviation_upper);
   }
 }

@@ -30,7 +30,7 @@ observation locations used in \code{fit}).}
 \item{model}{GeoWarp model object (default uses the model from the \code{fit}
 object).}
 
-\item{parameters}{GeoWarp Parameters (default uses the parameters from the
+\item{parameters}{GeoWarp parameters (default uses the parameters from the
 \code{fit} object).}
 
 \item{nugget}{Logical indicating whether to include the nugget variance in
@@ -46,9 +46,9 @@ functions calculate the estimated mean and variance at the given locations.
 }
 \section{Functions}{
 \itemize{
-\item \code{marginal_variance_profile}: Output the marginal variance at each depth
-}}
+\item \code{marginal_variance_profile()}: Output the marginal variance at each depth
 
+}}
 \examples{
 # Assuming `fit` is a fitted GeoWarp model:
 mean_values <- mean_profile(fit)

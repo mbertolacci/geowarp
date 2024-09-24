@@ -11,6 +11,7 @@ stan_trust_optim(
   control = list(maxit = 2000, prec = 0.001),
   method = "SR1",
   initial_value_attempts = 10,
+  initial_range = 4,
   theta_initial,
   ...
 )
@@ -31,6 +32,9 @@ Zero means no output, four gives the maximum.}
 
 \item{initial_value_attempts}{The number of attempts to find a valid initial
 value for the optimisation. Default is 10.}
+
+\item{initial_range}{The range of the initial values for the optimisation on
+the unconstrained space.}
 
 \item{...}{Additional arguments passed to
 \code{\link[trustOptim]{trust.optim}}.}

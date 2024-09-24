@@ -100,8 +100,8 @@ warped_coordinates <- function(
       * output[, vertical_index]
     )
   } else {
-    X_deviation_warping <- bernstein_warping_design_matrix(
-      vertical_warping$scaling * output[, vertical_index],
+    X_deviation_warping <- vertical_warping$scaling * bernstein_warping_design_matrix(
+      output[, vertical_index],
       vertical_warping$order,
       model$vertical_domain
     )
@@ -163,20 +163,26 @@ unwarped_coordinates <- function(
       / vertical_warping$scaling
     )
   } else {
-    # Solve for each value in turn
-    for (i in seq_len(nrow(output))) {
-      output[i, vertical_index] <- uniroot(
-        function(x) {
-          lhs <- bernstein_warping_design_matrix(
-            vertical_warping$scaling * x,
-            vertical_warping$order,
-            model$vertical_domain
-          ) %*% cumsum(parameters$gamma_deviation_vertical)
-          lhs - output[i, vertical_index]
-        },
-        interval = model$vertical_domain
-      )$root
+    intervals <- matrix(0, nrow = nrow(output), ncol = 2)
+    intervals[, 1] <- model$vertical_domain[1]
+    intervals[, 2] <- model$vertical_domain[2]
+    for (iteration in seq_len(1000)) {
+      x_mid <- rowMeans(intervals)
+      y_mid <- vertical_warping$scaling * bernstein_warping_design_matrix(
+        x_mid,
+        vertical_warping$order,
+        model$vertical_domain
+      ) %*% cumsum(parameters$gamma_deviation_vertical)
+
+      is_negative <- y_mid - output[, vertical_index] < 0
+      intervals[is_negative, 1] <- x_mid[is_negative]
+      intervals[!is_negative, 2] <- x_mid[!is_negative]
+
+      if (all(intervals[, 2] - intervals[, 1] < .Machine$double.eps ^ 0.5)) {
+        break
+      }
     }
+    output[, vertical_index] <- rowMeans(intervals)
   }
 
   output

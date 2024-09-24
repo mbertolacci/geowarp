@@ -399,13 +399,13 @@ inline geowarp_process_covariance_1d(
   if (smoothness == 0.5) {
     for (int j = 0; j < N; ++j) {
       K_block.coeffRef(j, j) = (
-        pow(deviation_sd[j], 2) + sigma_squared_nugget
+        stan::math::pow(deviation_sd[j], 2) + sigma_squared_nugget
       );
       for (int k = j + 1; k < N; ++k) {
         auto value_i_j_k = (
           deviation_sd[j]
           * deviation_sd[k]
-          * exp(-abs(x[j] - x[k]))
+          * stan::math::exp(-abs(x[j] - x[k]))
         );
         K_block.coeffRef(j, k) = value_i_j_k;
         K_block.coeffRef(k, j) = value_i_j_k;
@@ -414,7 +414,7 @@ inline geowarp_process_covariance_1d(
   } else if (smoothness == 1.5) {
     for (int j = 0; j < N; ++j) {
       K_block.coeffRef(j, j) = (
-        pow(deviation_sd[j], 2) + sigma_squared_nugget
+        stan::math::pow(deviation_sd[j], 2) + sigma_squared_nugget
       );
       for (int k = j + 1; k < N; ++k) {
         auto s3_distance_i_j_k = std::sqrt(3) * abs(x[j] - x[k]);
@@ -422,7 +422,7 @@ inline geowarp_process_covariance_1d(
           deviation_sd[j]
           * deviation_sd[k]
           * (1 + s3_distance_i_j_k)
-          * exp(-s3_distance_i_j_k)
+          * stan::math::exp(-s3_distance_i_j_k)
         );
         K_block.coeffRef(j, k) = value_i_j_k;
         K_block.coeffRef(k, j) = value_i_j_k;

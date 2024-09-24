@@ -34,7 +34,7 @@ made. Defaults to the observed data frame in the model fit.}
 
 \item{observed_df}{Data frame containing the observed data. Defaults to the}
 
-\item{parameters}{GeoWarp Parameters (default uses the parameters from the
+\item{parameters}{GeoWarp parameters (default uses the parameters from the
 fit).}
 
 \item{model}{GeoWarp model object (default uses the model from the fit).}
@@ -87,11 +87,11 @@ prediction can use the Vecchia approximation when the number of observed and
 predicted data are large. The prediction distribution is multivariate
 Gaussian, so it is specified by its mean and covariance
 }
-\section{Methods (by generic)}{
+\section{Functions}{
 \itemize{
-\item \code{predict}: Predict using a fit object
-}}
+\item \code{predict(geowarp_fit)}: Predict using a fit object
 
+}}
 \section{Details}{
 
 If \code{prediction} contains the output of this function, the precision matrix

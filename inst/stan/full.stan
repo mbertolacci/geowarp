@@ -62,6 +62,9 @@ data {
   int block_last_index[N_blocks];
   int block_N_responses[N_blocks];
 
+  int gamma_deviation_prior_type[D_horizontal_warpings + 1];
+  vector<lower=0>[D_horizontal_warpings + 1] gamma_deviation_lower;
+  vector<lower=0>[D_horizontal_warpings + 1] gamma_deviation_upper;
   vector<lower=0>[D_horizontal_warpings + 1] gamma_deviation_a;
   vector<lower=0>[D_horizontal_warpings + 1] gamma_deviation_b;
   real<lower=0> L_deviation_shape;
@@ -75,8 +78,14 @@ transformed data {
 parameters {
 #include "include/parameters_start.stan"
 #include "include/parameters_deviation_start.stan"
-  vector<lower=0>[D_horizontal_warpings] gamma_deviation_horizontal;
-  vector<lower=0>[P_deviation_warping] gamma_deviation_vertical;
+  vector<
+    lower=gamma_deviation_lower[1:D_horizontal_warpings],
+    upper=gamma_deviation_upper[1:D_horizontal_warpings]
+  >[D_horizontal_warpings] gamma_deviation_horizontal;
+  vector<
+    lower=gamma_deviation_lower[D_horizontal_warpings + 1],
+    upper=gamma_deviation_upper[D_horizontal_warpings + 1]
+  >[P_deviation_warping] gamma_deviation_vertical;
   cholesky_factor_corr[D_geometric] L_deviation;
 }
 transformed parameters {
@@ -148,12 +157,26 @@ model {
 #include "include/model_deviation_start.stan"
 
   for (i in 1:D_horizontal_warpings) {
-    if (gamma_deviation_b[i] > 0) {
+    if (gamma_deviation_prior_type[i] == 1) {
       gamma_deviation_horizontal[i] ~ gamma(gamma_deviation_a[i], gamma_deviation_b[i]);
+    } else if (gamma_deviation_prior_type[i] == 2) {
+      // Inverse uniform distribution
+      target += -2.0 * log(gamma_deviation_horizontal[i]);
+    } else {
+      // Implicitly, any other choice is uniform
+      gamma_deviation_horizontal[i] ~ uniform(gamma_deviation_lower[i], gamma_deviation_upper[i]);
     }
   }
   if (gamma_deviation_b[D_horizontal_warpings + 1] > 0) {
-    gamma_deviation_vertical ~ gamma(gamma_deviation_a[D_horizontal_warpings + 1], gamma_deviation_b[D_horizontal_warpings + 1]);
+    if (gamma_deviation_prior_type[D_horizontal_warpings + 1] == 1) {
+      gamma_deviation_vertical ~ gamma(gamma_deviation_a[D_horizontal_warpings + 1], gamma_deviation_b[D_horizontal_warpings + 1]);
+    } else if (gamma_deviation_prior_type[D_horizontal_warpings + 1] == 2) {
+      // Inverse uniform distribution
+      target += -2.0 * sum(log(gamma_deviation_vertical));
+    } else {
+      // Implicitly, any other choice is uniform
+      gamma_deviation_vertical ~ uniform(gamma_deviation_lower[D_horizontal_warpings + 1], gamma_deviation_upper[D_horizontal_warpings + 1]);
+    }
   }
   if (D_geometric > 0) {
     L_deviation ~ lkj_corr_cholesky(L_deviation_shape);

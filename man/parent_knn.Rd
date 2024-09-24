@@ -33,10 +33,10 @@ group.
 }
 \section{Functions}{
 \itemize{
-\item \code{parent_knn_across_groups}: Calculate kNN parents such that parents must come
+\item \code{parent_knn_across_groups()}: Calculate kNN parents such that parents must come
 from a different group to the location.
-}}
 
+}}
 \examples{
 x <- matrix(rnorm(100), nrow = 50)
 parents <- parent_knn(x, 5)

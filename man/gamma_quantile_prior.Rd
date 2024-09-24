@@ -41,10 +41,10 @@ distributions.
 }
 \section{Functions}{
 \itemize{
-\item \code{inverse_gamma_quantile_prior}: Equivalent function for the inverse gamma
+\item \code{inverse_gamma_quantile_prior()}: Equivalent function for the inverse gamma
 distribution.
-}}
 
+}}
 \examples{
 # Create a gamma distribution that has 5th and 95th percentiles at 2 and 10
 # respectively

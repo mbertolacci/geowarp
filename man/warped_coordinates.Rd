@@ -47,9 +47,9 @@ coordinates.
 }
 \section{Functions}{
 \itemize{
-\item \code{unwarped_coordinates}: Calculated unwarped coordinates.
-}}
+\item \code{unwarped_coordinates()}: Calculated unwarped coordinates.
 
+}}
 \seealso{
 \code{\link[geowarp]{geowarp_model}}
 \code{\link[geowarp]{geowarp_optimize}}

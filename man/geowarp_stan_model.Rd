@@ -45,9 +45,9 @@ GeoWarp, and can prepare the input data required to use the object.
 }
 \section{Functions}{
 \itemize{
-\item \code{geowarp_stan_data}: Prepare data for Stan
-}}
+\item \code{geowarp_stan_data()}: Prepare data for Stan
 
+}}
 \seealso{
 \code{\link{geowarp_optimise}}
 }

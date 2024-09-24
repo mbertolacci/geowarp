@@ -1,5 +1,5 @@
-#ifndef STAN_META_HEADER_HPP
-#define STAN_META_HEADER_HPP
+#ifndef STAN_META_HEADER_AFTER_HPP
+#define STAN_META_HEADER_AFTER_HPP
 
 #include <geowarp_process_covariance.hpp>
 #include <reduce_sum_vec.hpp>
@@ -251,4 +251,4 @@ geowarp_vecchia_reduce_sum_vertical_only(
     );
 }
 
-#endif  // STAN_META_HEADER_HPP
+#endif  // STAN_META_HEADER_AFTER_HPP

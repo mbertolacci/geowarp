@@ -9,6 +9,7 @@
 geowarp_deviation_model(
   covariance_function = c("matern15", "exponential"),
   axial_warping_units,
+  axial_warping_unit_mapping = seq_len(length(axial_warping_units)),
   geometric_warping_unit = geowarp_geometric_warping_unit(),
   variance_model = geowarp_variance_model()
 )
@@ -32,6 +33,10 @@ the warping functions for all the coordinates (for
 \code{\link{geowarp_bernstein_awu}}. At the moment, horizontal coordinates
 must only have linear warpings.}
 
+\item{axial_warping_unit_mapping}{Specifies the mapping between the axial
+warping units and the coordinates. Can be used to share warping units between
+coordinates.}
+
 \item{geometric_warping_unit}{A geometric warping unit object. Defaults to
 \code{geowarp_geometric_warping_unit()}.}
 
@@ -49,13 +54,13 @@ intended to be used as an argument for \code{\link{geowarp_model}}.
 }
 \section{Functions}{
 \itemize{
-\item \code{geowarp_white_deviation_model}: A deviation model that assumes no
+\item \code{geowarp_white_deviation_model()}: A deviation model that assumes no
 correlation (that is, i.i.d. Gaussian)
 
-\item \code{geowarp_vertical_only_deviation_model}: A deviation model that assumes no
+\item \code{geowarp_vertical_only_deviation_model()}: A deviation model that assumes no
 correlation in the horizontal directions.
-}}
 
+}}
 \examples{
 # Creating a GeoWarp deviation model object with custom settings
 deviation_model <- geowarp_deviation_model(

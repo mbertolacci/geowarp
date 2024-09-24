@@ -1,3 +1,92 @@
+// matrix geowarp_process_covariance_naive(
+//   real sigma_squared_nugget,
+//   vector deviation_sd,
+//   vector[] x,
+//   data real smoothness
+// ) {
+//   int n = size(x);
+//   matrix[n, n] output;
+//   if (smoothness == 0.5) {
+//     for (j in 1:n) {
+//       output[j, j] = square(deviation_sd[j]) + sigma_squared_nugget;
+//       for (k in (j+1):n) {
+//         output[j, k] = (
+//           deviation_sd[j]
+//            * deviation_sd[k]
+//            * exp(-distance(x[j], x[k]))
+//         );
+//         output[k, j] = output[j, k];
+//       }
+//     }
+//   } else if (smoothness == 1.5) {
+//     for (j in 1:n) {
+//       output[j, j] = square(deviation_sd[j]) + sigma_squared_nugget;
+//       for (k in (j+1):n) {
+//         real d = distance(x[j], x[k]);
+//         output[j, k] = (
+//           deviation_sd[j]
+//            * deviation_sd[k]
+//            * (1.0 + sqrt(3) * d)
+//            * exp(-sqrt(3) * d)
+//         );
+//         output[k, j] = output[j, k];
+//       }
+//     }
+//   }
+//   return output;
+// }
+
+// matrix geowarp_process_covariance_1d_naive(
+//   real sigma_squared_nugget,
+//   vector deviation_sd,
+//   real[] x,
+//   data real smoothness
+// ) {
+//   int n = size(x);
+//   matrix[n, n] output;
+//   if (smoothness == 0.5) {
+//     for (j in 1:n) {
+//       output[j, j] = square(deviation_sd[j]) + sigma_squared_nugget;
+//       for (k in (j+1):n) {
+//         output[j, k] = (
+//           deviation_sd[j]
+//            * deviation_sd[k]
+//            * exp(-fabs(x[j] - x[k]))
+//         );
+//         output[k, j] = output[j, k];
+//       }
+//     }
+//   } else if (smoothness == 1.5) {
+//     for (j in 1:n) {
+//       output[j, j] = square(deviation_sd[j]) + sigma_squared_nugget;
+//       for (k in (j+1):n) {
+//         real d = fabs(x[j] - x[k]);
+//         output[j, k] = (
+//           deviation_sd[j]
+//            * deviation_sd[k]
+//            * (1.0 + sqrt(3) * d)
+//            * exp(-sqrt(3) * d)
+//         );
+//         output[k, j] = output[j, k];
+//       }
+//     }
+//   }
+//   return output;
+// }
+
+matrix rw1d_precision(int n, real sigma_squared) {
+  matrix[n, n] output = diag_matrix(rep_vector(2, n));
+  if (n == 0) {
+    return output;
+  }
+  for (i in 2:n) {
+    output[i, i - 1] = -1;
+    output[i - 1, i] = -1;
+  }
+  output[n, n] = 1;
+  return output / sigma_squared;
+}
+
 // Body in stan_meta_header.hpp
 matrix geowarp_process_covariance(
   real sigma_squared_nugget,
@@ -13,19 +102,6 @@ matrix geowarp_process_covariance_1d(
   real[] x,
   data real smoothness
 );
-
-matrix rw1d_precision(int n, real sigma_squared) {
-  matrix[n, n] output = diag_matrix(rep_vector(2, n));
-  if (n == 0) {
-    return output;
-  }
-  for (i in 2:n) {
-    output[i, i - 1] = -1;
-    output[i - 1, i] = -1;
-  }
-  output[n, n] = 1;
-  return output / sigma_squared;
-}
 
 matrix exp1d_precision(int n, real delta, real ell, real sigma_squared) {
   matrix[n, n] output = rep_matrix(0, n, n);

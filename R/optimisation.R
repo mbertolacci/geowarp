@@ -16,6 +16,8 @@
 #' \code{\link[trustOptim]{trust.optim}}.
 #' @param initial_value_attempts The number of attempts to find a valid initial
 #'   value for the optimisation. Default is 10.
+#' @param initial_range The range of the initial values for the optimisation on
+#' the unconstrained space.
 #' @param ... Additional arguments passed to
 #' \code{\link[trustOptim]{trust.optim}}.
 #'
@@ -47,6 +49,7 @@ stan_trust_optim <- function(
   ),
   method = 'SR1',
   initial_value_attempts = 10,
+  initial_range = 4,
   theta_initial,
   ...
 ) {
@@ -57,7 +60,7 @@ stan_trust_optim <- function(
 
   if (missing(theta_initial)) {
     for (attempt in seq_len(initial_value_attempts)) {
-      theta_initial <- runif(n_params, -4, 4)
+      theta_initial <- runif(n_params, -initial_range, initial_range)
       value <- try(rstan::log_prob(fit0, theta_initial))
       if (!inherits(value, 'try-error') && is.finite(value)) {
         break
@@ -100,6 +103,7 @@ stan_nlm <- function(
   print.level = 2,
   iterlim = 2000,
   initial_value_attempts = 10,
+  initial_range = 4,
   theta_initial,
   ...
 ) {
@@ -108,7 +112,7 @@ stan_nlm <- function(
 
   if (missing(theta_initial)) {
     for (attempt in seq_len(initial_value_attempts)) {
-      theta_initial <- runif(n_params, -4, 4)
+      theta_initial <- runif(n_params, -initial_range, initial_range)
       value <- try(rstan::log_prob(fit0, theta_initial))
       if (!inherits(value, 'try-error') && is.finite(value)) {
         break
@@ -155,6 +159,7 @@ stan_nlminb <- function(
     trace = trace
   ),
   initial_value_attempts = 10,
+  initial_range = 4,
   theta_initial,
   ...
 ) {
@@ -167,7 +172,7 @@ stan_nlminb <- function(
 
   if (missing(theta_initial)) {
     for (attempt in seq_len(initial_value_attempts)) {
-      theta_initial <- runif(n_params, -4, 4)
+      theta_initial <- runif(n_params, -initial_range, initial_range)
       value <- try(rstan::log_prob(fit0, theta_initial))
       if (!inherits(value, 'try-error') && is.finite(value)) {
         break
@@ -196,6 +201,7 @@ stan_nlminb <- function(
 
   list(
     value = -fit$objective,
+    par_unconstrained = fit$par,
     par = rstan::constrain_pars(fit0, fit$par),
     iterations = fit$iterations,
     evaluations = fit$evaluations,

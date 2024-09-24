@@ -11,7 +11,8 @@ geowarp_mean_model(
   vertical_basis_functions = TRUE,
   vertical_basis_function_delta = 0.1,
   vertical_basis_function_effect_precision = 1/100,
-  vertical_basis_function_variance_prior = inverse_gamma_quantile_prior(0.001^2, 10^2)
+  vertical_basis_function_variance_prior = inverse_gamma_quantile_prior(0.001^2, 10^2),
+  vertical_basis_function_boundary_knots = 3L
 )
 }
 \arguments{
@@ -39,6 +40,10 @@ the precision of the effect of the vertical basis functions. Defaults to
 variance of the vertical basis functions, given as a list with \code{shape} and
 \code{rate} parameters. Defaults to an inverse gamma prior with 5\% and 95\%
 percentiles of \code{1e-3^2} and \code{10^2} respectively}
+
+\item{vertical_basis_function_boundary_knots}{The number of knots to place
+before after after the domain in order to address boundary effects. Defaults
+to three.}
 }
 \value{
 A GeoWarp mean model, ready to be passed as an argument to

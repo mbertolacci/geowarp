@@ -110,7 +110,7 @@ geowarp_optimise <- function(
   parameters$alpha_beta <- parameters$alpha_beta_hat
   parameters$alpha_beta_hat <- NULL
   parameters$log_marginal <- NULL
-  structure(
+  output <- structure(
     list(
       model = model,
       observed_df = df,
@@ -119,6 +119,11 @@ geowarp_optimise <- function(
     ),
     class = 'geowarp_fit'
   )
+  if (vecchia) {
+    output$parent_structure <- parent_structure
+    output$grouping <- grouping
+  }
+  output
 }
 
 #' GeoWarp Stan Model
@@ -239,18 +244,17 @@ geowarp_stan_data <- function(
       tail(model$deviation_model$axial_warping_units, 1)[[1]]
     }
     if (vertical_warping$name == 'linear_awu') {
-      output$X_deviation_warping <- cbind(
-        vertical_warping$scaling * output$x[, output$D]
-      )
+      output$X_deviation_warping <- cbind(output$x[, output$D])
       output$P_deviation_warping <- 1L
     } else {
       output$X_deviation_warping <- bernstein_warping_design_matrix(
-        vertical_warping$scaling * output$x[, output$D],
+        output$x[, output$D],
         vertical_warping$order,
         model$vertical_domain
       )
       output$P_deviation_warping <- ncol(output$X_deviation_warping)
     }
+    output$X_deviation_warping <- vertical_warping$scaling * output$X_deviation_warping
   }
 
   variance_model <- model$deviation_model$variance_model
@@ -287,15 +291,27 @@ geowarp_stan_data <- function(
 
   if (!is_white) {
     if (is_vertical_only) {
+      output$gamma_deviation_prior_type <- model$deviation_model$axial_warping_unit$prior$type
       output$gamma_deviation_a <- model$deviation_model$axial_warping_unit$prior$shape
       output$gamma_deviation_b <- model$deviation_model$axial_warping_unit$prior$rate
+      output$gamma_deviation_lower <- model$deviation_model$axial_warping_unit$prior$lower
+      output$gamma_deviation_upper <- model$deviation_model$axial_warping_unit$prior$upper
     } else {
       warping_priors <- lapply(model$deviation_model$axial_warping_units, getElement, 'prior')
+      output$gamma_deviation_prior_type <- sapply(warping_priors, getElement, 'type')
       output$gamma_deviation_a <- sapply(warping_priors, getElement, 'shape')
       output$gamma_deviation_b <- sapply(warping_priors, getElement, 'rate')
+      output$gamma_deviation_lower <- sapply(warping_priors, getElement, 'lower')
+      output$gamma_deviation_upper <- sapply(warping_priors, getElement, 'upper')
       output$D_horizontal_warpings <- length(warping_priors) - 1L
       output$axial_warping_unit_mapping <- model$deviation_model$axial_warping_unit_mapping
     }
+
+    output$gamma_deviation_prior_type <- c(
+      'gamma' = 1,
+      'inv_uniform' = 2,
+      'uniform' = 3
+    )[output$gamma_deviation_prior_type]
   }
 
   if (!is.null(model$deviation_model$geometric_warping_unit)) {
@@ -370,15 +386,16 @@ geowarp_stan_data <- function(
     centres <- seq(
       model$vertical_basis_function_delta * (floor(shift_value(
         vertical_domain[1]
-      )) - 3),
+      )) - model$vertical_basis_function_boundary_knots),
       model$vertical_basis_function_delta * (ceiling(shift_value(
         vertical_domain[2]
-      )) + 3),
+      )) + model$vertical_basis_function_boundary_knots),
       by = model$vertical_basis_function_delta
     )
     output$X_random <- splines::splineDesign(
       knots = centres,
-      x = x
+      x = x,
+      outer.ok = TRUE
     )
   } else {
     output$X_random <- matrix(0, nrow = nrow(df), ncol = 0)

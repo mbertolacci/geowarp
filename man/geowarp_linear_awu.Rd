@@ -6,9 +6,16 @@
 \alias{geowarp_geometric_warping_unit}
 \title{Create a GeoWarp Axial Warping Unit (AWU) Object}
 \usage{
-geowarp_linear_awu(scaling = 1, prior = list(shape = 1.01, rate = 0.01))
+geowarp_linear_awu(
+  scaling = 1,
+  prior = list(type = "gamma", shape = 1.01, rate = 0.01, lower = 0, upper = Inf)
+)
 
-geowarp_bernstein_awu(order = 20, prior = list(shape = 1.01, rate = 0.01))
+geowarp_bernstein_awu(
+  order = 20,
+  scaling = 1,
+  prior = list(type = "gamma", shape = 1.01, rate = 0.01, lower = 0, upper = Inf)
+)
 
 geowarp_geometric_warping_unit(prior_shape = 2)
 }
@@ -19,8 +26,13 @@ applies after rescaling. This help with numerical issues by making the
 inferred parameter closer to one.}
 
 \item{prior}{A list giving the parameters for the gamma prior over the
-axial warping unit parameters. A list containing two entries, \code{shape} and
-\code{rate}.}
+axial warping unit parameters. This contains five entries: \code{type}, \code{shape}
+\code{rate}, \code{lower}, and \code{upper}. The \code{type} parameter specifies the distribution
+type, one of 'gamma', 'inv_uniform', or 'uniform'. The \code{shape} and \code{rate}
+parameters specify the shape and rate parameters of the gamma distribution,
+if chosen. The \code{lower} and \code{upper} parameters specify the lower and upper
+bounds of the prior distribution; these can be set to \code{-Inf} or \code{Inf} as
+needed.}
 
 \item{order}{Numeric value specifying the order of the Bernstein polynomial.
 Defaults to 20.}
@@ -47,13 +59,13 @@ induces geometric anisotropy in the space, and is specified through
 }
 \section{Functions}{
 \itemize{
-\item \code{geowarp_bernstein_awu}: A warping unit that uses Bernstein
+\item \code{geowarp_bernstein_awu()}: A warping unit that uses Bernstein
 polynomials.
 
-\item \code{geowarp_geometric_warping_unit}: A geometric warping unit that specifies
+\item \code{geowarp_geometric_warping_unit()}: A geometric warping unit that specifies
 geometric anisotropy.
-}}
 
+}}
 \examples{
 # Creating a GeoWarp linear AWU
 linear_awu <- geowarp_linear_awu(scaling = 0.5)

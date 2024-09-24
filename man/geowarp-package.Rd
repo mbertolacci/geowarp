@@ -9,3 +9,7 @@
 A package to fit GeoWarp, a model that uses warped spatial
 processes for inferring soil properties.
 }
+\author{
+\strong{Maintainer}: First Last \email{first.last@example.com} (\href{https://orcid.org/YOUR-ORCID-ID}{ORCID})
+
+}
