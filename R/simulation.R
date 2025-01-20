@@ -137,5 +137,5 @@ geowarp_simulate <- function(
     t(U),
     matrix(rnorm(n_samples * nrow(U)), ncol = n_samples)
   )
-  output[Matrix::invPerm(parent_structure$observed_ordering), ]
+  as.matrix(output[Matrix::invPerm(parent_structure$observed_ordering), ])
 }
