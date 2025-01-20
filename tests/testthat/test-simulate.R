@@ -51,7 +51,11 @@ test_that('simulation works', {
 
   result <- call_simulate(n_sample = 1, vecchia = TRUE)
   base_checks(result)
-  expect_type(result$value, 'double')
+  expect_type(result$value, "double")
+  
+  result <- call_simulate(n_sample = 5, vecchia = TRUE)
+  base_checks(result)
+  expect_equal(dim(result$value), c(nrow(target_df), 5))
 
   result <- call_simulate(n_sample = 1, vecchia = TRUE, threads = 2L)
   base_checks(result)
