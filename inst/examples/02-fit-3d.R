@@ -337,3 +337,7 @@ ggplot() +
   scale_fill_viridis_c() +
   coord_fixed() +
   facet_wrap(~ z)
+
+# Simulate from the fitted model
+simulated_df <- geowarp_simulate(fit, n_samples = 2, vecchia = TRUE)
+str(simulated_df)
