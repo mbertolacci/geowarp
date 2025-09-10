@@ -18,8 +18,11 @@ geowarp_predict(
   n_samples = 500,
   vecchia = "auto",
   n_parents = 50,
+  grouped = TRUE,
   parent_structure = vecchia_parent_structure(observed_df, model, n_parents,
     prediction_df = prediction_df),
+  grouping = vecchia_grouping(parent_structure, include_predictions = TRUE, format =
+    "GpGp"),
   threads = getOption("geowarp.threads"),
   ...
 )

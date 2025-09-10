@@ -102,6 +102,25 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// vecchia_U_parts_grouped
+Rcpp::List vecchia_U_parts_grouped(const Eigen::ArrayXi& blockIndices, const Eigen::ArrayXi& blockLastIndex, const Eigen::ArrayXi& blockLocalResponseIndex, const Eigen::ArrayXi& blockLastResponseOfBlock, const Eigen::MatrixXd& xWarped, const std::string& covarianceFunction, const Eigen::VectorXd& sigmaDeviation, const Eigen::VectorXd& sigmaSquaredNugget, bool parallel);
+RcppExport SEXP _geowarp_vecchia_U_parts_grouped(SEXP blockIndicesSEXP, SEXP blockLastIndexSEXP, SEXP blockLocalResponseIndexSEXP, SEXP blockLastResponseOfBlockSEXP, SEXP xWarpedSEXP, SEXP covarianceFunctionSEXP, SEXP sigmaDeviationSEXP, SEXP sigmaSquaredNuggetSEXP, SEXP parallelSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const Eigen::ArrayXi& >::type blockIndices(blockIndicesSEXP);
+    Rcpp::traits::input_parameter< const Eigen::ArrayXi& >::type blockLastIndex(blockLastIndexSEXP);
+    Rcpp::traits::input_parameter< const Eigen::ArrayXi& >::type blockLocalResponseIndex(blockLocalResponseIndexSEXP);
+    Rcpp::traits::input_parameter< const Eigen::ArrayXi& >::type blockLastResponseOfBlock(blockLastResponseOfBlockSEXP);
+    Rcpp::traits::input_parameter< const Eigen::MatrixXd& >::type xWarped(xWarpedSEXP);
+    Rcpp::traits::input_parameter< const std::string& >::type covarianceFunction(covarianceFunctionSEXP);
+    Rcpp::traits::input_parameter< const Eigen::VectorXd& >::type sigmaDeviation(sigmaDeviationSEXP);
+    Rcpp::traits::input_parameter< const Eigen::VectorXd& >::type sigmaSquaredNugget(sigmaSquaredNuggetSEXP);
+    Rcpp::traits::input_parameter< bool >::type parallel(parallelSEXP);
+    rcpp_result_gen = Rcpp::wrap(vecchia_U_parts_grouped(blockIndices, blockLastIndex, blockLocalResponseIndex, blockLastResponseOfBlock, xWarped, covarianceFunction, sigmaDeviation, sigmaSquaredNugget, parallel));
+    return rcpp_result_gen;
+END_RCPP
+}
 
 RcppExport SEXP _rcpp_module_boot_stan_fit4full_mod();
 RcppExport SEXP _rcpp_module_boot_stan_fit4vertical_only_mod();
@@ -116,6 +135,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_geowarp_uniqueRows", (DL_FUNC) &_geowarp_uniqueRows, 1},
     {"_geowarp_deduplicateParents", (DL_FUNC) &_geowarp_deduplicateParents, 1},
     {"_geowarp_vecchia_U_x_parts", (DL_FUNC) &_geowarp_vecchia_U_x_parts, 6},
+    {"_geowarp_vecchia_U_parts_grouped", (DL_FUNC) &_geowarp_vecchia_U_parts_grouped, 9},
     {"_rcpp_module_boot_stan_fit4full_mod", (DL_FUNC) &_rcpp_module_boot_stan_fit4full_mod, 0},
     {"_rcpp_module_boot_stan_fit4vertical_only_mod", (DL_FUNC) &_rcpp_module_boot_stan_fit4vertical_only_mod, 0},
     {"_rcpp_module_boot_stan_fit4white_mod", (DL_FUNC) &_rcpp_module_boot_stan_fit4white_mod, 0},

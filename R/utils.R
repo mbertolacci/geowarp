@@ -54,6 +54,11 @@ inverse_gamma_quantile_prior <- function(
   gamma_quantile_prior(1 / q_upper, 1 / q_lower, ...)
 }
 
+#' @export
+unique_rows <- function(x) {
+  .unique_rows(x)
+}
+
 .chol_solve <- function(R, b) {
   backsolve(R, backsolve(R, b, transpose = TRUE))
 }

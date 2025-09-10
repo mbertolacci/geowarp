@@ -186,12 +186,29 @@ vecchia_parent_structure <- function(
 #' @export
 vecchia_grouping <- function(
   parent_structure,
-  exponent = 3
+  exponent = 3,
+  include_predictions = FALSE,
+  format = c('standard', 'GpGp')
 ) {
+  format <- match.arg(format)
+  parents <- if (include_predictions) {
+    rbind(
+      parent_structure$observed_parents,
+      .deduplicate_parents(cbind(
+        nrow(parent_structure$observed_parents) + parent_structure$prediction_within_parents,
+        parent_structure$prediction_between_parents
+      ))
+    )
+  } else {
+    parent_structure$observed_parents
+  }
   vecchia_groups <- GpGp::group_obs(
-    parent_structure$observed_parents,
+    parents,
     exponent = exponent
   )
+  if (format == 'GpGp') {
+    return(vecchia_groups)
+  }
   current_block_index <- 1L
   current_response_index <- 1L
   for (i in seq_along(vecchia_groups$last_ind_of_block)) {
@@ -643,6 +660,61 @@ plot_parent_structure <- function(
     dims = c(nrow(x), nrow(x))
   ))
 }
+
+.create_vecchia_U_grouped <- function(
+  x,
+  X_deviation_fixed,
+  X_deviation_random,
+  fit,
+  grouping,
+  nugget = rep(TRUE, nrow(x)),
+  model = fit$model,
+  parameters = fit$parameters,
+  threads
+) {
+  x_warped <- warped_coordinates(x = x, model = model, parameters = parameters)
+  if (model$deviation_model$name == 'vertical_only') {
+    # NOTE(mgnb): The neighbourhood structure itself will never pick a parent
+    # from a different vertical location, so this is safe
+    x_warped <- x_warped[, ncol(x_warped), drop = FALSE]
+  }
+
+  sigma_deviation <- exp(
+    0.5 * as.vector(
+      X_deviation_fixed %*% parameters$eta_deviation
+      + X_deviation_random %*% parameters$zeta_deviation
+    )
+  )
+
+  parts <- vecchia_U_parts_grouped(
+    grouping$all_inds,
+    grouping$last_ind_of_block,
+    grouping$local_resp_inds,
+    grouping$last_resp_of_block,
+    x_warped,
+    model$deviation_model$covariance_function,
+    sigma_deviation,
+    nugget * parameters$sigma_squared_nugget,
+    threads > 1 || threads == -1
+  )
+
+  i <- parts$i
+  j <- parts$j
+  x <- parts$x
+  x_is_non_zero <- x != 0
+
+  i_non_zero <- i[x_is_non_zero]
+  j_non_zero <- j[x_is_non_zero]
+  x_non_zero <- x[x_is_non_zero]
+
+  Matrix::sparseMatrix(
+    i = i_non_zero,
+    j = j_non_zero,
+    x = x_non_zero,
+    triangular = TRUE
+  )
+}
+
 
 .knn <- function(x, y, k) {
   if (k < nrow(x)) {

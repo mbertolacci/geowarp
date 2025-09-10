@@ -33,3 +33,7 @@ vecchia_U_x_parts <- function(parents, xWarped, covarianceFunction, sigmaDeviati
     .Call(`_geowarp_vecchia_U_x_parts`, parents, xWarped, covarianceFunction, sigmaDeviation, sigmaSquaredNugget, parallel)
 }
 
+vecchia_U_parts_grouped <- function(blockIndices, blockLastIndex, blockLocalResponseIndex, blockLastResponseOfBlock, xWarped, covarianceFunction, sigmaDeviation, sigmaSquaredNugget, parallel) {
+    .Call(`_geowarp_vecchia_U_parts_grouped`, blockIndices, blockLastIndex, blockLocalResponseIndex, blockLastResponseOfBlock, xWarped, covarianceFunction, sigmaDeviation, sigmaSquaredNugget, parallel)
+}
+

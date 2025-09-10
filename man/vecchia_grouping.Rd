@@ -4,7 +4,12 @@
 \alias{vecchia_grouping}
 \title{Calculate Groups of Locations}
 \usage{
-vecchia_grouping(parent_structure, exponent = 3)
+vecchia_grouping(
+  parent_structure,
+  exponent = 3,
+  include_predictions = FALSE,
+  format = c("standard", "GpGp")
+)
 }
 \arguments{
 \item{parent_structure}{A parent structure list as returned by

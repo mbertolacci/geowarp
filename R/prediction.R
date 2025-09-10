@@ -78,9 +78,13 @@ marginal_variance_profile <- function(
 #' @param vecchia Whether to use Vecchia's approximation (`'auto'`, `TRUE`,
 #' `FALSE`). If `'auto'`, the Vecchia approximation is used when the number of
 #' observed and prediction locations together exceed 1000.
+#' @param grouped Logical, indicating whether to use the grouped Vecchia
+#' approximation.
 #' @param n_parents Number of parents to consider for Vecchia's approximation.
 #' @param parent_structure Parent structure for Vecchia's approximation,
 #' produced using \code{\link{vecchia_parent_structure}}.
+#' @param grouping Grouping for the Vecchia approximation, produced using
+#' \code{\link{vecchia_grouping}}.
 #' @param threads Number of threads to use for parallelisation, taken from
 #' `getOption('geowarp.threads')` by default, which is itself set to 1 by
 #' default. The special value -1 picks a number of threads based on the number
@@ -142,12 +146,14 @@ geowarp_predict <- function(
   n_samples = 500,
   vecchia = 'auto',
   n_parents = 50,
+  grouped = FALSE,
   parent_structure = vecchia_parent_structure(
     observed_df,
     model,
     n_parents,
     prediction_df = prediction_df
   ),
+  grouping = vecchia_grouping(parent_structure, include_predictions = TRUE, format = 'GpGp'),
   threads = getOption('geowarp.threads'),
   ...
 ) {
@@ -179,6 +185,8 @@ geowarp_predict <- function(
       model,
       parameters,
       parent_structure,
+      grouped,
+      grouping,
       nugget,
       threads
     )
@@ -285,6 +293,8 @@ predict.geowarp_fit <- function(object, ...) {
   model,
   parameters,
   parent_structure,
+  grouped,
+  grouping,
   nugget,
   threads
 ) {
@@ -310,26 +320,42 @@ predict.geowarp_fit <- function(object, ...) {
   observed_indices <- seq_len(n_observed)
   prediction_indices <- n_observed + seq_len(n_prediction)
 
-  parents <- rbind(
-    parent_structure$observed_parents,
-    .deduplicate_parents(cbind(
-      nrow(parent_structure$observed_parents) + parent_structure$prediction_within_parents,
-      parent_structure$prediction_between_parents
-    ))
-  )
-  U <- .create_vecchia_U(
-    x_all,
-    X_deviation_fixed_all,
-    X_deviation_random_all,
-    parents = parents,
-    model = model,
-    parameters = parameters,
-    nugget = c(
-      rep(TRUE, nrow(observed_stan_data$x)),
-      rep(nugget, nrow(prediction_stan_data$x))
-    ),
-    threads = threads
-  )
+  U <- if (grouped) {
+    .create_vecchia_U_grouped(
+      x_all,
+      X_deviation_fixed_all,
+      X_deviation_random_all,
+      grouping = grouping,
+      model = model,
+      parameters = parameters,
+      nugget = c(
+        rep(TRUE, nrow(observed_stan_data$x)),
+        rep(nugget, nrow(prediction_stan_data$x))
+      ),
+      threads = threads
+    )
+  } else {
+    parents <- rbind(
+      parent_structure$observed_parents,
+      .deduplicate_parents(cbind(
+        nrow(parent_structure$observed_parents) + parent_structure$prediction_within_parents,
+        parent_structure$prediction_between_parents
+      ))
+    )
+    .create_vecchia_U(
+      x_all,
+      X_deviation_fixed_all,
+      X_deviation_random_all,
+      parents = parents,
+      model = model,
+      parameters = parameters,
+      nugget = c(
+        rep(TRUE, nrow(observed_stan_data$x)),
+        rep(nugget, nrow(prediction_stan_data$x))
+      ),
+      threads = threads
+    )
+  }
   V <- U[prediction_indices, prediction_indices]
 
   mu_hat <- as.vector(X_mean_all %*% parameters$alpha_beta)
